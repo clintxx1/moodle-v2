@@ -38,7 +38,7 @@ const GuestLayout = ({ children }) => {
       label: "Random Stuffs"
     },
   ]
-
+  //Added random comment
   const navigateTo = (e) => {
     window.location.href = e.key;
   }
