@@ -1,16 +1,28 @@
-import React from "react";
-import { Layout, Menu } from "antd";
-import { LogoutOutlined, DashboardOutlined, AppstoreOutlined, MailOutlined } from "@ant-design/icons";
-import { useLocation } from "react-router-dom";
+import React, { createRef, useRef, useState } from "react";
+import { Layout, Menu, Button, Tooltip } from "antd";
+import {
+  LogoutOutlined,
+  DashboardOutlined,
+  AppstoreOutlined,
+  MailOutlined,
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
+} from "@ant-design/icons";
+import { Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 const GuestLayout = ({ children }) => {
   const { Header, Content, Footer, Sider } = Layout;
   const location = useLocation();
+  const [collapsed, setCollapsed] = useState(true);
+  const ref = createRef();
+  const navigate = useNavigate();
 
   const getSelectedKey = () => {
     switch (location.pathname) {
       case "/home":
         return "1";
+      case "/3":
+        return "2";
       default:
         return "1";
     }
@@ -20,56 +32,90 @@ const GuestLayout = ({ children }) => {
     {
       key: "/",
       icon: <DashboardOutlined />,
-      label: "Home"
+      label: "Home",
     },
     {
       key: "home",
       icon: <LogoutOutlined />,
-      label: "Random Stuffs"
+      label: "Random Stuffs",
     },
     {
       key: "3",
       icon: <AppstoreOutlined />,
-      label: "Random Stuffs 2"
+      label: "Random Stuffs 2",
     },
     {
       key: "4",
       icon: <MailOutlined />,
-      label: "Random Stuffs"
+      label: "Random Stuffs",
     },
-  ]
+  ];
   //Added random comment
   const navigateTo = (e) => {
-    window.location.href = e.key;
-  }
+    navigate(e.key);
+    // window.location.href = e.key;
+  };
+
+  const toggleCollapsed = () => {
+    setCollapsed(!collapsed);
+  };
 
   return (
     <Layout>
-      <Header style={{ padding: 0, margin: 0, backgroundColor: "white" }}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "flex-start",
-          }}
-        >
+      <Header
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0 15px",
+          margin: 0,
+          backgroundColor: "white",
+        }}
+      >
+        <div className="flex flex-row items-center">
+          <Tooltip title="Switch for sidebar navigation" placement="bottomLeft">
+          <Button
+            // type="primary"
+            onClick={toggleCollapsed}
+            style={{
+              marginBottom: 16,
+              padding: "0 10px",
+            }}
+          >
+            {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          </Button>
+          </Tooltip>
           <img
-            src={require("../assets/sample.jpg")}
-            style={{ height: 60, cursor: "pointer" }}
+            src={require("../assets/nwssu.png")}
+            style={{ height: 60, cursor: "pointer", padding: "0 10px" }}
             alt=""
+            onClick={() => (window.location.href = "/")}
           />
-          <p className="text-xs font-bold" style={{ fontWeight: "bold" }}>
-            Sample Boilerplate
-          </p>
+          <p style={{ padding: "0 10px", fontSize: 20 }}>NwSSU LMS - Moodle</p>
+        </div>
+        <div>
+          You are not logged in. (
+          <a href="/login" style={{ color: "green" }}>
+            Log in
+          </a>
+          )
         </div>
       </Header>
-      <Layout style={{ minHeight: "90vh" }}>
-        <Sider theme="light" collapsible>
-          <Menu theme="light" selectedKeys={getSelectedKey()} mode="inline" items={items} onClick={navigateTo}/>
-        </Sider>
-        <Layout className="site-layout">
+      <Layout style={{ minHeight: "90vh", flex: 1, flexDirection: "row" }}>
+        <div style={{ backgroundColor: "white" }}>
+          <Menu
+            ref={ref}
+            theme="light"
+            selectedKeys={getSelectedKey()}
+            mode="inline"
+            items={items}
+            onClick={navigateTo}
+            inlineCollapsed={collapsed}
+          />
+        </div>
+        <Layout style={{ flex: 1 }}>
           <Content style={{ margin: "0 16px" }}>
-            {children}
+            <Outlet />
           </Content>
           <Footer style={{ textAlign: "center" }}>Cid&Clint @2023</Footer>
         </Layout>
