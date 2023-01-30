@@ -5,6 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import Dashboard from "../pages/dashboard";
 import GuestLayout from "../layout/guest";
 import Login from "../pages/login";
+import ErrorPage from "../pages/error";
 
 export default function App() {
   //TODO
@@ -12,10 +13,12 @@ export default function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<GuestLayout />}>
-        <Route path="/home" element={<Dashboard />}/>
+      <Route path="/" element={<GuestLayout />} errorElement={<ErrorPage />}>
+        <Route path="/" element={<Dashboard />} errorElement={<ErrorPage />} />
+        <Route path="/home" element={<Dashboard />}  errorElement={<ErrorPage />} />
       </Route>
-      <Route path="/login" element={<Login />} />
+      <Route path="/error-page" element={<ErrorPage />} errorElement={<ErrorPage />}/>
+      <Route path="/login" element={<Login />} errorElement={<ErrorPage />}/>
       {/**TODO - Remove Switch for now */}
         {/* <Switch> */}
           {/* <AuthGuard exact path="/" component={HomeController}/> */}

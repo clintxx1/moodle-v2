@@ -1,5 +1,5 @@
-import React, { createRef, useRef, useState } from "react";
-import { Layout, Menu, Button, Tooltip } from "antd";
+import React, { createRef, useState } from "react";
+import { Layout, Menu, Button } from "antd";
 import {
   LogoutOutlined,
   DashboardOutlined,
@@ -8,10 +8,10 @@ import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
 } from "@ant-design/icons";
-import { Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
-const GuestLayout = ({ children }) => {
-  const { Header, Content, Footer, Sider } = Layout;
+const GuestLayout = () => {
+  const { Header, Content, Footer } = Layout;
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(true);
   const ref = createRef();
@@ -73,9 +73,7 @@ const GuestLayout = ({ children }) => {
         }}
       >
         <div className="flex flex-row items-center">
-          <Tooltip title="Switch for sidebar navigation" placement="bottomLeft">
           <Button
-            // type="primary"
             onClick={toggleCollapsed}
             style={{
               marginBottom: 16,
@@ -84,25 +82,35 @@ const GuestLayout = ({ children }) => {
           >
             {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </Button>
-          </Tooltip>
           <img
             src={require("../assets/nwssu.png")}
             style={{ height: 60, cursor: "pointer", padding: "0 10px" }}
             alt=""
             onClick={() => (window.location.href = "/")}
           />
-          <p style={{ padding: "0 10px", fontSize: 20 }}>NwSSU LMS - Moodle</p>
+          <p className="text-sm md:text-xl">NwSSU LMS - Moodle</p>
         </div>
-        <div>
+        <div className="">
           You are not logged in. (
-          <a href="/login" style={{ color: "green" }}>
+          <a href="/login" className="text-indigo-600">
             Log in
           </a>
           )
         </div>
       </Header>
-      <Layout style={{ minHeight: "90vh", flex: 1, flexDirection: "row" }}>
-        <div style={{ backgroundColor: "white" }}>
+      <Layout style={{ minHeight: "93vh", flex: 1, flexDirection: "row" }}>
+        <div className="bg-white hidden">
+          <Menu
+            ref={ref}
+            theme="light"
+            selectedKeys={getSelectedKey()}
+            mode="inline"
+            items={items}
+            onClick={navigateTo}
+            inlineCollapsed={collapsed}
+          />
+        </div>
+        <div className={`bg-white lg:block ${collapsed ? 'hidden' : 'block'}`}>
           <Menu
             ref={ref}
             theme="light"
