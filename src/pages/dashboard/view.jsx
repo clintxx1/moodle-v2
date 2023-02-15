@@ -1,10 +1,37 @@
+import { Col } from "antd";
+import { Row } from "antd";
 import React, { useContext } from "react";
+import CourseOverview from "../../components/courseOverview";
+import RecentlyAccessedCourse from "../../components/recentlyAccessedCourses";
+import Timeline from "../../components/timeline";
 import { PageContext } from "../../lib/context";
 
 const DashboardView = () => {
   const { features } = useContext(PageContext);
   return (
-    <div className="flex bg-white py-24 sm:py-32 my-2">
+    <div className="flex m-0 h-full w-auto p-0">
+      <div className="flex flex-col w-full h-full md:mr-2 mr-4">
+        <div className="flex flex-col w-full h-full md:mr-2 mr-4 min-h-[300px]">
+          <RecentlyAccessedCourse />
+        </div>
+        <div className="flex flex-col w-full h-full md:mr-2 mr-4 min-h-[300px]">
+          <CourseOverview />
+        </div>
+        <div className="block md:hidden mb-4 mt-0 p-0 h-full min-h-[300px]">
+          <Timeline />
+        </div>
+      </div>
+      <div className="hidden md:flex flex-col w-1/5 h-full pr-4">
+        <Timeline />
+      </div>
+      {/* <Row gutter={12}>
+        <Col>1</Col>
+        <Col>2</Col>
+      </Row>
+      <Row gutter={12}>
+        <Col>3</Col>
+        <Col>4</Col>
+      </Row>
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:text-center">
           <p className="mt-2 text-xl font-bold tracking-tight text-gray-900 sm:text-4xl">
@@ -20,7 +47,7 @@ const DashboardView = () => {
             {features.map((feature) => (
               <div key={feature.name} className="relative pl-16">
                 <dt className="text-sm lg:text-base font-semibold leading-7 text-gray-900">
-                  {/* {feature.icon} */}
+                  {/* {feature.icon} 
                   <div className="absolute top-0 left-0 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600">
                     {feature.icon}
                   </div>
@@ -31,7 +58,7 @@ const DashboardView = () => {
             ))}
           </dl>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -98,7 +98,7 @@ const GuestLayout = () => {
           )
         </div>
       </Header>
-      <Layout style={{ minHeight: "93vh", flex: 1, flexDirection: "row" }}>
+      <Layout style={{ minHeight: "93vh", flex: 1, flexDirection: "row"}}>
         <div className="bg-white hidden">
           <Menu
             ref={ref}
@@ -121,11 +121,11 @@ const GuestLayout = () => {
             inlineCollapsed={collapsed}
           />
         </div>
-        <Layout style={{ flex: 1 }}>
-          <Content style={{ margin: "0 16px" }}>
+        <Layout style={{ flex: 1, display: 'flex', marginRight: 0, padding: 0 }}>
+          <Content style={{ margin: 0, padding: 0 }}>
             <Outlet />
           </Content>
-          <Footer style={{ textAlign: "center" }}>Cid&Clint @2023</Footer>
+          <Footer style={{ textAlign: "center" }}>All Rights Reserved™ 2023</Footer>
         </Layout>
       </Layout>
     </Layout>
