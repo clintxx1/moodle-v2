@@ -99,7 +99,7 @@ const GuestLayout = () => {
         </div>
       </Header>
       <Layout style={{ minHeight: "93vh", flex: 1, flexDirection: "row"}}>
-        <div className="bg-white hidden">
+        <div className="bg-white hidden mt-2">
           <Menu
             ref={ref}
             theme="light"
@@ -110,7 +110,7 @@ const GuestLayout = () => {
             inlineCollapsed={collapsed}
           />
         </div>
-        <div className={`bg-white lg:block ${collapsed ? 'hidden' : 'block'}`}>
+        <div className={`bg-white lg:block ${collapsed ? 'hidden' : 'block'} mt-2`}>
           <Menu
             ref={ref}
             theme="light"

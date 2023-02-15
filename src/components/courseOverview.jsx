@@ -6,12 +6,12 @@ import {
   FunnelPlotFilled,
 } from "@ant-design/icons";
 
-const CourseOverview = () => {
+const CourseOverview = ({children}) => {
   const handleChange = (e) => {
     console.log(e);
   };
   return (
-    <div className="flex flex-col bg-white p-4 mx-2 md:mb-2 mb-0 w-full h-full border-black border-x-[1px] border-y-[1px] border-opacity-30 ">
+    <div className="flex flex-col bg-white p-4 mx-2 md:mb-2 mb-0 w-full h-fit border-gray-300 border-x-[1px] border-y-[1px]">
       <div className="text-lg font-extralight">Course overview</div>
       <div className="flex flex-row justify-between">
         <div>
@@ -60,6 +60,7 @@ const CourseOverview = () => {
           />
         </div>
       </div>
+      <div>{children}</div>
     </div>
   );
 };
