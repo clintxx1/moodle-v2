@@ -32,7 +32,7 @@ const GuestLayout = () => {
     {
       key: "/",
       icon: <DashboardOutlined />,
-      label: "Home",
+      label: "Dashboard",
     },
     {
       key: "home",
@@ -121,7 +121,7 @@ const GuestLayout = () => {
             inlineCollapsed={collapsed}
           />
         </div>
-        <Layout style={{ flex: 1, display: 'flex', marginRight: 0, padding: 0 }}>
+        <Layout style={{ flex: 1, display: 'flex', margin: 0, padding: 0 }}>
           <Content style={{ margin: 0, padding: 0 }}>
             <Outlet />
           </Content>

@@ -15,7 +15,7 @@ export default function App() {
     <Routes>
       <Route path="/" element={<GuestLayout />} errorElement={<ErrorPage />}>
         <Route path="/" element={<Dashboard />} errorElement={<ErrorPage />} />
-        <Route path="/home" element={<Dashboard />}  errorElement={<ErrorPage />} />
+        {/* <Route path="/home" element={<Dashboard />}  errorElement={<ErrorPage />} /> */}
       </Route>
       <Route path="/error-page" element={<ErrorPage />} errorElement={<ErrorPage />}/>
       <Route path="/login" element={<Login />} errorElement={<ErrorPage />}/>

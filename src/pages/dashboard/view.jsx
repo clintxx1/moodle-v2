@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import CourseCard from "../../components/accessedCourseCard";
 import Course from "../../components/course";
 import CourseOverview from "../../components/courseOverview";
 import RecentlyAccessedCourse from "../../components/recentlyAccessedCourses";
@@ -7,36 +8,61 @@ import { PageContext } from "../../lib/context";
 
 const DashboardView = () => {
   const { features } = useContext(PageContext);
+  const sampleData = [
+    {
+      dept: "CCIS",
+      subject: "CS 404 | BSCS 4 | Test Subject", 
+      progress: 30,
+    },
+    {
+      dept: "COED",
+      subject: "SCIENCE | BSSEd 4 | Test Subject", 
+      progress: 70,
+    },
+    {
+      dept: "COM",
+      subject: "AGRARIAN REFORM | BSA 4 | Test Subject", 
+      progress: 100,
+    },
+    {
+      dept: "CAS",
+      subject: "SOC.SCI 4 | BSCrim | Test Subject",
+      progress: 50
+    }
+  ]
   return (
     <div className="flex m-0 h-full w-auto p-0">
-      <div className="flex flex-col w-full h-full md:mr-2 mr-4">
-        <div className="flex flex-col w-full md:mr-2 mr-4 min-h-[300px]">
-          <RecentlyAccessedCourse />
+      <div className="flex flex-col w-full h-full lg:mr-2 mr-4">
+        <div className="flex w-full h-fit lg:mr-2 mr-4 min-h-[300px]">
+          <RecentlyAccessedCourse>
+            {sampleData.map((item) => {
+              return (
+                <CourseCard 
+                  dept={item.dept}
+                  subject={item.subject}
+                />
+              )
+            })}
+          </RecentlyAccessedCourse>
         </div>
-        <div className="flex flex-col w-full h-fit md:mr-2 mr-4 min-h-[300px]">
+        <div className="flex w-full h-fit lg:mr-2 mr-4">
           <CourseOverview>
-            <Course 
-              dept="CCIS"
-              subject="CS 404 | BSCS 4 | Test Subject"
-              progress={30}
-            />
-            <Course 
-              dept="COED"
-              subject="SCIENCE | BSSEd 4 | Test Subject"
-              progress={70}
-            />
-            <Course 
-              dept="COM"
-              subject="AGRARIAN REFORM | BSA 4 | Test Subject"
-              progress={100}
-            />
+            {sampleData.map((item) => {
+              return (
+                <Course 
+                  dept={item.dept}
+                  subject={item.subject}
+                  progress={item.progress}
+                />
+              )
+            })}
           </CourseOverview>
         </div>
-        <div className="block md:hidden mb-4 mt-0 p-0 h-fit min-h-[300px]">
+        <div className="flex lg:hidden ml-2 mb-4 mt-0 p-0 h-fit min-h-[300px]">
           <Timeline />
         </div>
       </div>
-      <div className="hidden md:flex flex-col w-1/5 h-full pr-4">
+      <div className="hidden lg:flex w-1/4 lg:h-fit lg:min-h-[794px] pr-2">
         <Timeline />
       </div>
       {/* <div className="mx-auto max-w-7xl px-6 lg:px-8">
