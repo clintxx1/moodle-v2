@@ -7,6 +7,7 @@ const CourseCard = ({ dept, subject, image }) => {
   return (
     <div className="flex flex-row w-[250px] items-center justify-center border-gray-300 border-x-[1px] border-y-[1px] mr-4 overflow-hidden">
       <img
+        alt="img"
         src={image ?? defBackgroundImage}
         width={200}
         className="hover:scale-150 transform transition duration-500 cursor-pointer"

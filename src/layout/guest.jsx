@@ -9,6 +9,7 @@ import {
   MenuFoldOutlined,
 } from "@ant-design/icons";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import CustomDropdown from "../components/dropdown";
 
 const GuestLayout = () => {
   const { Header, Content, Footer } = Layout;
@@ -90,15 +91,9 @@ const GuestLayout = () => {
           />
           <p className="text-sm md:text-xl">NwSSU LMS - Moodle</p>
         </div>
-        <div className="">
-          You are not logged in. (
-          <a href="/login" className="text-indigo-600">
-            Log in
-          </a>
-          )
-        </div>
+        <CustomDropdown />
       </Header>
-      <Layout style={{ minHeight: "93vh", flex: 1, flexDirection: "row"}}>
+      <Layout style={{ minHeight: "93vh", flex: 1, flexDirection: "row" }}>
         <div className="bg-white hidden mt-2">
           <Menu
             ref={ref}
@@ -110,7 +105,9 @@ const GuestLayout = () => {
             inlineCollapsed={collapsed}
           />
         </div>
-        <div className={`bg-white lg:block ${collapsed ? 'hidden' : 'block'} mt-2`}>
+        <div
+          className={`bg-white lg:block ${collapsed ? "hidden" : "block"} mt-2`}
+        >
           <Menu
             ref={ref}
             theme="light"
@@ -121,11 +118,13 @@ const GuestLayout = () => {
             inlineCollapsed={collapsed}
           />
         </div>
-        <Layout style={{ flex: 1, display: 'flex', margin: 0, padding: 0 }}>
+        <Layout style={{ flex: 1, display: "flex", margin: 0, padding: 0 }}>
           <Content style={{ margin: 0, padding: 0 }}>
             <Outlet />
           </Content>
-          <Footer style={{ textAlign: "center" }}>All Rights Reserved™ 2023</Footer>
+          <Footer style={{ textAlign: "center" }}>
+            All Rights Reserved™ 2023
+          </Footer>
         </Layout>
       </Layout>
     </Layout>

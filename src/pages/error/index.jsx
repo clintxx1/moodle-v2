@@ -20,13 +20,13 @@ const ErrorPage = () => {
               </p>
               <div className="mt-10 flex items-center justify-center gap-x-6">
                 <a
-                  href="/"
+                  href="/dashboard"
                   className="rounded-md bg-indigo-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   Back to Home
                 </a>
                 <a
-                  href="/"
+                  href="/dashboard"
                   className="text-base font-semibold leading-7 text-gray-900"
                 >
                   Learn more <span aria-hidden="true">→</span>

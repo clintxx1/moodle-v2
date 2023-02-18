@@ -1,35 +1,25 @@
 import React from "react";
-import { Route, redirect } from "react-router-dom";
+import { Navigate, useOutlet } from "react-router-dom";
 import GuestLayout from "../layout/guest";
+import auth from "../lib/services";
 
-export const AuthGuard = ({ component: Component, ...rest }) => {
+export const PublicLayout = () => {
+  const outlet = useOutlet();
+  if (auth.isAuthenticated()) {
+    return <Navigate replace to={"/dashboard"} />;
+  }
+
   return (
-    <Route
-      {...rest}
-      render={(props) =>
-        !localStorage.getItem(process.env.REACT_APP_LS_TOKEN) ? (
-          <Component {...props} />
-        ) : (
-          redirect("/home")
-        )
-      }
-    />
+    <div className="flex w-full h-screen items-center justify-center">
+      {outlet}
+    </div>
   );
 };
 
-export const DashGuard = ({ component: Component, ...rest }) => {
-  return (
-    <Route
-      {...rest}
-      render={(props) =>
-        localStorage.getItem(process.env.REACT_APP_LS_TOKEN) ? (
-            <GuestLayout>
-              <Component {...props} />
-            </GuestLayout>
-        ) : (
-          redirect("/")
-        )
-      }
-    />
-  );
+export const PrivateLayout = () => {
+  if (!auth.isAuthenticated()) {
+    return <Navigate replace to={"/login"} />;
+  }
+
+  return <GuestLayout />;
 };

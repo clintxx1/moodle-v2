@@ -1,18 +1,8 @@
-import { BrowserRouter } from "react-router-dom";
-import Router from "./router";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./router";
 
 function App() {
-  /**
-   * TODO - fix routing
-   * Additional work
-   * when auth is applied
-   */
-
-  return (
-    <BrowserRouter>
-      <Router />
-    </BrowserRouter>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

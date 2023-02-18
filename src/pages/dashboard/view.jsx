@@ -7,39 +7,19 @@ import Timeline from "../../components/timeline";
 import { PageContext } from "../../lib/context";
 
 const DashboardView = () => {
-  const { features } = useContext(PageContext);
-  const sampleData = [
-    {
-      dept: "CCIS",
-      subject: "CS 404 | BSCS 4 | Test Subject", 
-      progress: 30,
-    },
-    {
-      dept: "COED",
-      subject: "SCIENCE | BSSEd 4 | Test Subject", 
-      progress: 70,
-    },
-    {
-      dept: "COM",
-      subject: "AGRARIAN REFORM | BSA 4 | Test Subject", 
-      progress: 100,
-    },
-    {
-      dept: "CAS",
-      subject: "SOC.SCI 4 | BSCrim | Test Subject",
-      progress: 50
-    }
-  ]
+  const { sampleData } = useContext(PageContext);
+  
   return (
     <div className="flex m-0 h-full w-auto p-0">
       <div className="flex flex-col w-full h-full lg:mr-2 mr-4">
         <div className="flex w-full h-fit lg:mr-2 mr-4 min-h-[300px]">
-          <RecentlyAccessedCourse>
+          <RecentlyAccessedCourse key={1}>
             {sampleData.map((item) => {
               return (
                 <CourseCard 
                   dept={item.dept}
                   subject={item.subject}
+                  key={item.key}
                 />
               )
             })}
@@ -53,6 +33,7 @@ const DashboardView = () => {
                   dept={item.dept}
                   subject={item.subject}
                   progress={item.progress}
+                  key={item.key}
                 />
               )
             })}
