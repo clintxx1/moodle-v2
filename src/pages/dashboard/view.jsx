@@ -8,7 +8,7 @@ import { PageContext } from "../../lib/context";
 
 const DashboardView = () => {
   const { sampleData } = useContext(PageContext);
-  
+
   return (
     <div className="flex m-0 h-full w-auto p-0">
       <div className="flex flex-col w-full h-full lg:mr-2 mr-4">
@@ -16,12 +16,12 @@ const DashboardView = () => {
           <RecentlyAccessedCourse key={1}>
             {sampleData.map((item) => {
               return (
-                <CourseCard 
+                <CourseCard
                   dept={item.dept}
                   subject={item.subject}
                   key={item.key}
                 />
-              )
+              );
             })}
           </RecentlyAccessedCourse>
         </div>
@@ -29,13 +29,14 @@ const DashboardView = () => {
           <CourseOverview>
             {sampleData.map((item) => {
               return (
-                <Course 
+                <Course
                   dept={item.dept}
                   subject={item.subject}
                   progress={item.progress}
                   key={item.key}
+                  id={item.id}
                 />
-              )
+              );
             })}
           </CourseOverview>
         </div>

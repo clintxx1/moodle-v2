@@ -8,7 +8,7 @@ const Timeline = () => {
   };
 
   return (
-    <div className="flex flex-col bg-white p-4 my-2 mr-2 w-full border-gray-300 border-x-[1px] border-y-[1px]">
+    <div className="flex flex-col bg-white p-4 my-2 mr-2 w-full border-gray-300 border-[1px]">
       <div className="text-lg font-extralight">Timeline</div>
       <div className="flex flex-row items-center justify-between mt-2">
         <Select

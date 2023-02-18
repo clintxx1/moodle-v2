@@ -7,7 +7,7 @@ import { message } from "antd";
 const Login = () => {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const payload = {
@@ -23,7 +23,7 @@ const Login = () => {
         }
         const data = await res.json();
         auth.storeToken(data.token);
-        window.location.href="/dashboard"
+        window.location.href = "/dashboard";
       })
       .catch((err) => {
         console.error("ERR: ", err);

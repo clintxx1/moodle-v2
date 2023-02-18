@@ -28,20 +28,41 @@ const RegisterView = () => {
             &nbsp;if you already have an account.
           </p>
         </div>
-        <Form form={form} onFinish={handleSubmit} labelCol={{span: 6}} wrapperCol={{span: 18}}>
+        <Form
+          form={form}
+          onFinish={handleSubmit}
+          labelCol={{ span: 6 }}
+          wrapperCol={{ span: 18 }}
+        >
           <div className="rounded-md shadow-sm mt-8 space-y-6">
             <div className="my-4">
-              <Form.Item name="username" label="Username" rules={[{ required: true, message: 'Please input your username' }]}>
+              <Form.Item
+                name="username"
+                label="Username"
+                rules={[
+                  { required: true, message: "Please input your username" },
+                ]}
+              >
                 <Input id="username" placeholder="Username" />
               </Form.Item>
             </div>
             <div className="my-4">
-              <Form.Item name="email" label="Email" rules={[{ required: true, message: 'Please input your email' }]}>
+              <Form.Item
+                name="email"
+                label="Email"
+                rules={[{ required: true, message: "Please input your email" }]}
+              >
                 <Input placeholder="Email" id="email" type="email" />
               </Form.Item>
             </div>
             <div className="my-4">
-              <Form.Item name="password" label="Password" rules={[{ required: true, message: 'Please input your password' }]}>
+              <Form.Item
+                name="password"
+                label="Password"
+                rules={[
+                  { required: true, message: "Please input your password" },
+                ]}
+              >
                 <Input.Password placeholder="Password" id="password" />
               </Form.Item>
             </div>

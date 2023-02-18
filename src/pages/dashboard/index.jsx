@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { PageContext } from "../../lib/context";
 import DashboardView from "./view";
 import {
@@ -7,34 +7,39 @@ import {
   SyncOutlined,
   SecurityScanFilled,
 } from "@ant-design/icons";
+import { getCollections } from "../../lib/query";
 
 const Dashboard = () => {
-  const sampleData = [
+  const [sampleData, setSampleData] = useState([
     {
       key: 1,
       dept: "CCIS",
       subject: "CS 404 | BSCS 4 | Test Subject",
       progress: 30,
+      id: "63f0ef007b6eab776f0179c1",
     },
     {
       key: 2,
       dept: "COED",
       subject: "SCIENCE | BSSEd 4 | Test Subject",
       progress: 70,
+      id: "63f0ef007b6eab776f0179c2",
     },
     {
       key: 3,
       dept: "COM",
       subject: "AGRARIAN REFORM | BSA 4 | Test Subject",
       progress: 100,
+      id: "63f0ef007b6eab776f0179c3",
     },
-    {
-      key: 4,
-      dept: "CAS",
-      subject: "SOC.SCI 4 | BSCrim | Test Subject",
-      progress: 50,
-    },
-  ];
+    // {
+    //   key: 4,
+    //   dept: "CAS",
+    //   subject: "SOC.SCI 4 | BSCrim | Test Subject",
+    //   progress: 50,
+    //   id: "63f0ef007b6eab776f0179c4"
+    // },
+  ]);
   const features = [
     {
       name: "Sample #1",
@@ -61,6 +66,24 @@ const Dashboard = () => {
       icon: <SecurityScanFilled style={{ color: "white" }} />,
     },
   ];
+
+  useEffect(() => {
+    async function fetchCollections() {
+      const res = await getCollections();
+      let data = res.data.data;
+      data.map((item, index) => {
+        let tempData = {
+          key: index + sampleData.length + 1,
+          dept: "CCIS",
+          subject: item.name,
+          progress: 10,
+          id: item._id,
+        };
+        setSampleData([...sampleData, tempData]);
+      });
+    }
+    fetchCollections();
+  }, []);
 
   const values = {
     features,

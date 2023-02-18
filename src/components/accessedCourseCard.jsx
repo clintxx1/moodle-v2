@@ -5,7 +5,7 @@ const CourseCard = ({ dept, subject, image }) => {
   const defBackgroundImage = require("../assets/nwssu.png");
 
   return (
-    <div className="flex flex-row w-[250px] items-center justify-center border-gray-300 border-x-[1px] border-y-[1px] mr-4 overflow-hidden">
+    <div className="flex flex-row w-[250px] items-center justify-center border-gray-300 border-[1px] mr-4 overflow-hidden">
       <img
         alt="img"
         src={image ?? defBackgroundImage}
