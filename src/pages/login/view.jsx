@@ -19,7 +19,7 @@ const LoginView = () => {
           <p className="mt-2 text-center text-sm text-gray-600">
             Or &nbsp;
             <a
-              href="/"
+              href="/register"
               className="font-medium text-indigo-600 hover:text-indigo-500"
             >
               create an account if you're new.

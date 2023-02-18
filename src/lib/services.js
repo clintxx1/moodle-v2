@@ -21,7 +21,7 @@ const auth = {
     if (token) {
       const decodedData = this.decode(token);
       //TODO - Add role on schema to determine user type
-      return decodedData.type;
+      return decodedData.role;
     }
     return null;
   },
@@ -55,7 +55,7 @@ const auth = {
   },
   register(data) {
     //TODO - fix API to combine both admin and student
-    return fetch(`${process.env.REACT_APP_API_URL}/register`, {
+    return fetch(`${process.env.REACT_APP_API_URL}/admin/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
