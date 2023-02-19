@@ -20,6 +20,7 @@ const DashboardView = () => {
                   dept={item.dept}
                   subject={item.subject}
                   key={item.key}
+                  id={item.id}
                 />
               );
             })}

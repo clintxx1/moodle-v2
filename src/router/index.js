@@ -4,7 +4,6 @@ import {
   createRoutesFromElements,
   Navigate,
   Route,
-  useParams,
 } from "react-router-dom";
 import Dashboard from "../pages/dashboard";
 import Login from "../pages/login";
@@ -12,8 +11,7 @@ import ErrorPage from "../pages/error";
 import { PrivateLayout, PublicLayout } from "./modules";
 import Register from "../pages/register";
 import Course from "../pages/course";
-
-// const { id } = useParams();
+import CreateExam from "../pages/createExam";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -28,6 +26,7 @@ export const router = createBrowserRouter(
         <Route path="/course">
           <Route path=":id" element={<Course />} />
         </Route>
+        <Route path="/create-exam" element={<CreateExam />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Route>
     </>

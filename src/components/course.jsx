@@ -6,10 +6,7 @@ import { useNavigate } from "react-router-dom";
 const Course = ({ dept, subject, progress, id }) => {
   const navigate = useNavigate();
   return (
-    <div
-      onClick={() => navigate(`/course/${id}`)}
-      className="flex flex-row items-center w-full border-gray-300 border-[1px] my-3 min-h-[80px]"
-    >
+    <div className="flex flex-row items-center w-full border-gray-300 border-[1px] my-3 min-h-[80px]">
       <div className="hidden md:flex md:flex-row w-full ">
         <Col span={22}>
           <Row gutter={12}>
@@ -24,7 +21,10 @@ const Course = ({ dept, subject, progress, id }) => {
           </Row>
           <Row>
             <Col span={12}>
-              <div className="pl-5 pb-3 hover:underline inline-block cursor-pointer">
+              <div
+                onClick={() => navigate(`/course/${id}`)}
+                className="pl-5 pb-3 hover:underline inline-block cursor-pointer"
+              >
                 {subject}
               </div>
             </Col>

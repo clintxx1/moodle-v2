@@ -71,6 +71,7 @@ const Dashboard = () => {
     async function fetchCollections() {
       const res = await getCollections();
       let data = res.data.data;
+      // eslint-disable-next-line
       data.map((item, index) => {
         let tempData = {
           key: index + sampleData.length + 1,
@@ -83,6 +84,7 @@ const Dashboard = () => {
       });
     }
     fetchCollections();
+    // eslint-disable-next-line
   }, []);
 
   const values = {
