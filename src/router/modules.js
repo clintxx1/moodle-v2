@@ -20,6 +20,9 @@ export const PrivateLayout = () => {
   if (!auth.isAuthenticated()) {
     return <Navigate replace to={"/login"} />;
   }
+  if (auth.getExpiration() * 1000 < Date.now()) {
+    auth.clear();
+  }
 
   return <GuestLayout />;
 };

@@ -1,3 +1,5 @@
+import auth from "./services";
+
 export const getRandomColor = () => {
   const letters = '0123456789ABCDEF'.split('');
   let color = '#';
@@ -5,4 +7,8 @@ export const getRandomColor = () => {
       color += letters[Math.floor(Math.random() * 16)]
   }
   return color
+}
+
+export const dataHeader = () => {
+  return { headers: { "x-access-token": auth.getToken() } }
 }

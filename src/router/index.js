@@ -11,7 +11,8 @@ import ErrorPage from "../pages/error";
 import { PrivateLayout, PublicLayout } from "./modules";
 import Register from "../pages/register";
 import Course from "../pages/course";
-import CreateExam from "../pages/createExam";
+import CreateExam from "../pages/exam";
+import Category from "../pages/category";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -26,7 +27,8 @@ export const router = createBrowserRouter(
         <Route path="/course">
           <Route path=":id" element={<Course />} />
         </Route>
-        <Route path="/create-exam" element={<CreateExam />} />
+        <Route path="/exam" element={<CreateExam />} />
+        <Route path="/category" element={<Category />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Route>
     </>

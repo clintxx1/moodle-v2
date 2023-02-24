@@ -7,7 +7,7 @@ import {
   SyncOutlined,
   SecurityScanFilled,
 } from "@ant-design/icons";
-import { getCollections } from "../../lib/query";
+import { getCollections } from "../../lib/api";
 
 const Dashboard = () => {
   const [sampleData, setSampleData] = useState([
@@ -67,25 +67,25 @@ const Dashboard = () => {
     },
   ];
 
-  useEffect(() => {
-    async function fetchCollections() {
-      const res = await getCollections();
-      let data = res.data.data;
-      // eslint-disable-next-line
-      data.map((item, index) => {
-        let tempData = {
-          key: index + sampleData.length + 1,
-          dept: "CCIS",
-          subject: item.name,
-          progress: 10,
-          id: item._id,
-        };
-        setSampleData([...sampleData, tempData]);
-      });
-    }
-    fetchCollections();
-    // eslint-disable-next-line
-  }, []);
+  // useEffect(() => {
+  //   async function fetchCollections() {
+  //     const res = await getCollections();
+  //     let data = res.data.data;
+  //     // eslint-disable-next-line
+  //     data.map((item, index) => {
+  //       let tempData = {
+  //         key: index + sampleData.length + 1,
+  //         dept: "CCIS",
+  //         subject: item.name,
+  //         progress: 10,
+  //         id: item._id,
+  //       };
+  //       setSampleData([...sampleData, tempData]);
+  //     });
+  //   }
+  //   fetchCollections();
+  //   // eslint-disable-next-line
+  // }, []);
 
   const values = {
     features,

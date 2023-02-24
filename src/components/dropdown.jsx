@@ -7,9 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 const CustomDropdown = () => {
   const navigate = useNavigate();
-  const initialChar = Array.from(
-    auth.getUserInfo().username
-  )[0].toUpperCase() ?? <UserOutlined />;
+  const initialChar = <UserOutlined />;
   const role = auth.getRole();
   const handleLogout = () => {
     auth.clear();
@@ -21,12 +19,12 @@ const CustomDropdown = () => {
     },
   ]);
   const handleCreateExam = () => {
-    navigate("/create-exam")
+    navigate("/exam")
   };
 
   useEffect(() => {
     if (role) {
-      if (role === "admin") {
+      if (["admin", "superadmin"].includes(role)) {
         setItems([
           {
             key: "1",
@@ -56,7 +54,7 @@ const CustomDropdown = () => {
       >
         <div
           className={
-            "flex items-center justify-center text-xl text-white font-semibold mt-1"
+            "flex items-center justify-center text-xl text-white font-semibold mt-2"
           }
         >
           {initialChar}

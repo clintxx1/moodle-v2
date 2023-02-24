@@ -22,8 +22,10 @@ const Login = () => {
           return;
         }
         const data = await res.json();
-        auth.storeToken(data.token);
-        window.location.href = "/dashboard";
+        if(data){
+          auth.storeToken(data.token);
+          window.location.href = "/dashboard";
+        }
       })
       .catch((err) => {
         console.error("ERR: ", err);

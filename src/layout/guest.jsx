@@ -1,4 +1,4 @@
-import React, { createRef, useState } from "react";
+import React, { createRef, useEffect, useState } from "react";
 import { Layout, Menu, Button } from "antd";
 import {
   LogoutOutlined,
@@ -7,59 +7,86 @@ import {
   MailOutlined,
   MenuUnfoldOutlined,
   MenuFoldOutlined,
+  FormOutlined,
 } from "@ant-design/icons";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import CustomDropdown from "../components/dropdown";
+import auth from "../lib/services";
 
 const GuestLayout = () => {
   const { Header, Content, Footer } = Layout;
   const location = useLocation();
+  const role = auth.getRole();
   const [collapsed, setCollapsed] = useState(true);
   const ref = createRef();
   const navigate = useNavigate();
+  const { firstName, middleName, lastName } = auth.getUserInfo();
 
   const getSelectedKey = () => {
     switch (location.pathname) {
-      case "/home":
-        return "1";
-      case "/3":
-        return "2";
+      case "/dashboard":
+        return "dashboard"
+      case "/exam":
+        return "exam";
+      case "/category":
+        return "3";
+      case "/logout":
+        return "4";
       default:
-        return "1";
+        return "dashboard";
     }
   };
 
-  const items = [
+  const [items, setItems] = useState([
     {
-      key: "/",
+      key: "dashboard",
       icon: <DashboardOutlined />,
       label: "Dashboard",
     },
     {
-      key: "home",
+      key: "logout",
       icon: <LogoutOutlined />,
-      label: "Random Stuffs",
+      label: "Logout",
     },
-    {
-      key: "3",
-      icon: <AppstoreOutlined />,
-      label: "Random Stuffs 2",
-    },
-    {
-      key: "4",
-      icon: <MailOutlined />,
-      label: "Random Stuffs",
-    },
-  ];
-  //Added random comment
+  ]);
+
   const navigateTo = (e) => {
+    if(e.key === 'logout'){
+      auth.clear();
+    }
     navigate(e.key);
-    // window.location.href = e.key;
   };
 
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
+
+  useEffect(() => {
+    if(role && ["admin", "superadmin"].includes(role)){
+      setItems([
+        {
+          key: "dashboard",
+          icon: <DashboardOutlined />,
+          label: "Dashboard",
+        },
+        {
+          key: "exam",
+          icon: <FormOutlined />,
+          label: "Exam",
+        },
+        {
+          key: "category",
+          icon: <AppstoreOutlined />,
+          label: "Category",
+        },
+        {
+          key: "logout",
+          icon: <LogoutOutlined />,
+          label: "Logout",
+        },
+      ])
+    }
+  }, [role])
 
   return (
     <Layout>
@@ -91,7 +118,12 @@ const GuestLayout = () => {
           />
           <p className="text-sm md:text-xl">NwSSU LMS - Moodle</p>
         </div>
-        <CustomDropdown />
+        <div className="flex flex-row items-center justify-center">
+          <p className="mr-2 text-base font-semibold">{`${firstName ?? ""} ${
+            middleName ?? ""
+          } ${lastName ?? ""}`}</p>
+          <CustomDropdown />
+        </div>
       </Header>
       <Layout style={{ minHeight: "93vh", flex: 1, flexDirection: "row" }}>
         <div className="bg-white hidden mt-2">

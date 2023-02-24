@@ -45,7 +45,7 @@ const auth = {
     return JSON.parse(window.atob(base64));
   },
   login(credential) {
-    return fetch(`${process.env.REACT_APP_API_URL}/admin/login`, {
+    return fetch(`${process.env.REACT_APP_API_URL}/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ const auth = {
   },
   register(data) {
     //TODO - fix API to combine both admin and student
-    return fetch(`${process.env.REACT_APP_API_URL}/admin/register`, {
+    return fetch(`${process.env.REACT_APP_API_URL}/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
