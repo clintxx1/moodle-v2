@@ -18,7 +18,7 @@ const ErrorPage = () => {
               <p className="mt-6 text-lg leading-8 text-gray-600">
                 We're sorry, the page you requested could not be found. Please
                 go back to the Homepage or contact us at
-                gabrielamores@nwssu.edu.ph
+                admin@nwssu.edu.ph
               </p>
               <div className="mt-10 flex items-center justify-center gap-x-6">
                 <a
