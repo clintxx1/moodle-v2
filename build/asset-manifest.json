@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/static/css/main.4f68c394.css",
+    "main.js": "/static/js/main.d3ddafbb.js",
+    "static/media/nwssu.png": "/static/media/nwssu.c20e47a9ade19c83bb12.png",
+    "index.html": "/index.html",
+    "main.4f68c394.css.map": "/static/css/main.4f68c394.css.map",
+    "main.d3ddafbb.js.map": "/static/js/main.d3ddafbb.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.4f68c394.css",
+    "static/js/main.d3ddafbb.js"
+  ]
+}
