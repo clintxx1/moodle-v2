@@ -14,7 +14,6 @@ import CategoryView from "./view";
 const Category = () => {
   const [data, setData] = useState();
   const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editData, setEditData] = useState();
@@ -75,10 +74,6 @@ const Category = () => {
     setIsModalOpen(false);
   };
 
-  const showPopconfirm = () => {
-    setOpen(true);
-  };
-
   const handleOk = async (e) => {
     try {
       setConfirmLoading(true);
@@ -90,7 +85,6 @@ const Category = () => {
         });
         setEditData();
         fetchCategories();
-        setOpen(false);
         setConfirmLoading(false);
       } else {
         notification.error({
@@ -106,11 +100,6 @@ const Category = () => {
         3000
       );
     }
-  };
-
-  const handleCancel = () => {
-    console.log("Clicked cancel button");
-    setOpen(false);
   };
 
   const handleInputChange = (e) => {
@@ -136,25 +125,24 @@ const Category = () => {
     {
       title: "Action",
       key: "action",
-      render: (record) => (
+      render: (_, record) => (
         <Space>
           <Tooltip title="Edit Profile">
             <EditOutlined onClick={() => showModal(record)} />
           </Tooltip>
-          <Tooltip title="Delete Category">
-            {/* <Popconfirm
-              title="Title"
-              description="Open Popconfirm with async logic"
-              open={open}
+          <Tooltip title="Delete Category" key={record.id} trigger={["hover"]}>
+            <Popconfirm
+              title="Delete Category"
+              description="Are you sure you want to delete?"
               onConfirm={() => handleOk(record)}
+              okText="Yes"
+              cancelText="No"
               okButtonProps={{
                 loading: confirmLoading,
               }}
-              onCancel={handleCancel}
             >
-              <DeleteOutlined onClick={showPopconfirm} />
-            </Popconfirm> */}
-            <DeleteOutlined onClick={() => handleOk(record)} />
+              <DeleteOutlined />
+            </Popconfirm>
           </Tooltip>
         </Space>
       ),

@@ -1,25 +1,54 @@
 import React, { useEffect, useState } from "react";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  EllipsisOutlined,
+  MinusCircleOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import {
   Button,
   Checkbox,
   DatePicker,
   Divider,
+  Dropdown,
   Form,
   Input,
   InputNumber,
   notification,
+  Radio,
   Select,
   Tooltip,
 } from "antd";
 import moment from "moment";
 import dayjs from "dayjs";
 import { createExam, createQuestion, getCategories } from "../../lib/api";
+import { useNavigate } from "react-router-dom";
 
 const CreateExam = () => {
+  const navigate = useNavigate();
   const { RangePicker } = DatePicker;
+  const [form] = Form.useForm();
   const [data, setData] = useState();
   const [loading, setLoading] = useState(false);
+  const [answerType, setAnswerType] = useState("multiple");
+
+  const items = [
+    {
+      label: (
+        <div onClick={() => setAnswerType("multiple")}>Multiple choice</div>
+      ),
+      key: "multiple",
+    },
+    {
+      label: <div onClick={() => setAnswerType("trulse")}>True or false</div>,
+      key: "trulse",
+    },
+    {
+      label: (
+        <div onClick={() => setAnswerType("fill")}>Fill in the blanks</div>
+      ),
+      key: "fill",
+    },
+  ];
 
   const fetchCategories = async () => {
     const res = await getCategories();
@@ -37,6 +66,8 @@ const CreateExam = () => {
   };
 
   const onFinish = async (values) => {
+    // console.log("DATA: ", values);
+    // return;
     if (values.questions && values.questions.length) {
       const newVal = {
         category: values.examCategory,
@@ -49,28 +80,31 @@ const CreateExam = () => {
         ),
         itemNumber: values.questions.length,
       };
-
       const examRes = await createExam(newVal);
       let examResult = examRes.data.data;
       if (examResult) {
         if (values?.questions && values?.questions.length) {
           const questionPayload = values?.questions.map((q) => {
             let answer = q?.choices.filter((a) => a.answer)[0]?.choice;
+            let type = q?.choices.filter((a) => a.answer)[0]?.type;
             let choices = q?.choices.map((a) => a.choice);
             return {
-              exam: examResult._id,
               question: q.question,
-              answer: answer,
-              choices: choices,
-              type: "MultipleChoice",
+              answer,
+              choices,
+              type,
             };
           });
-          const questionRes = await createQuestion(...questionPayload);
+          const questionRes = await createQuestion({
+            exam: examResult._id,
+            questions: questionPayload,
+          });
           if (questionRes.status === 200) {
             notification.success({
               message: "Exam Creation",
               description: "Exam created successfully.",
             });
+            navigate("/create-exam");
           } else {
             notification.error({
               message: "Exam Creation",
@@ -117,13 +151,13 @@ const CreateExam = () => {
         </Form.Item>
         <Form.Item
           name={"examDuration"}
-          label={"Duration"}
+          label={"Duration (hours)"}
           rules={[
             { required: true, message: "Please add a valid exam duration" },
           ]}
         >
           <InputNumber
-            placeholder="Enter exam duration"
+            placeholder="Enter exam duration (ex. 1)"
             min={1}
             style={{ width: "100%" }}
           />
@@ -147,17 +181,17 @@ const CreateExam = () => {
         </Form.Item>
         <Form.List
           name="questions"
-          // rules={[
-          //   {
-          //     validator: async (_, names) => {
-          //       if (!names || names.length < 5) {
-          //         return Promise.reject(
-          //           new Error("Please input atleast 5 questions.")
-          //         );
-          //       }
-          //     },
-          //   },
-          // ]}
+          rules={[
+            {
+              validator: async (_, names) => {
+                if (!names || names.length < 5) {
+                  return Promise.reject(
+                    new Error("Please input atleast 5 questions.")
+                  );
+                }
+              },
+            },
+          ]}
         >
           {(fields, { add, remove }, { errors }) => (
             <>
@@ -193,88 +227,211 @@ const CreateExam = () => {
                   </div>
                   <Form.List
                     name={[field.name, "choices"]}
-                    rules={[
-                      {
-                        validator: async (_, names) => {
-                          if (!names || names.length < 2) {
-                            return Promise.reject(
-                              new Error("Please input at least 2 choices")
-                            );
-                          }
-                        },
-                      },
-                    ]}
+                    // rules={[
+                    //   {
+                    //     validator: async (_, names) => {
+                    //       if (!names || names.length < 2) {
+                    //         return Promise.reject(
+                    //           new Error("Please add at least 2 choices")
+                    //         );
+                    //       }
+                    //     },
+                    //   },
+                    // ]}
+                    // style={{alignSelf: "center"}}
                   >
                     {(answers, { add, remove }, { errors }) => (
-                      <div className="border-gray-300 border-[1px] rounded-lg my-5 p-2">
+                      <div className="border-gray-300 border-[1px] rounded-lg my-5 p-2 min-w-[250px]">
                         {answers.map((ans, index) => (
                           <div
                             className="flex flex-row items-center"
                             key={ans.key}
                           >
-                            <Form.Item
-                              {...ans}
-                              name={[ans.name, "answer"]}
-                              key={[ans.key, "a"]}
-                              valuePropName="checked"
+                            {answerType === "multiple" ? (
+                              <div
+                                key={ans.key}
+                                className="flex flex-row items-center justify-center w-full"
+                              >
+                                <Form.Item
+                                  {...ans}
+                                  hidden
+                                  name={[ans.name, "type"]}
+                                  key={[ans.key, "t1"]}
+                                  initialValue={"MultipleChoice"}
+                                >
+                                  <Input />
+                                </Form.Item>
+                                <Form.Item
+                                  {...ans}
+                                  name={[ans.name, "answer"]}
+                                  key={[ans.key, "a"]}
+                                  valuePropName="checked"
+                                >
+                                  <Checkbox />
+                                </Form.Item>
+                                <Form.Item
+                                  {...ans}
+                                  name={[ans.name, "choice"]}
+                                  key={[ans.key, "c"]}
+                                  label={`Choice ${index + 1}`}
+                                  validateTrigger={["onChange", "onBlur"]}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      whitespace: true,
+                                      message:
+                                        "Please input your choice or delete this field.",
+                                    },
+                                  ]}
+                                  labelCol={{ span: 6 }}
+                                  wrapperCol={{ span: 18 }}
+                                  style={{
+                                    margin: 0,
+                                    marginRight: 10,
+                                    marginBottom: 10,
+                                    width: "100%",
+                                  }}
+                                >
+                                  <Input
+                                    placeholder={`Choice #${index + 1}`}
+                                    style={{ width: "100%", marginRight: 10 }}
+                                  />
+                                </Form.Item>
+                                <Tooltip
+                                  title="Remove this choice field"
+                                  showArrow
+                                >
+                                  <MinusCircleOutlined
+                                    onClick={() => remove(ans.name)}
+                                  />
+                                </Tooltip>
+                              </div>
+                            ) : answerType === "trulse" ? (
+                              <div
+                                key={ans.key}
+                                className="flex flex-row items-center justify-center w-full"
+                              >
+                                <Form.Item
+                                  {...ans}
+                                  hidden
+                                  name={[ans.name, "type"]}
+                                  key={[ans.key, "t2"]}
+                                  initialValue={"TrueOrFalse"}
+                                >
+                                  <Input />
+                                </Form.Item>
+                                <Form.Item
+                                  {...ans}
+                                  name={[ans.name, "answer"]}
+                                  key={[ans.key, "tof"]}
+                                  style={{ margin: 0 }}
+                                  wrapperCol={{ span: 24 }}
+                                >
+                                  <Radio.Group
+                                    size="large"
+                                    style={{ width: "100%", marginRight: 10 }}
+                                  >
+                                    <Radio.Button value={true}>
+                                      True
+                                    </Radio.Button>
+                                    <Radio.Button value={false}>
+                                      False
+                                    </Radio.Button>
+                                  </Radio.Group>
+                                </Form.Item>
+                                <Tooltip
+                                  title="Remove this choice field"
+                                  showArrow
+                                >
+                                  <MinusCircleOutlined
+                                    onClick={() => remove(ans.name)}
+                                  />
+                                </Tooltip>
+                              </div>
+                            ) : (
+                              <div
+                                key={ans.key}
+                                className="flex flex-row items-center w-full"
+                              >
+                                <Form.Item
+                                  {...ans}
+                                  hidden
+                                  name={[ans.name, "type"]}
+                                  key={[ans.key, "t3"]}
+                                  initialValue={"FillInTheBlank"}
+                                >
+                                  <Input />
+                                </Form.Item>
+                                <Form.Item
+                                  {...ans}
+                                  name={[ans.name, "answer"]}
+                                  key={[ans.key, "f"]}
+                                  label={`Answer`}
+                                  validateTrigger={["onChange", "onBlur"]}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      whitespace: true,
+                                      message:
+                                        "Please input your answer or delete this field.",
+                                    },
+                                  ]}
+                                  labelCol={{ span: 6 }}
+                                  wrapperCol={{ span: 18 }}
+                                  style={{
+                                    margin: 0,
+                                    marginRight: 10,
+                                    marginBottom: 10,
+                                    width: "100%",
+                                  }}
+                                >
+                                  <Input
+                                    placeholder={`Answer`}
+                                    style={{ width: "100%", marginRight: 10 }}
+                                  />
+                                </Form.Item>
+                                <Tooltip title="Remove this field" showArrow>
+                                  <MinusCircleOutlined
+                                    onClick={() => remove(ans.name)}
+                                  />
+                                </Tooltip>
+                              </div>
+                            )}
+                            <Dropdown
+                              menu={{ items }}
+                              placement="bottomRight"
+                              trigger={"click"}
                             >
-                              {/* <Tooltip title="Choose as answer"> */}
-                              <Checkbox />
-                              {/* </Tooltip> */}
-                            </Form.Item>
-                            <Form.Item
-                              {...ans}
-                              name={[ans.name, "choice"]}
-                              key={[ans.key, "c"]}
-                              label={`Choice ${index + 1}`}
-                              validateTrigger={["onChange", "onBlur"]}
-                              rules={[
-                                {
-                                  required: true,
-                                  whitespace: true,
-                                  message:
-                                    "Please input your choice or delete this field.",
-                                },
-                              ]}
-                              labelCol={{ span: 6 }}
-                              wrapperCol={{ span: 18 }}
-                              style={{
-                                margin: 0,
-                                marginRight: 10,
-                                marginBottom: 10,
-                                width: "100%",
-                              }}
-                            >
-                              <Input
-                                placeholder={`Choice #${index + 1}`}
-                                style={{ width: "100%", marginRight: 10 }}
-                              />
-                            </Form.Item>
-                            <Tooltip title="Remove this choice field" showArrow>
-                              <MinusCircleOutlined
-                                onClick={() => remove(ans.name)}
-                              />
-                            </Tooltip>
+                              <div className="flex items-center justify-center mb-1">
+                                <Button
+                                  icon={<EllipsisOutlined rotate={90} />}
+                                  type="ghost"
+                                />
+                              </div>
+                            </Dropdown>
                           </div>
                         ))}
-                        <Form.Item
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            width: "100%",
-                          }}
-                        >
-                          <Button
-                            type="dashed"
-                            onClick={() => add()}
-                            style={{ width: "fit-content" }}
-                            icon={<PlusOutlined />}
+                        {answerType === "multiple" ? (
+                          <Form.Item
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              width: "100%",
+                            }}
                           >
-                            Add choices
-                          </Button>
-                          <Form.ErrorList errors={errors} />
-                        </Form.Item>
+                            <Button
+                              type="dashed"
+                              onClick={() => add()}
+                              icon={<PlusOutlined />}
+                            >
+                              Add choices
+                            </Button>
+                            <Form.ErrorList errors={errors} />
+                          </Form.Item>
+                        ) : (
+                          () => form.resetFields()
+                        )}
                       </div>
                     )}
                   </Form.List>

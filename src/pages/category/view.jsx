@@ -39,8 +39,13 @@ const CategoryView = () => {
         onOk={handleEditOk}
         onCancel={handleEditCancel}
       >
-        <label>Category Name:</label>
-        <Input defaultValue={editData?.name} onChange={handleInputChange} />
+        <div key={editData?.name}>
+          <label>Category Name:</label>
+          <Input
+            defaultValue={editData?.name || ""}
+            onChange={handleInputChange}
+          />
+        </div>
       </Modal>
     </div>
   );
