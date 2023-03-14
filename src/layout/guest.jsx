@@ -4,7 +4,6 @@ import {
   LogoutOutlined,
   DashboardOutlined,
   AppstoreOutlined,
-  MailOutlined,
   MenuUnfoldOutlined,
   MenuFoldOutlined,
   FormOutlined,

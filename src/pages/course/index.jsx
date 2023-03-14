@@ -1,23 +1,47 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { getRecord } from "../../lib/api";
 import { PageContext } from "../../lib/context";
-import { getCollectionDetails } from "../../lib/api";
 import CourseView from "./view";
 
 const Course = () => {
-  const id = useParams();
-  const [collectionData, setCollectionData] = useState();
+  const navigate = useNavigate();
+  const [exam, setExam] = useState();
+  const [buttonText, setButtonText] = useState("Attempt Exam");
+  const [hasAttempted, setHasAttempted] = useState(false);
+  const [record, setRecord] = useState()
 
-  // useEffect(() => {
-  //   async function fetchCollectionDetail() {
-  //     const res = await getCollectionDetails(id);
-  //     setCollectionData(res.data.data[0]);
-  //   }
-  //   fetchCollectionDetail();
-  // }, [id]);
+  const fetchCurrentRecord = async (data) => {
+    const res = await getRecord({ exam: data });
+    if (res.status === 200) {
+      let data = res.data.data;
+      setRecord(data);
+      if (data) {
+        if (data.isComplete) {
+          setHasAttempted(true);
+        } else {
+          setButtonText("Continue last attempt");
+          setHasAttempted(false);
+        }
+      } else {
+        setButtonText("Attempt Exam");
+        setHasAttempted(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem("currentExam"));
+    setExam(data);
+    fetchCurrentRecord(data._id);
+  }, []);
 
   const values = {
-    collectionData,
+    exam,
+    navigate,
+    hasAttempted,
+    buttonText,
+    record,
   };
   return (
     <PageContext.Provider value={values}>

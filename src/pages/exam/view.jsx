@@ -21,16 +21,12 @@ const ExamView = () => {
       <div className="flex flex-row w-full items-center justify-between">
         <p className="font-bold text-3xl m-5">Exam</p>
         <div className="pr-4">
-          {/* <Link to={"/create-exam"} state={{ onFinish: onFinish, someOtherData: "test"}}>
-            Create
-          </Link> */}
           <Button type="primary" size="large" onClick={handleCreate}>
             Create
           </Button>
         </div>
       </div>
       <Table
-        // rowKey={data?.cat_id}
         loading={loading}
         dataSource={data ?? []}
         columns={columns}

@@ -28,7 +28,7 @@ const Exam = () => {
       if (data.length) {
         const tempData = data.map((val, index) => {
           return {
-            no: index+1,
+            no: index + 1,
             id: val?._id,
             time_start: moment(val?.dateTimeStart).format("LLL"),
             time_end: moment(val?.dateTimeEnd).format("LLL"),
@@ -37,7 +37,7 @@ const Exam = () => {
             category: val?.category?.name,
             questions: val?.questions,
             date_modified: moment(val?.log.pop()?.createdAt).format("LLL"),
-          }
+          };
         });
         setData(tempData);
         setLoading(false);

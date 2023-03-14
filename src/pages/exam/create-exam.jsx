@@ -179,6 +179,45 @@ const CreateExam = () => {
             style={{ width: "100%" }}
           />
         </Form.Item>
+        {/* <Form.List name="sections">
+            {(sections, {add, remove}, {errors}) => (
+              <>
+              {sections.map((section, index) => (
+                <>
+                <Form.Item
+                  {...sections}
+                  label="Section"
+                  name={[section.name, "section"]}
+                  key={[section.key, "sec"]}
+                >
+                  <Input />
+                </Form.Item>
+                <Tooltip title="Remove this section" showArrow>
+                      <MinusCircleOutlined onClick={() => remove(section.name)} />
+                    </Tooltip>
+                </>
+              ))}
+              <Form.Item
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "100%",
+                }}
+              >
+                <Button
+                  type="dashed"
+                  onClick={() => add()}
+                  style={{ width: "fit-content" }}
+                  icon={<PlusOutlined />}
+                >
+                  Add section field
+                </Button>
+                <Form.ErrorList errors={errors} />
+              </Form.Item>
+              </>
+            )}
+        </Form.List> */}
         <Form.List
           name="questions"
           rules={[
@@ -196,9 +235,9 @@ const CreateExam = () => {
           {(fields, { add, remove }, { errors }) => (
             <>
               {fields.map((field, index) => (
-                <>
+                <div key={field.key}>
                   <Divider />
-                  <div className="flex flex-row items-center" key={field.key}>
+                  <div className="flex flex-row items-center">
                     <Form.Item
                       {...field}
                       label={`Question ${index + 1}`}
@@ -240,202 +279,213 @@ const CreateExam = () => {
                     // ]}
                     // style={{alignSelf: "center"}}
                   >
-                    {(answers, { add, remove }, { errors }) => (
-                      <div className="border-gray-300 border-[1px] rounded-lg my-5 p-2 min-w-[250px]">
-                        {answers.map((ans, index) => (
-                          <div
-                            className="flex flex-row items-center"
-                            key={ans.key}
-                          >
-                            {answerType === "multiple" ? (
-                              <div
-                                key={ans.key}
-                                className="flex flex-row items-center justify-center w-full"
-                              >
-                                <Form.Item
-                                  {...ans}
-                                  hidden
-                                  name={[ans.name, "type"]}
-                                  key={[ans.key, "t1"]}
-                                  initialValue={"MultipleChoice"}
+                    {(answers, { add, remove }, { errors }) => {
+                      if (answerType !== "multiple") {
+                        answers.map((item) => remove(item.name));
+                        answers = [{
+                          fieldKey: 0,
+                          isListField: true,
+                          key: 0,
+                          name: 0,
+                        }]
+                      }
+                      return (
+                        <div className="border-gray-300 border-[1px] rounded-lg my-5 p-2 min-w-[250px]">
+                          {answers.map((ans, index) => (
+                            <div
+                              className="flex flex-row items-center"
+                              key={ans.key}
+                            >
+                              {answerType === "multiple" ? (
+                                <div
+                                  key={ans.key}
+                                  className="flex flex-row items-center justify-center w-full"
                                 >
-                                  <Input />
-                                </Form.Item>
-                                <Form.Item
-                                  {...ans}
-                                  name={[ans.name, "answer"]}
-                                  key={[ans.key, "a"]}
-                                  valuePropName="checked"
-                                >
-                                  <Checkbox />
-                                </Form.Item>
-                                <Form.Item
-                                  {...ans}
-                                  name={[ans.name, "choice"]}
-                                  key={[ans.key, "c"]}
-                                  label={`Choice ${index + 1}`}
-                                  validateTrigger={["onChange", "onBlur"]}
-                                  rules={[
-                                    {
-                                      required: true,
-                                      whitespace: true,
-                                      message:
-                                        "Please input your choice or delete this field.",
-                                    },
-                                  ]}
-                                  labelCol={{ span: 6 }}
-                                  wrapperCol={{ span: 18 }}
-                                  style={{
-                                    margin: 0,
-                                    marginRight: 10,
-                                    marginBottom: 10,
-                                    width: "100%",
-                                  }}
-                                >
-                                  <Input
-                                    placeholder={`Choice #${index + 1}`}
-                                    style={{ width: "100%", marginRight: 10 }}
-                                  />
-                                </Form.Item>
-                                <Tooltip
-                                  title="Remove this choice field"
-                                  showArrow
-                                >
-                                  <MinusCircleOutlined
-                                    onClick={() => remove(ans.name)}
-                                  />
-                                </Tooltip>
-                              </div>
-                            ) : answerType === "trulse" ? (
-                              <div
-                                key={ans.key}
-                                className="flex flex-row items-center justify-center w-full"
-                              >
-                                <Form.Item
-                                  {...ans}
-                                  hidden
-                                  name={[ans.name, "type"]}
-                                  key={[ans.key, "t2"]}
-                                  initialValue={"TrueOrFalse"}
-                                >
-                                  <Input />
-                                </Form.Item>
-                                <Form.Item
-                                  {...ans}
-                                  name={[ans.name, "answer"]}
-                                  key={[ans.key, "tof"]}
-                                  style={{ margin: 0 }}
-                                  wrapperCol={{ span: 24 }}
-                                >
-                                  <Radio.Group
-                                    size="large"
-                                    style={{ width: "100%", marginRight: 10 }}
+                                  <Form.Item
+                                    {...ans}
+                                    hidden
+                                    name={[ans.name, "type"]}
+                                    key={[ans.key, "t1"]}
+                                    initialValue={"MultipleChoice"}
                                   >
-                                    <Radio.Button value={true}>
-                                      True
-                                    </Radio.Button>
-                                    <Radio.Button value={false}>
-                                      False
-                                    </Radio.Button>
-                                  </Radio.Group>
-                                </Form.Item>
-                                <Tooltip
-                                  title="Remove this choice field"
-                                  showArrow
+                                    <Input />
+                                  </Form.Item>
+                                  <Form.Item
+                                    {...ans}
+                                    name={[ans.name, "answer"]}
+                                    key={[ans.key, "a"]}
+                                    valuePropName="checked"
+                                  >
+                                    <Checkbox />
+                                  </Form.Item>
+                                  <Form.Item
+                                    {...ans}
+                                    name={[ans.name, "choice"]}
+                                    key={[ans.key, "c"]}
+                                    label={`Choice ${index + 1}`}
+                                    validateTrigger={["onChange", "onBlur"]}
+                                    rules={[
+                                      {
+                                        required: true,
+                                        whitespace: true,
+                                        message:
+                                          "Please input your choice or delete this field.",
+                                      },
+                                    ]}
+                                    labelCol={{ span: 6 }}
+                                    wrapperCol={{ span: 18 }}
+                                    style={{
+                                      margin: 0,
+                                      marginRight: 10,
+                                      marginBottom: 10,
+                                      width: "100%",
+                                    }}
+                                  >
+                                    <Input
+                                      placeholder={`Choice #${index + 1}`}
+                                      style={{ width: "100%", marginRight: 10 }}
+                                    />
+                                  </Form.Item>
+                                  <Tooltip
+                                    title="Remove this choice field"
+                                    showArrow
+                                  >
+                                    <MinusCircleOutlined
+                                      onClick={() => remove(ans.name)}
+                                    />
+                                  </Tooltip>
+                                </div>
+                              ) : answerType === "trulse" ? (
+                                <div
+                                  key={ans.key}
+                                  className="flex flex-row items-center justify-center w-full"
                                 >
-                                  <MinusCircleOutlined
-                                    onClick={() => remove(ans.name)}
-                                  />
-                                </Tooltip>
-                              </div>
-                            ) : (
-                              <div
-                                key={ans.key}
-                                className="flex flex-row items-center w-full"
+                                  <Form.Item
+                                    {...ans}
+                                    hidden
+                                    name={[ans.name, "type"]}
+                                    key={[ans.key, "t2"]}
+                                    initialValue={"TrueOrFalse"}
+                                  >
+                                    <Input />
+                                  </Form.Item>
+                                  <Form.Item
+                                    {...ans}
+                                    name={[ans.name, "answer"]}
+                                    key={[ans.key, "tof"]}
+                                    style={{ margin: 0 }}
+                                    wrapperCol={{ span: 24 }}
+                                  >
+                                    <Radio.Group
+                                      size="large"
+                                      style={{ width: "100%", marginRight: 10 }}
+                                    >
+                                      <Radio.Button value={true}>
+                                        True
+                                      </Radio.Button>
+                                      <Radio.Button value={false}>
+                                        False
+                                      </Radio.Button>
+                                    </Radio.Group>
+                                  </Form.Item>
+                                  <Tooltip
+                                    title="Remove this choice field"
+                                    showArrow
+                                  >
+                                    <MinusCircleOutlined
+                                      onClick={() => remove(ans.name)}
+                                    />
+                                  </Tooltip>
+                                </div>
+                              ) : (
+                                <div
+                                  key={ans.key}
+                                  className="flex flex-row items-center w-full"
+                                >
+                                  <Form.Item
+                                    {...ans}
+                                    hidden
+                                    name={[ans.name, "type"]}
+                                    key={[ans.key, "t3"]}
+                                    initialValue={"FillInTheBlank"}
+                                  >
+                                    <Input />
+                                  </Form.Item>
+                                  <Form.Item
+                                    {...ans}
+                                    name={[ans.name, "answer"]}
+                                    key={[ans.key, "f"]}
+                                    label={`Answer`}
+                                    validateTrigger={["onChange", "onBlur"]}
+                                    rules={[
+                                      {
+                                        required: true,
+                                        whitespace: true,
+                                        message:
+                                          "Please input your answer or delete this field.",
+                                      },
+                                    ]}
+                                    labelCol={{ span: 6 }}
+                                    wrapperCol={{ span: 18 }}
+                                    style={{
+                                      margin: 0,
+                                      marginRight: 10,
+                                      marginBottom: 10,
+                                      width: "100%",
+                                    }}
+                                  >
+                                    <Input
+                                      placeholder={`Answer`}
+                                      style={{ width: "100%", marginRight: 10 }}
+                                    />
+                                  </Form.Item>
+                                  <Tooltip title="Remove this field" showArrow>
+                                    <MinusCircleOutlined
+                                      onClick={() => remove(ans.name)}
+                                    />
+                                  </Tooltip>
+                                </div>
+                              )}
+                              <Dropdown
+                                menu={{ items }}
+                                placement="bottomRight"
+                                trigger={"click"}
                               >
-                                <Form.Item
-                                  {...ans}
-                                  hidden
-                                  name={[ans.name, "type"]}
-                                  key={[ans.key, "t3"]}
-                                  initialValue={"FillInTheBlank"}
-                                >
-                                  <Input />
-                                </Form.Item>
-                                <Form.Item
-                                  {...ans}
-                                  name={[ans.name, "answer"]}
-                                  key={[ans.key, "f"]}
-                                  label={`Answer`}
-                                  validateTrigger={["onChange", "onBlur"]}
-                                  rules={[
-                                    {
-                                      required: true,
-                                      whitespace: true,
-                                      message:
-                                        "Please input your answer or delete this field.",
-                                    },
-                                  ]}
-                                  labelCol={{ span: 6 }}
-                                  wrapperCol={{ span: 18 }}
-                                  style={{
-                                    margin: 0,
-                                    marginRight: 10,
-                                    marginBottom: 10,
-                                    width: "100%",
-                                  }}
-                                >
-                                  <Input
-                                    placeholder={`Answer`}
-                                    style={{ width: "100%", marginRight: 10 }}
+                                <div className="flex items-center justify-center mb-1">
+                                  <Button
+                                    icon={<EllipsisOutlined rotate={90} />}
+                                    type="ghost"
                                   />
-                                </Form.Item>
-                                <Tooltip title="Remove this field" showArrow>
-                                  <MinusCircleOutlined
-                                    onClick={() => remove(ans.name)}
-                                  />
-                                </Tooltip>
-                              </div>
-                            )}
-                            <Dropdown
-                              menu={{ items }}
-                              placement="bottomRight"
-                              trigger={"click"}
+                                </div>
+                              </Dropdown>
+                            </div>
+                          ))}
+                          {answerType === "multiple" ? (
+                            <Form.Item
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                width: "100%",
+                              }}
                             >
-                              <div className="flex items-center justify-center mb-1">
-                                <Button
-                                  icon={<EllipsisOutlined rotate={90} />}
-                                  type="ghost"
-                                />
-                              </div>
-                            </Dropdown>
-                          </div>
-                        ))}
-                        {answerType === "multiple" ? (
-                          <Form.Item
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              width: "100%",
-                            }}
-                          >
-                            <Button
-                              type="dashed"
-                              onClick={() => add()}
-                              icon={<PlusOutlined />}
-                            >
-                              Add choices
-                            </Button>
-                            <Form.ErrorList errors={errors} />
-                          </Form.Item>
-                        ) : (
-                          () => form.resetFields()
-                        )}
-                      </div>
-                    )}
+                              <Button
+                                type="dashed"
+                                onClick={() => add()}
+                                icon={<PlusOutlined />}
+                              >
+                                Add choices
+                              </Button>
+                              <Form.ErrorList errors={errors} />
+                            </Form.Item>
+                          ) : (
+                            () => form.resetFields()
+                          )}
+                        </div>
+                      );
+                    }}
                   </Form.List>
-                </>
+                </div>
               ))}
               <Form.Item
                 style={{

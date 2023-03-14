@@ -14,6 +14,8 @@ import Course from "../pages/course";
 import Category from "../pages/category";
 import Exam from "../pages/exam";
 import CreateExam from "../pages/exam/create-exam";
+import Profile from "../pages/profile";
+import AttemptExam from "../pages/exam/attempt-exam";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -25,14 +27,14 @@ export const router = createBrowserRouter(
       </Route>
       <Route element={<PrivateLayout />} errorElement={<ErrorPage />}>
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/course">
-          <Route path=":id" element={<Course />} />
-        </Route>
+        <Route path="/course/:id" element={<Course />} />
         <Route path="/exam" element={<Exam />}>
           <Route path=":id" element={<CreateExam />} />
         </Route>
+        <Route path="/exam/:id/attempt" element={<AttemptExam />} />
         <Route path="/create-exam" element={<CreateExam />} />
         <Route path="/category" element={<Category />} />
+        <Route path="/profile/:id" element={<Profile />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Route>
     </>

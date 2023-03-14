@@ -2,7 +2,7 @@ import { UnorderedListOutlined, FieldTimeOutlined } from "@ant-design/icons";
 import { Select } from "antd";
 import React from "react";
 
-const Timeline = () => {
+const Timeline = ({children}) => {
   const handleChange = (e) => {
     console.log(e);
   };
@@ -36,6 +36,7 @@ const Timeline = () => {
           suffixIcon={<UnorderedListOutlined />}
         />
       </div>
+      {children}
     </div>
   );
 };

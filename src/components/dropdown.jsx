@@ -15,12 +15,17 @@ const CustomDropdown = () => {
   const [items, setItems] = useState([
     {
       key: "1",
+      label: (
+        <div onClick={() => navigate(`profile/${auth.getUserInfo().id}`)}>
+          Profile
+        </div>
+      ),
+    },
+    {
+      key: "2",
       label: <div onClick={handleLogout}>Logout</div>,
     },
   ]);
-  const handleCreateExam = () => {
-    navigate("/exam")
-  };
 
   useEffect(() => {
     if (role) {
@@ -28,10 +33,20 @@ const CustomDropdown = () => {
         setItems([
           {
             key: "1",
-            label: <div onClick={handleCreateExam}>Create Exam</div>,
+            label: (
+              <div onClick={() => navigate(`profile/${auth.getUserInfo().id}`)}>
+                Profile
+              </div>
+            ),
           },
           {
             key: "2",
+            label: (
+              <div onClick={() => navigate("create-exam")}>Create Exam</div>
+            ),
+          },
+          {
+            key: "3",
             label: <div onClick={handleLogout}>Logout</div>,
           },
         ]);

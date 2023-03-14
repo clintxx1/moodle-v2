@@ -59,10 +59,13 @@ export const deleteCategory = ({ id }) => {
  *
  * */
 
-export const getUsers = (data) => {
+export const getUser = (data) => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/user`, { data }, dataHeader())
+      .get(`${process.env.REACT_APP_API_URL}/user`, {
+        params: { _id: data },
+        ...dataHeader(),
+      })
       .then((res) => resolve(res))
       .catch((err) => reject(err));
   });
@@ -99,7 +102,10 @@ export const deleteUser = (data) => {
 export const getRecord = (data) => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/record`, data, dataHeader())
+      .get(`${process.env.REACT_APP_API_URL}/currentRecord`, {
+        params: data,
+        ...dataHeader(),
+      })
       .then((res) => resolve(res))
       .catch((err) => reject(err));
   });
