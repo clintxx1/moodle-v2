@@ -220,17 +220,17 @@ const CreateExam = () => {
         </Form.List> */}
         <Form.List
           name="questions"
-          rules={[
-            {
-              validator: async (_, names) => {
-                if (!names || names.length < 5) {
-                  return Promise.reject(
-                    new Error("Please input atleast 5 questions.")
-                  );
-                }
-              },
-            },
-          ]}
+          // rules={[
+          //   {
+          //     validator: async (_, names) => {
+          //       if (!names || names.length < 5) {
+          //         return Promise.reject(
+          //           new Error("Please input atleast 5 questions.")
+          //         );
+          //       }
+          //     },
+          //   },
+          // ]}
         >
           {(fields, { add, remove }, { errors }) => (
             <>

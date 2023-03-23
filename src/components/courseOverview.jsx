@@ -11,7 +11,7 @@ const CourseOverview = ({children}) => {
     console.log(e);
   };
   return (
-    <div className="flex flex-col bg-white p-4 mx-2 mb-2 w-full h-fit border-gray-300 border-[1px]">
+    <div className="flex flex-col bg-white p-4 mx-2 mb-2 w-full h-fit border-gray-300 border-[1px] min-h-[300px]">
     {/* <div className="flex flex-col bg-white p-4 mx-2 md:mb-2 mb-0 w-full h-fit border-gray-300 border-[1px]"> */}
       <div className="text-lg font-extralight">Course overview</div>
       <div className="flex flex-row justify-between">

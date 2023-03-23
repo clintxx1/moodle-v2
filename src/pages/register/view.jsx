@@ -37,13 +37,32 @@ const RegisterView = () => {
           <div className="rounded-md shadow-sm mt-8 space-y-6">
             <div className="my-4">
               <Form.Item
-                name="username"
-                label="Username"
+                name="firstName"
+                label="First name"
                 rules={[
-                  { required: true, message: "Please input your username" },
+                  { required: true, message: "Please input your first name" },
                 ]}
               >
-                <Input id="username" placeholder="Username" />
+                <Input id="firstName" placeholder="First name" />
+              </Form.Item>
+            </div>
+            <div className="my-4">
+              <Form.Item
+                name="middleName"
+                label="Middle name"
+              >
+                <Input id="middleName" placeholder="Middle name" />
+              </Form.Item>
+            </div>
+            <div className="my-4">
+              <Form.Item
+                name="lastName"
+                label="Lastname"
+                rules={[
+                  { required: true, message: "Please input your lastname" },
+                ]}
+              >
+                <Input id="lastName" placeholder="Lastname" />
               </Form.Item>
             </div>
             <div className="my-4">

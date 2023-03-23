@@ -25,7 +25,7 @@ const Exam = () => {
       if (auth.getRole() === "student") id = auth.getUserInfo()?._id;
       const res = await getExam(id);
       let data = res.data.data;
-      if (data.length) {
+      if (data.length > 0) {
         const tempData = data.map((val, index) => {
           return {
             no: index + 1,
@@ -40,8 +40,10 @@ const Exam = () => {
           };
         });
         setData(tempData);
-        setLoading(false);
+      } else {
+        setData([]);
       }
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }

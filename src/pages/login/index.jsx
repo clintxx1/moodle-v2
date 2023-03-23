@@ -22,7 +22,7 @@ const Login = () => {
           return;
         }
         const data = await res.json();
-        if(data){
+        if (data) {
           auth.storeToken(data.token);
           window.location.href = "/dashboard";
         }

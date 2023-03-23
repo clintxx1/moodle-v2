@@ -1,5 +1,5 @@
 import React, { createRef, useEffect, useState } from "react";
-import { Layout, Menu, Button } from "antd";
+import { Layout, Menu, Button, Badge, Dropdown } from "antd";
 import {
   LogoutOutlined,
   DashboardOutlined,
@@ -7,10 +7,23 @@ import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
   FormOutlined,
+  BellOutlined,
+  SmileOutlined,
 } from "@ant-design/icons";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import CustomDropdown from "../components/dropdown";
 import auth from "../lib/services";
+import { fetchNotifications } from "../lib/api";
+
+/**
+ *
+ * @returns Dropdown payload
+ * key
+ * label
+ * icon
+ * disabled
+ *
+ */
 
 const GuestLayout = () => {
   const { Header, Content, Footer } = Layout;
@@ -24,7 +37,7 @@ const GuestLayout = () => {
   const getSelectedKey = () => {
     switch (location.pathname) {
       case "/dashboard":
-        return "dashboard"
+        return "dashboard";
       case "/exam":
         return "exam";
       case "/category":
@@ -50,7 +63,7 @@ const GuestLayout = () => {
   ]);
 
   const navigateTo = (e) => {
-    if(e.key === 'logout'){
+    if (e.key === "logout") {
       auth.clear();
     }
     navigate(e.key);
@@ -61,7 +74,7 @@ const GuestLayout = () => {
   };
 
   useEffect(() => {
-    if(role && ["admin", "superadmin"].includes(role)){
+    if (role && ["admin", "superadmin"].includes(role)) {
       setItems([
         {
           key: "dashboard",
@@ -83,12 +96,25 @@ const GuestLayout = () => {
           icon: <LogoutOutlined />,
           label: "Logout",
         },
-      ])
+      ]);
     }
-  }, [role])
+  }, [role]);
+
+  useEffect(() => {
+    const getNotifications = async () => {
+      try {
+        const res = await fetchNotifications();
+        console.log(res);
+      } catch (error) {
+        console.log("ERR: ", error);
+      }
+    }
+    getNotifications();
+  }, [])
+  
 
   return (
-    <Layout>
+    <div className="flex flex-col">
       <Header
         style={{
           display: "flex",
@@ -118,6 +144,22 @@ const GuestLayout = () => {
           <p className="text-sm md:text-xl">NwSSU LMS - Moodle</p>
         </div>
         <div className="flex flex-row items-center justify-center">
+          {auth.getRole() === "superadmin" && (
+            <div className="mr-5 mb-1">
+              <Badge count={1} className="test">
+                <Dropdown
+                  arrow
+                  placement="bottomRight"
+                  trigger="click"
+                  menu={{
+                    items,
+                  }}
+                >
+                  <BellOutlined style={{ fontSize: 22 }} />
+                </Dropdown>
+              </Badge>
+            </div>
+          )}
           <p className="mr-2 text-base font-semibold">{`${firstName ?? ""} ${
             middleName ?? ""
           } ${lastName ?? ""}`}</p>
@@ -158,7 +200,7 @@ const GuestLayout = () => {
           </Footer>
         </Layout>
       </Layout>
-    </Layout>
+    </div>
   );
 };
 

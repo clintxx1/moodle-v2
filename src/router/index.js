@@ -16,6 +16,7 @@ import Exam from "../pages/exam";
 import CreateExam from "../pages/exam/create-exam";
 import Profile from "../pages/profile";
 import AttemptExam from "../pages/exam/attempt-exam";
+import auth from "../lib/services";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -32,8 +33,12 @@ export const router = createBrowserRouter(
           <Route path=":id" element={<CreateExam />} />
         </Route>
         <Route path="/exam/:id/attempt" element={<AttemptExam />} />
-        <Route path="/create-exam" element={<CreateExam />} />
-        <Route path="/category" element={<Category />} />
+        {["superadmin", "admin"].includes(auth.getRole()) && (
+          <Route path="/create-exam" element={<CreateExam />} />
+        )}
+        {["superadmin", "admin"].includes(auth.getRole()) && (
+          <Route path="/category" element={<Category />} />
+        )}
         <Route path="/profile/:id" element={<Profile />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Route>

@@ -231,3 +231,19 @@ export const submitExam = (data) => {
   });
 };
 /**END OF EXAM API */
+
+/**NOTIFICATIONS API */
+export const fetchNotifications = () => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/notifications`, {
+        headers: dataHeader(),
+      })
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};

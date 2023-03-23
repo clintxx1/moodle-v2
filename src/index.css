@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.ant-dropdown-menu {
+    max-height: 250px;
+    max-width: 250px;
+    overflow: auto;
+}

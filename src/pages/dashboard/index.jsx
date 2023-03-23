@@ -5,7 +5,7 @@ import { getExam } from "../../lib/api";
 
 const Dashboard = () => {
   const [loader, setLoader] = useState(false);
-  const [data, setData] = useState([])
+  const [data, setData] = useState([]);
   //   [
   //   {
   //     key: 1,
@@ -38,22 +38,28 @@ const Dashboard = () => {
   // ]);
 
   useEffect(() => {
-    setLoader(true)
+    setLoader(true);
     async function fetchExams() {
-      const res = await getExam();
-      let data = res.data.data;
-      // console.log("EXAM: ", data);
-      // const examData = data.map((item, index) => {
-      //   return {
-      //     key: index + data.length + 1,
-      //     dept: item.category.name,
-      //     subject: item.category.name,
-      //     progress: 0,
-      //     id: item._id,
-      //   };
-      // });
-      setData(data);
-      setLoader(false);
+      try {
+        const res = await getExam();
+        let data = res.data.data;
+        // console.log("EXAM: ", data);
+        // const examData = data.map((item, index) => {
+        //   return {
+        //     key: index + data.length + 1,
+        //     dept: item.category.name,
+        //     subject: item.category.name,
+        //     progress: 0,
+        //     id: item._id,
+        //   };
+        // });
+        setData(data);
+        setLoader(false);
+      } catch (error) {
+        console.error("ERR: ", error);
+        setLoader(false);
+        setData([]);
+      }
     }
     fetchExams();
   }, []);
