@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/static/css/main.5e3695f0.css",
-    "main.js": "/static/js/main.393e7016.js",
+    "main.js": "/static/js/main.37449d22.js",
     "static/media/nwssu.png": "/static/media/nwssu.c20e47a9ade19c83bb12.png",
     "index.html": "/index.html",
     "main.5e3695f0.css.map": "/static/css/main.5e3695f0.css.map",
-    "main.393e7016.js.map": "/static/js/main.393e7016.js.map"
+    "main.37449d22.js.map": "/static/js/main.37449d22.js.map"
   },
   "entrypoints": [
     "static/css/main.5e3695f0.css",
-    "static/js/main.393e7016.js"
+    "static/js/main.37449d22.js"
   ]
 }
