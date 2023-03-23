@@ -14,27 +14,43 @@ const DashboardView = () => {
       <div className="flex flex-col w-full h-full lg:mr-2 mr-4">
         <div className="flex w-full h-fit lg:mr-2 mr-4 min-h-[300px]">
           {loader ? (
-            <div className="flex flex-row w-full bg-white items-center justify-center border-gray-300 border-[1px] mr-4 overflow-hidden mb-2">
+            <div className="flex flex-row w-full bg-white items-center justify-center border-gray-300 border-[1px] overflow-hidden m-2">
               <Spin tip="Fetching recently accessed courses..." size="large" />
             </div>
           ) : (
             <RecentlyAccessedCourse>
-              {data.map((item) => {
-                return <CourseCard key={item._id} {...item} />;
-              })}
+              {data && data.length > 0 ? (
+                data.map((item) => {
+                  return <CourseCard key={item._id} {...item} />;
+                })
+              ) : (
+                <div className="flex flex-row items-center justify-center m-2 pt-20 w-full">
+                  <p className="text-base italic text-gray-400">
+                    No recent course accessed.
+                  </p>
+                </div>
+              )}
             </RecentlyAccessedCourse>
           )}
         </div>
         <div className="flex w-full h-fit lg:mr-2 mr-4">
           {loader ? (
-            <div className="flex flex-row w-full min-h-[300px] bg-white items-center justify-center border-gray-300 border-[1px] mr-4 overflow-hidden">
+            <div className="flex flex-row w-full min-h-[300px] bg-white items-center justify-center border-gray-300 border-[1px] overflow-hidden m-2">
               <Spin tip="Fetching data..." size="large" />
             </div>
           ) : (
             <CourseOverview>
-              {data.map((item) => {
-                return <Course {...item} key={item._id} />;
-              })}
+              {data && data.length > 0 ? (
+                data.map((item) => {
+                  return <Course {...item} key={item._id} />;
+                })
+              ) : (
+                <div className="flex flex-row items-center justify-center p-36 w-full">
+                  <p className="text-base italic text-gray-400">
+                    No courses available
+                  </p>
+                </div>
+              )}
             </CourseOverview>
           )}
         </div>
