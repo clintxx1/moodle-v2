@@ -25,6 +25,33 @@ import { fetchNotifications } from "../lib/api";
  *
  */
 
+const items = [
+  {
+    key: "dashboard",
+    icon: <DashboardOutlined />,
+    label: "Dashboard",
+    accountType: ["admin", "superadmin", "student"],
+  },
+  {
+    key: "exam",
+    icon: <FormOutlined />,
+    label: "Exam",
+    accountType: ["admin", "superadmin"],
+  },
+  {
+    key: "category",
+    icon: <AppstoreOutlined />,
+    label: "Category",
+    accountType: ["admin", "superadmin"],
+  },
+  {
+    key: "logout",
+    icon: <LogoutOutlined />,
+    label: "Logout",
+    accountType: ["admin", "superadmin", "student"],
+  },
+];
+
 const GuestLayout = () => {
   const { Header, Content, Footer } = Layout;
   const location = useLocation();
@@ -33,6 +60,34 @@ const GuestLayout = () => {
   const ref = createRef();
   const navigate = useNavigate();
   const { firstName, middleName, lastName } = auth.getUserInfo();
+  const [notification, setNotification] = useState([]);
+
+  useEffect(() => {
+    const getNotifications = async () => {
+      try {
+        const res = await fetchNotifications();
+        if (res?.data?.data) {
+          const customFormat = res.data.data.map((item) => {
+            return {
+              key: item._id,
+              label: notificationRenderer(item),
+            };
+          });
+          setNotification(customFormat);
+          console.log(res);
+        }
+      } catch (error) {
+        console.log("ERR: ", error);
+      }
+    };
+    getNotifications();
+  }, []);
+
+  useEffect(() => {
+    if (notification) {
+      console.log("NOTIF: ", notification);
+    }
+  }, [notification]);
 
   const getSelectedKey = () => {
     switch (location.pathname) {
@@ -49,19 +104,6 @@ const GuestLayout = () => {
     }
   };
 
-  const [items, setItems] = useState([
-    {
-      key: "dashboard",
-      icon: <DashboardOutlined />,
-      label: "Dashboard",
-    },
-    {
-      key: "logout",
-      icon: <LogoutOutlined />,
-      label: "Logout",
-    },
-  ]);
-
   const navigateTo = (e) => {
     if (e.key === "logout") {
       auth.clear();
@@ -73,45 +115,32 @@ const GuestLayout = () => {
     setCollapsed(!collapsed);
   };
 
-  useEffect(() => {
-    if (role && ["admin", "superadmin"].includes(role)) {
-      setItems([
-        {
-          key: "dashboard",
-          icon: <DashboardOutlined />,
-          label: "Dashboard",
-        },
-        {
-          key: "exam",
-          icon: <FormOutlined />,
-          label: "Exam",
-        },
-        {
-          key: "category",
-          icon: <AppstoreOutlined />,
-          label: "Category",
-        },
-        {
-          key: "logout",
-          icon: <LogoutOutlined />,
-          label: "Logout",
-        },
-      ]);
-    }
-  }, [role]);
+  const notificationRenderer = (data) => {
+    return (
+      <>
+        <div className="flex flex-row items-center justify-between">
+          <p>APPROVAL</p>
+          <p>{`${data.firstName} ${data?.middleName} ${data.lastName}`}</p>
+        </div>
+      </>
+    );
+  };
 
-  useEffect(() => {
-    const getNotifications = async () => {
-      try {
-        const res = await fetchNotifications();
-        console.log(res);
-      } catch (error) {
-        console.log("ERR: ", error);
-      }
-    }
-    getNotifications();
-  }, [])
-  
+  const customShit = [
+    {
+      key: "1",
+      label: <div>test</div>,
+      onClick: () => console.log("TEST")
+    },
+    // {
+    //   key: "2",
+    //   label: <div onClick={() => console.log("TEST")}>test</div>,
+    // },
+    // {
+    //   key: "3",
+    //   label: <div onClick={() => console.log("TEST")}>test</div>,
+    // },
+  ];
 
   return (
     <div className="flex flex-col">
@@ -147,16 +176,11 @@ const GuestLayout = () => {
           {auth.getRole() === "superadmin" && (
             <div className="mr-5 mb-1">
               <Badge count={1} className="test">
-                <Dropdown
-                  arrow
-                  placement="bottomRight"
-                  trigger="click"
-                  menu={{
-                    items,
-                  }}
-                >
-                  <BellOutlined style={{ fontSize: 22 }} />
-                </Dropdown>
+                <Dropdown.Button arrow placement="bottomRight" menu={{ items }}>
+                  <div>
+                    <BellOutlined style={{ fontSize: 22 }} />
+                  </div>
+                </Dropdown.Button>
               </Badge>
             </div>
           )}
@@ -186,7 +210,7 @@ const GuestLayout = () => {
             theme="light"
             selectedKeys={getSelectedKey()}
             mode="inline"
-            items={items}
+            items={items.filter((e) => e.accountType.includes(auth.getRole()))}
             onClick={navigateTo}
             inlineCollapsed={collapsed}
           />

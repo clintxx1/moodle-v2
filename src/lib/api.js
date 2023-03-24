@@ -232,13 +232,26 @@ export const submitExam = (data) => {
 };
 /**END OF EXAM API */
 
-/**NOTIFICATIONS API */
+/**START OF NOTIFICATIONS API */
 export const fetchNotifications = () => {
   return new Promise((resolve, reject) => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/notifications`, {
-        headers: dataHeader(),
+        ...dataHeader(),
       })
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+export const approveUser = (data) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .put(`${process.env.REACT_APP_API_URL}/approveUser`, data, dataHeader())
       .then((res) => {
         resolve(res);
       })
