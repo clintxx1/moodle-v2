@@ -84,7 +84,7 @@ export const deleteUser = (data) => {
   return new Promise((resolve, reject) => {
     axios
       .delete(`${process.env.REACT_APP_API_URL}/user`, {
-        data: data,
+        data: { _id: data },
         ...dataHeader(),
       })
       .then((res) => resolve(res))
@@ -251,7 +251,11 @@ export const fetchNotifications = () => {
 export const approveUser = (data) => {
   return new Promise((resolve, reject) => {
     axios
-      .put(`${process.env.REACT_APP_API_URL}/approveUser`, data, dataHeader())
+      .put(
+        `${process.env.REACT_APP_API_URL}/approveUser`,
+        { _id: data },
+        dataHeader()
+      )
       .then((res) => {
         resolve(res);
       })
@@ -260,3 +264,25 @@ export const approveUser = (data) => {
       });
   });
 };
+
+export const approveAllUser = () => {
+  return new Promise((resolve, reject) => {
+    axios
+      .put(`${process.env.REACT_APP_API_URL}/approveAllUsers`, {}, dataHeader())
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const rejectAllUser = () => {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(`${process.env.REACT_APP_API_URL}/rejectAllUsers`, {
+        ...dataHeader(),
+      })
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+/**END OF NOTIFICATIONS API */

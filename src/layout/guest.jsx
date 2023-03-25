@@ -1,5 +1,5 @@
 import React, { createRef, useEffect, useState } from "react";
-import { Layout, Menu, Button, Badge, Dropdown } from "antd";
+import { Layout, Menu, Button, Badge, notification } from "antd";
 import {
   LogoutOutlined,
   DashboardOutlined,
@@ -8,22 +8,17 @@ import {
   MenuFoldOutlined,
   FormOutlined,
   BellOutlined,
-  SmileOutlined,
 } from "@ant-design/icons";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import CustomDropdown from "../components/dropdown";
 import auth from "../lib/services";
-import { fetchNotifications } from "../lib/api";
-
-/**
- *
- * @returns Dropdown payload
- * key
- * label
- * icon
- * disabled
- *
- */
+import {
+  approveAllUser,
+  approveUser,
+  deleteUser,
+  fetchNotifications,
+  rejectAllUser,
+} from "../lib/api";
 
 const items = [
   {
@@ -55,39 +50,16 @@ const items = [
 const GuestLayout = () => {
   const { Header, Content, Footer } = Layout;
   const location = useLocation();
-  const role = auth.getRole();
   const [collapsed, setCollapsed] = useState(true);
   const ref = createRef();
   const navigate = useNavigate();
   const { firstName, middleName, lastName } = auth.getUserInfo();
-  const [notification, setNotification] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [openNotification, setOpenNotification] = useState(false);
 
   useEffect(() => {
-    const getNotifications = async () => {
-      try {
-        const res = await fetchNotifications();
-        if (res?.data?.data) {
-          const customFormat = res.data.data.map((item) => {
-            return {
-              key: item._id,
-              label: notificationRenderer(item),
-            };
-          });
-          setNotification(customFormat);
-          console.log(res);
-        }
-      } catch (error) {
-        console.log("ERR: ", error);
-      }
-    };
     getNotifications();
   }, []);
-
-  useEffect(() => {
-    if (notification) {
-      console.log("NOTIF: ", notification);
-    }
-  }, [notification]);
 
   const getSelectedKey = () => {
     switch (location.pathname) {
@@ -104,6 +76,17 @@ const GuestLayout = () => {
     }
   };
 
+  const getNotifications = async () => {
+    try {
+      const res = await fetchNotifications();
+      if (res?.data?.data) {
+        setNotifications(res?.data?.data);
+      }
+    } catch (error) {
+      console.error("ERR: ", error);
+    }
+  };
+
   const navigateTo = (e) => {
     if (e.key === "logout") {
       auth.clear();
@@ -115,32 +98,97 @@ const GuestLayout = () => {
     setCollapsed(!collapsed);
   };
 
-  const notificationRenderer = (data) => {
+  const handleApproveUser = async (id, index) => {
+    const res = await approveUser(id);
+    if (res.status === 200) {
+      getNotifications();
+    } else {
+      notification.error({
+        message: "User Approval",
+        description: "Approval Failed.",
+      });
+    }
+  };
+
+  const handleRejectUser = async (id, index) => {
+    const res = await deleteUser(id);
+    if (res.status === 200) {
+      getNotifications();
+    } else {
+      notification.error({
+        message: "User Rejection",
+        description: "Rejection Failed.",
+      });
+    }
+  };
+
+  const notificationRenderer = (data, index) => {
+    const { _id, firstName, middleName, lastName, role } = data;
     return (
-      <>
-        <div className="flex flex-row items-center justify-between">
-          <p>APPROVAL</p>
-          <p>{`${data.firstName} ${data?.middleName} ${data.lastName}`}</p>
+      <div
+        className="flex flex-col items-start justify-between h-16 p-3 pr-4 border-b-[1px] border-b-gray-300"
+        key={_id}
+      >
+        <div className="flex flex-row items-center justify-between w-full">
+          <p className="font-semibold">APPROVAL</p>
+          <p>{`${firstName ?? ""} ${middleName ?? ""} ${lastName ?? ""}`}</p>
         </div>
-      </>
+        <div className="flex flex-row items-center justify-between w-full mt-2">
+          <div className="flex flex-row items-center justify-between">
+            <p className="font-semibold">{"Type: "}&nbsp;</p>
+            <p className="">{role.toUpperCase()}</p>
+          </div>
+          <div className="flex flex-row items-center justify-center gap-3">
+            <Button size="small" onClick={() => handleApproveUser(_id, index)}>
+              Approve
+            </Button>
+            <Button
+              size="small"
+              type="primary"
+              danger
+              onClick={() => handleRejectUser(_id, index)}
+            >
+              Reject
+            </Button>
+          </div>
+        </div>
+      </div>
     );
   };
 
-  const customShit = [
-    {
-      key: "1",
-      label: <div>test</div>,
-      onClick: () => console.log("TEST")
-    },
-    // {
-    //   key: "2",
-    //   label: <div onClick={() => console.log("TEST")}>test</div>,
-    // },
-    // {
-    //   key: "3",
-    //   label: <div onClick={() => console.log("TEST")}>test</div>,
-    // },
-  ];
+  const handleOpenNotifications = () => {
+    setOpenNotification((isOpen) => !isOpen);
+  };
+
+  const getNotificationCount = (data) => {
+    if (data && data.length === 0) return 0;
+
+    return data.length;
+  };
+
+  const handleApproveAllUser = async () => {
+    const res = await approveAllUser();
+    if (res.status === 200) {
+      getNotifications();
+    } else {
+      notification.error({
+        message: "User Approval",
+        description: "Approval Failed.",
+      });
+    }
+  };
+
+  const handleRejectAllUser = async () => {
+    const res = await rejectAllUser();
+    if (res.status === 200) {
+      getNotifications();
+    } else {
+      notification.error({
+        message: "User Rejection",
+        description: "Rejection Failed.",
+      });
+    }
+  };
 
   return (
     <div className="flex flex-col">
@@ -175,12 +223,62 @@ const GuestLayout = () => {
         <div className="flex flex-row items-center justify-center">
           {auth.getRole() === "superadmin" && (
             <div className="mr-5 mb-1">
-              <Badge count={1} className="test">
-                <Dropdown.Button arrow placement="bottomRight" menu={{ items }}>
-                  <div>
-                    <BellOutlined style={{ fontSize: 22 }} />
+              <Badge
+                count={getNotificationCount(notifications)}
+                className="relative"
+              >
+                <BellOutlined
+                  style={{ fontSize: 22, cursor: "pointer" }}
+                  onClick={handleOpenNotifications}
+                />
+                {openNotification &&
+                  notifications &&
+                  notifications.length > 1 && (
+                    <div
+                      className={`absolute mt-[267px] border-gray-400 text-end right-0 z-50 overflow-auto bg-slate-200 pr-4 ${
+                        notifications.length <= 4
+                          ? "w-96 rounded-b-lg border-x-[1px] border-b-[1px]"
+                          : "mr-4 rounded-bl-lg w-[367px] border-b-[1px]"
+                      }`}
+                    >
+                      <Button
+                        size="small"
+                        type="link"
+                        onClick={handleApproveAllUser}
+                      >
+                        Accept All
+                      </Button>
+                      <Button
+                        size="small"
+                        type="link"
+                        danger
+                        onClick={handleRejectAllUser}
+                      >
+                        Reject All
+                      </Button>
+                    </div>
+                  )}
+                {openNotification && (
+                  <div className="absolute w-96 h-72 right-0 z-40 overflow-auto rounded-lg mt-1 border-[1px] border-gray-400 bg-white">
+                    {notifications && notifications.length > 0 ? (
+                      <div
+                        className={`${
+                          notifications.length <= 4 ? "mb-0" : "mb-6"
+                        }`}
+                      >
+                        {notifications.map((item, idx) => {
+                          return notificationRenderer(item, idx);
+                        })}
+                      </div>
+                    ) : (
+                      <div className="flex flex-row items-center justify-center h-full w-full">
+                        <p className="text-base italic text-gray-400">
+                          You have no notifications
+                        </p>
+                      </div>
+                    )}
                   </div>
-                </Dropdown.Button>
+                )}
               </Badge>
             </div>
           )}
