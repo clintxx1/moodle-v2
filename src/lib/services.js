@@ -26,15 +26,9 @@ const auth = {
     return null;
   },
   getUserInfo() {
-    // if (localStorage.getItem("user_token")) {
-    //   const data = JSON.parse(localStorage.getItem("user_token"))[0];
-    //   return data;
-    // }
     const token = this.getToken();
     if (token) {
       const decodedData = this.decode(token);
-      //TODO - Fix data passed from API
-      // return decodedData.user;
       return decodedData;
     }
     return null;

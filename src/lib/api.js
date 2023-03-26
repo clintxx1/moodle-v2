@@ -59,6 +59,19 @@ export const deleteCategory = ({ id }) => {
  *
  * */
 
+export const register = (data) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/register`, data, dataHeader())
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
 export const getUser = (data) => {
   return new Promise((resolve, reject) => {
     axios

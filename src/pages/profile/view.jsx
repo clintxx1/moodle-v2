@@ -4,7 +4,8 @@ import React, { useContext } from "react";
 import { PageContext } from "../../lib/context";
 
 const ProfileView = () => {
-  const { user } = useContext(PageContext);
+  const { firstName, middleName, lastName, email, age, gender, status } =
+    useContext(PageContext);
 
   return (
     <div className="w-auto items-start min-h-[500px] bg-white border-[1px] border-gray-300 m-2">
@@ -22,13 +23,21 @@ const ProfileView = () => {
             <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500">First name:</dt>
               <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                {user?.firstName ?? ""}
+                {firstName ?? "N/A"}
+              </dd>
+            </div>
+            <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+              <dt className="text-sm font-medium text-gray-500">
+                Middle name:
+              </dt>
+              <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                {middleName ?? "N/A"}
               </dd>
             </div>
             <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500">Lastname:</dt>
               <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                {user?.lastName ?? ""}
+                {lastName ?? "N/A"}
               </dd>
             </div>
             <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -36,31 +45,29 @@ const ProfileView = () => {
                 Email address:
               </dt>
               <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                {user?.email ?? ""}
+                {email ?? "N/A"}
               </dd>
             </div>
             <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500">Age</dt>
               <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                {user?.age ?? ""}
+                {age ?? "N/A"}
               </dd>
             </div>
             <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500">Gender</dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                {user?.gender ?? ""}
+              <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0 capitalize">
+                {gender ?? "N/A"}
               </dd>
             </div>
             <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500">
                 Account Status:
               </dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                {user?.status === "approved" && (
+              <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0 capitalize">
                   <Tag icon={<CheckCircleOutlined />} color="success">
-                    Approved
+                    {status ?? "N/A"}
                   </Tag>
-                )}
               </dd>
             </div>
           </dl>

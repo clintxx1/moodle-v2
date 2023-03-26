@@ -45,22 +45,30 @@ const AttemptExam = () => {
   useEffect(() => {
     if (params && params.id) {
       async function attemptExamination() {
-        const res = await attemptExam({ exam: params.id });
-        setExam(res?.data);
+        try {
+          const res = await attemptExam({ exam: params.id });
+          setExam(res?.data);
 
-        //TIME
-        if (res?.data?.record) {
-          let deadline = new Date(res?.data?.record?.timeStart);
-          deadline.setHours(deadline.getHours() + res?.data?.exam?.duration);
-          clearTimer(deadline);
-        }
+          //TIME
+          if (res?.data?.record) {
+            let deadline = new Date(res?.data?.record?.timeStart);
+            deadline.setHours(deadline.getHours() + res?.data?.exam?.duration);
+            clearTimer(deadline);
+          }
 
-        //PAGE
-        let maxPage = res?.data?.exam?.quetions?.length;
-        if (maxPage > 5) {
-          setPage(Math.ceil(maxPage / 5));
-        } else {
-          setPage(1);
+          //PAGE
+          let maxPage = res?.data?.exam?.quetions?.length;
+          if (maxPage > 5) {
+            setPage(Math.ceil(maxPage / 5));
+          } else {
+            setPage(1);
+          }
+        } catch (error) {
+          if (error?.response?.status === 401) {
+            handleSubmit(form.getFieldsValue());
+            setShowResult(true);
+          }
+          console.error("EXAM ERR: ", error);
         }
       }
       attemptExamination();
@@ -196,20 +204,22 @@ const AttemptExam = () => {
                   })}
                 <div className="flex flex-row items-center justify-between p-4">
                   <div>
-                    {currentPage > 1 && (
+                    {/* {currentPage > 1 && (
                       <Button type="primary" onClick={handlePrevQuestion}>
                         Previous
                       </Button>
-                    )}
+                    )} */}
                     <Button
                       type="primary"
-                      htmlType={`${buttonType}`}
-                      onClick={handleNextQuestion}
+                      htmlType="submit"
+                      // htmlType={`${buttonType}`}
+                      // onClick={handleNextQuestion}
                     >
-                      {buttonText}
+                      {/* {buttonText} */}
+                      Submit
                     </Button>
                   </div>
-                  <span>{`Page ${currentPage} of ${page}`}</span>
+                  {/* <span>{`Page ${currentPage} of ${page}`}</span> */}
                 </div>
               </Form>
             </div>
@@ -224,7 +234,7 @@ const AttemptExam = () => {
                 {exam?.itemNumber ?? <Tag color={"error"}>Incomplete</Tag>}
               </Descriptions.Item>
               <Descriptions.Item label="Grade/100">
-                {exam?.score ?? 0}
+                {`${exam?.score ? exam?.score : 'Not available'}`}
               </Descriptions.Item>
             </Descriptions>
             <div className="flex flex-row w-full justify-center mt-12">

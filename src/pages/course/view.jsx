@@ -33,7 +33,11 @@ const CourseView = () => {
               </Descriptions.Item>
               {hasAttempted && (
                 <Descriptions.Item label="Score" span={24}>
-                  {`${record?.score} out of ${exam?.itemNumber}`}
+                  {`${
+                    record?.score
+                      ? `${record?.score} out of ${exam?.itemNumber}`
+                      : "Not available"
+                  }`}
                 </Descriptions.Item>
               )}
             </Descriptions>
@@ -46,7 +50,7 @@ const CourseView = () => {
                 {buttonText}
               </Button>
               {hasAttempted && (
-                <p className="italic text-gray-400">
+                <p className="italic text-gray-400 mb-8">
                   No additional attempts allowed.
                 </p>
               )}

@@ -104,7 +104,7 @@ const CreateExam = () => {
               message: "Exam Creation",
               description: "Exam created successfully.",
             });
-            navigate("/create-exam");
+            navigate("/exam");
           } else {
             notification.error({
               message: "Exam Creation",
@@ -299,7 +299,7 @@ const CreateExam = () => {
                               {answerType === "multiple" ? (
                                 <div
                                   key={ans.key}
-                                  className="flex flex-row items-center justify-center w-full"
+                                  className="flex flex-row items-start justify-center w-full"
                                 >
                                   <Form.Item
                                     {...ans}
@@ -316,7 +316,7 @@ const CreateExam = () => {
                                     key={[ans.key, "a"]}
                                     valuePropName="checked"
                                   >
-                                    <Checkbox />
+                                    <Checkbox>Answer</Checkbox>
                                   </Form.Item>
                                   <Form.Item
                                     {...ans}
@@ -350,9 +350,11 @@ const CreateExam = () => {
                                     title="Remove this choice field"
                                     showArrow
                                   >
+                                    <div className="mt-1">
                                     <MinusCircleOutlined
                                       onClick={() => remove(ans.name)}
                                     />
+                                    </div>
                                   </Tooltip>
                                 </div>
                               ) : answerType === "trulse" ? (
@@ -446,7 +448,7 @@ const CreateExam = () => {
                                   </Tooltip>
                                 </div>
                               )}
-                              <Dropdown
+                              {/* <Dropdown
                                 menu={{ items }}
                                 placement="bottomRight"
                                 trigger={"click"}
@@ -457,7 +459,7 @@ const CreateExam = () => {
                                     type="ghost"
                                   />
                                 </div>
-                              </Dropdown>
+                              </Dropdown> */}
                             </div>
                           ))}
                           {answerType === "multiple" ? (

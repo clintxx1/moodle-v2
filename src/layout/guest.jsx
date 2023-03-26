@@ -25,25 +25,25 @@ const items = [
     key: "dashboard",
     icon: <DashboardOutlined />,
     label: "Dashboard",
-    accountType: ["admin", "superadmin", "student"],
+    accounttype: ["admin", "superadmin", "student"],
   },
   {
     key: "exam",
     icon: <FormOutlined />,
     label: "Exam",
-    accountType: ["admin", "superadmin"],
+    accounttype: ["admin", "superadmin"],
   },
   {
     key: "category",
     icon: <AppstoreOutlined />,
     label: "Category",
-    accountType: ["admin", "superadmin"],
+    accounttype: ["admin", "superadmin"],
   },
   {
     key: "logout",
     icon: <LogoutOutlined />,
     label: "Logout",
-    accountType: ["admin", "superadmin", "student"],
+    accounttype: ["admin", "superadmin", "student"],
   },
 ];
 
@@ -131,7 +131,9 @@ const GuestLayout = () => {
       >
         <div className="flex flex-row items-center justify-between w-full">
           <p className="font-semibold">APPROVAL</p>
-          <p>{`${firstName ?? ""} ${middleName ?? ""} ${lastName ?? ""}`}</p>
+          <p>{`${firstName ?? ""} ${`${
+            middleName ? `${middleName[0]}.` : ""
+          }`} ${lastName ?? ""}`}</p>
         </div>
         <div className="flex flex-row items-center justify-between w-full mt-2">
           <div className="flex flex-row items-center justify-between">
@@ -235,10 +237,10 @@ const GuestLayout = () => {
                   notifications &&
                   notifications.length > 1 && (
                     <div
-                      className={`absolute mt-[267px] border-gray-400 text-end right-0 z-50 overflow-auto bg-slate-200 pr-4 ${
+                      className={`absolute mt-[267px] border-gray-400 text-end right-0 z-50 overflow-auto bg-white pr-4 ${
                         notifications.length <= 4
                           ? "w-96 rounded-b-lg border-x-[1px] border-b-[1px]"
-                          : "mr-4 rounded-bl-lg w-[367px] border-b-[1px]"
+                          : "mr-5 rounded-bl-lg w-[363px] border-b-[1px]"
                       }`}
                     >
                       <Button
@@ -282,9 +284,9 @@ const GuestLayout = () => {
               </Badge>
             </div>
           )}
-          <p className="mr-2 text-base font-semibold">{`${firstName ?? ""} ${
-            middleName ?? ""
-          } ${lastName ?? ""}`}</p>
+          <p className="mr-2 text-base font-semibold">{`${firstName ?? ""} ${`${
+            middleName ? `${middleName[0]}.` : ""
+          }`} ${lastName ?? ""}`}</p>
           <CustomDropdown />
         </div>
       </Header>
@@ -308,7 +310,7 @@ const GuestLayout = () => {
             theme="light"
             selectedKeys={getSelectedKey()}
             mode="inline"
-            items={items.filter((e) => e.accountType.includes(auth.getRole()))}
+            items={items.filter((e) => e.accounttype.includes(auth.getRole()))}
             onClick={navigateTo}
             inlineCollapsed={collapsed}
           />
