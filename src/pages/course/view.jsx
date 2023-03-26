@@ -5,7 +5,7 @@ import CourseHeader from "../../components/course-page/courseHeader";
 import { PageContext } from "../../lib/context";
 
 const CourseView = () => {
-  const { exam, navigate, hasAttempted, buttonText, record } =
+  const { exam, navigate, hasAttempted, buttonText, record, isNotOpen } =
     useContext(PageContext);
   return (
     <>
@@ -42,13 +42,17 @@ const CourseView = () => {
               )}
             </Descriptions>
             <div className="flex flex-row w-full justify-center mt-12">
-              <Button
-                hidden={hasAttempted}
-                type="primary"
-                onClick={() => navigate(`/exam/${exam?._id}/attempt`)}
-              >
-                {buttonText}
-              </Button>
+              {isNotOpen ? (
+                <p className="italic text-gray-400 mb-8">Exam is not open.</p>
+              ) : (
+                <Button
+                  hidden={hasAttempted}
+                  type="primary"
+                  onClick={() => navigate(`/exam/${exam?._id}/attempt`)}
+                >
+                  {buttonText}
+                </Button>
+              )}
               {hasAttempted && (
                 <p className="italic text-gray-400 mb-8">
                   No additional attempts allowed.
