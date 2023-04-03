@@ -10,18 +10,19 @@ const AttemptExam = () => {
   const params = useParams();
   const timerRef = useRef(null);
   const [exam, setExam] = useState();
-  const [page, setPage] = useState();
+  // const [page, setPage] = useState();
   const [recordId, setRecordId] = useState();
   const [showResult, setShowResult] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [buttonText, setButtonText] = useState("Next");
-  const [buttonType, setButtonType] = useState("button");
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const [buttonText, setButtonText] = useState("Next");
+  // const [buttonType, setButtonType] = useState("button");
   const [timer, setTimer] = useState("00:00:00");
+  const [fetchTime, setFetchTime] = useState(0)
 
-  const handleNextQuestion = () => {
-    if (currentPage === page) return;
-    setCurrentPage((page) => page + 1);
-  };
+  // const handleNextQuestion = () => {
+  //   if (currentPage === page) return;
+  //   setCurrentPage((page) => page + 1);
+  // };
 
   const updateCurrentRecord = async (question, answer) => {
     const payload = {
@@ -29,9 +30,13 @@ const AttemptExam = () => {
       question: question?._id,
       answer,
     };
-    const res = await updateRecord(payload);
-    if (res.status === 201) {
-      setRecordId(res.data.record?._id);
+    if (fetchTime.getTime() >= new Date().getTime()){
+      const res = await updateRecord(payload);
+      if (res.status === 201) {
+        setRecordId(res.data.record?._id);
+      }
+    } else {
+      handleSubmit();
     }
   };
 
@@ -53,19 +58,24 @@ const AttemptExam = () => {
           if (res?.data?.record) {
             let deadline = new Date(res?.data?.record?.timeStart);
             deadline.setHours(deadline.getHours() + res?.data?.exam?.duration);
-            clearTimer(deadline);
+            if(deadline.getTime() >= new Date().getTime()){
+              setFetchTime(deadline);
+              clearTimer(deadline);
+            } else {
+              handleSubmit();
+            }
           }
 
           //PAGE
-          let maxPage = res?.data?.exam?.quetions?.length;
-          if (maxPage > 5) {
-            setPage(Math.ceil(maxPage / 5));
-          } else {
-            setPage(1);
-          }
+          // let maxPage = res?.data?.exam?.quetions?.length;
+          // if (maxPage > 5) {
+          //   setPage(Math.ceil(maxPage / 5));
+          // } else {
+          //   setPage(1);
+          // }
         } catch (error) {
           if (error?.response?.status === 401) {
-            handleSubmit(form.getFieldsValue());
+            handleSubmit();
             setShowResult(true);
           }
           console.error("EXAM ERR: ", error);
@@ -89,7 +99,7 @@ const AttemptExam = () => {
     };
   };
 
-  const startTimer = (e) => {
+  const startTimer = async (e) => {
     let { total, hours, minutes, seconds } = getTimeRemaining(e);
     if (total >= 0) {
       setTimer(
@@ -108,18 +118,14 @@ const AttemptExam = () => {
       startTimer(e);
     }, 1000);
     timerRef.current = id;
-    if (id === "00:00:00") {
-      handleSubmit(form.getFieldsValue());
-      setShowResult(true);
-    }
   };
 
-  const handlePrevQuestion = () => {
-    if (currentPage === 1) {
-      return;
-    }
-    setCurrentPage((p) => p - 1);
-  };
+  // const handlePrevQuestion = () => {
+  //   if (currentPage === 1) {
+  //     return;
+  //   }
+  //   setCurrentPage((p) => p - 1);
+  // };
 
   const getCurrentChoice = (questionId) => {
     let filteredQuestion = exam.record.answers.filter(
@@ -130,21 +136,12 @@ const AttemptExam = () => {
     return filteredQuestion[0]?.answer;
   };
 
-  useEffect(() => {
-    if (currentPage === page) {
-      setButtonText("Submit");
-      setButtonType("submit");
-    }
-  }, [currentPage, page]);
-
-  // const watchAnswer = (question, answer) => {
-  //   let payload = {
-  //     question: question._id,
-  //     answer,
+  // useEffect(() => {
+  //   if (currentPage === page) {
+  //     setButtonText("Submit");
+  //     setButtonType("submit");
   //   }
-
-  //   const res = await updateRecord
-  // }
+  // }, [currentPage, page]);
 
   return (
     <>
@@ -234,7 +231,7 @@ const AttemptExam = () => {
                 {exam?.itemNumber ?? <Tag color={"error"}>Incomplete</Tag>}
               </Descriptions.Item>
               <Descriptions.Item label="Grade/100">
-                {`${exam?.score ? exam?.score : 'Not available'}`}
+                {`${exam?.score ? exam?.score : "Not available"}`}
               </Descriptions.Item>
             </Descriptions>
             <div className="flex flex-row w-full justify-center mt-12">

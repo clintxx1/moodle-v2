@@ -37,6 +37,15 @@ const RegisterView = () => {
           <div className="rounded-md shadow-sm mt-8 space-y-6">
             <div className="my-4">
               <Form.Item
+                name={"schoolId"}
+                label={"School ID"}
+                rules={[
+                  { required: true, message: "Please input your school ID" },
+                ]}
+              >
+                <Input placeholder="School ID" />
+              </Form.Item>
+              <Form.Item
                 name="firstName"
                 label="First name"
                 rules={[

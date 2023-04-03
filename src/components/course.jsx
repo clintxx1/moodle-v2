@@ -8,6 +8,7 @@ const Course = (props) => {
     progress = 0,
     _id,
     category: { name: category },
+    title,
   } = props;
   const navigate = useNavigate();
 
@@ -36,7 +37,7 @@ const Course = (props) => {
                 onClick={handleGoToCourse}
                 className="pl-5 pb-3 hover:underline inline-block cursor-pointer"
               >
-                {category}
+                {title}
               </div>
             </Col>
           </Row>

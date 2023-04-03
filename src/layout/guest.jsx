@@ -19,6 +19,7 @@ import {
   fetchNotifications,
   rejectAllUser,
 } from "../lib/api";
+import OutsideClickHandler from "react-outside-click-handler";
 
 const items = [
   {
@@ -158,7 +159,8 @@ const GuestLayout = () => {
     );
   };
 
-  const handleOpenNotifications = () => {
+  const handleOpenNotifications = (e) => {
+    e.stopPropagation();
     setOpenNotification((isOpen) => !isOpen);
   };
 
@@ -233,54 +235,58 @@ const GuestLayout = () => {
                   style={{ fontSize: 22, cursor: "pointer" }}
                   onClick={handleOpenNotifications}
                 />
-                {openNotification &&
-                  notifications &&
-                  notifications.length > 1 && (
-                    <div
-                      className={`absolute mt-[267px] border-gray-400 text-end right-0 z-50 overflow-auto bg-white pr-4 ${
-                        notifications.length <= 4
-                          ? "w-96 rounded-b-lg border-x-[1px] border-b-[1px]"
-                          : "mr-5 rounded-bl-lg w-[363px] border-b-[1px]"
-                      }`}
-                    >
-                      <Button
-                        size="small"
-                        type="link"
-                        onClick={handleApproveAllUser}
-                      >
-                        Accept All
-                      </Button>
-                      <Button
-                        size="small"
-                        type="link"
-                        danger
-                        onClick={handleRejectAllUser}
-                      >
-                        Reject All
-                      </Button>
-                    </div>
-                  )}
-                {openNotification && (
-                  <div className="absolute w-96 h-72 right-0 z-40 overflow-auto rounded-lg mt-1 border-[1px] border-gray-400 bg-white">
-                    {notifications && notifications.length > 0 ? (
+                <OutsideClickHandler
+                  onOutsideClick={() => setOpenNotification(false)}
+                >
+                  {openNotification &&
+                    notifications &&
+                    notifications.length > 1 && (
                       <div
-                        className={`${
-                          notifications.length <= 4 ? "mb-0" : "mb-6"
+                        className={`absolute mt-[267px] border-gray-400 text-end right-0 z-50 overflow-auto bg-white pr-4 ${
+                          notifications.length <= 4
+                            ? "w-96 rounded-b-lg border-x-[1px] border-b-[1px]"
+                            : "mr-5 rounded-bl-lg w-[363px] border-b-[1px]"
                         }`}
                       >
-                        {notifications.map((item, idx) => {
-                          return notificationRenderer(item, idx);
-                        })}
-                      </div>
-                    ) : (
-                      <div className="flex flex-row items-center justify-center h-full w-full">
-                        <p className="text-base italic text-gray-400">
-                          You have no notifications
-                        </p>
+                        <Button
+                          size="small"
+                          type="link"
+                          onClick={handleApproveAllUser}
+                        >
+                          Accept All
+                        </Button>
+                        <Button
+                          size="small"
+                          type="link"
+                          danger
+                          onClick={handleRejectAllUser}
+                        >
+                          Reject All
+                        </Button>
                       </div>
                     )}
-                  </div>
-                )}
+                  {openNotification && (
+                    <div className="absolute w-96 h-72 right-0 z-40 overflow-auto rounded-lg mt-1 border-[1px] border-gray-400 bg-white">
+                      {notifications && notifications.length > 0 ? (
+                        <div
+                          className={`${
+                            notifications.length <= 4 ? "mb-0" : "mb-6"
+                          }`}
+                        >
+                          {notifications.map((item, idx) => {
+                            return notificationRenderer(item, idx);
+                          })}
+                        </div>
+                      ) : (
+                        <div className="flex flex-row items-center justify-center h-full w-full">
+                          <p className="text-base italic text-gray-400">
+                            You have no notifications
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </OutsideClickHandler>
               </Badge>
             </div>
           )}

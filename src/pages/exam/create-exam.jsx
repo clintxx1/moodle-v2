@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  EllipsisOutlined,
   MinusCircleOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
@@ -8,8 +7,6 @@ import {
   Button,
   Checkbox,
   DatePicker,
-  Divider,
-  Dropdown,
   Form,
   Input,
   InputNumber,
@@ -26,29 +23,31 @@ import { useNavigate } from "react-router-dom";
 const CreateExam = () => {
   const navigate = useNavigate();
   const { RangePicker } = DatePicker;
+  const { TextArea } = Input;
   const [form] = Form.useForm();
   const [data, setData] = useState();
   const [loading, setLoading] = useState(false);
-  const [answerType, setAnswerType] = useState("multiple");
+  const answerType = "multiple";
+  // const [answerType, setAnswerType] = useState("multiple");
 
-  const items = [
-    {
-      label: (
-        <div onClick={() => setAnswerType("multiple")}>Multiple choice</div>
-      ),
-      key: "multiple",
-    },
-    {
-      label: <div onClick={() => setAnswerType("trulse")}>True or false</div>,
-      key: "trulse",
-    },
-    {
-      label: (
-        <div onClick={() => setAnswerType("fill")}>Fill in the blanks</div>
-      ),
-      key: "fill",
-    },
-  ];
+  // const items = [
+  //   {
+  //     label: (
+  //       <div onClick={() => setAnswerType("multiple")}>Multiple choice</div>
+  //     ),
+  //     key: "multiple",
+  //   },
+  //   {
+  //     label: <div onClick={() => setAnswerType("trulse")}>True or false</div>,
+  //     key: "trulse",
+  //   },
+  //   {
+  //     label: (
+  //       <div onClick={() => setAnswerType("fill")}>Fill in the blanks</div>
+  //     ),
+  //     key: "fill",
+  //   },
+  // ];
 
   const fetchCategories = async () => {
     const res = await getCategories();
@@ -70,6 +69,8 @@ const CreateExam = () => {
     // return;
     if (values.questions && values.questions.length) {
       const newVal = {
+        title: values.examTitle,
+        description: values.examDescription ?? null,
         category: values.examCategory,
         duration: values.examDuration,
         dateTimeStart: moment(dayjs(values.startEndTime[0]).format()).format(
@@ -143,11 +144,32 @@ const CreateExam = () => {
         wrapperCol={{ span: 18 }}
       >
         <Form.Item
+          name={"examTitle"}
+          label={"Title"}
+          rules={[{ required: true, message: "Please add an exam title" }]}
+        >
+          <Input 
+            style={{ width: "100%" }}
+          />
+        </Form.Item>
+        <Form.Item
           name={"examCategory"}
           label={"Category"}
           rules={[{ required: true, message: "Please choose a category" }]}
         >
           <Select loading={loading} options={data} />
+        </Form.Item>
+        <Form.Item
+          name={"examDescription"}
+          label={"Description"}
+        >
+        <TextArea
+          showCount
+          maxLength={200}
+          style={{ height: 120 }}
+          // onChange={onChange}
+          placeholder="Enter exam description"
+        />
         </Form.Item>
         <Form.Item
           name={"examDuration"}
@@ -164,16 +186,16 @@ const CreateExam = () => {
         </Form.Item>
         <Form.Item
           name="startEndTime"
-          label={"Select time of exam"}
+          label={"Timing"}
           rules={[{ required: true, message: "Please add a deadline" }]}
         >
           <RangePicker
             showTime={{
               hideDisabledOptions: true,
-              defaultValue: [
-                moment("00:00", "hh:mm a"),
-                moment("11:59", "hh:mm a"),
-              ],
+              // defaultValue: [
+              //   moment("00:00", "hh:mm a"),
+              //   moment("11:59", "hh:mm a"),
+              // ],
             }}
             format="YYYY-MM-DD hh:mm a"
             style={{ width: "100%" }}
@@ -235,8 +257,7 @@ const CreateExam = () => {
           {(fields, { add, remove }, { errors }) => (
             <>
               {fields.map((field, index) => (
-                <div key={field.key}>
-                  <Divider />
+                <div key={field.key} className="border-gray-300 border-[1px] rounded-lg my-5 p-2 min-w-[250px]">
                   <div className="flex flex-row items-center">
                     <Form.Item
                       {...field}

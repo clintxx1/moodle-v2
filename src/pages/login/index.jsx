@@ -11,7 +11,7 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const payload = {
-      email: emailRef.current.value,
+      schoolId: emailRef.current.value,
       password: passwordRef.current.value,
     };
     auth

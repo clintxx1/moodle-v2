@@ -6,11 +6,16 @@ const CourseHeader = (props) => {
     schoolYear = "22-23",
     course = "BS in Agricuture",
     category: { name="" } = {},
+    title,
+    description,
   } = props;
   return (
     <div className="flex flex-col justify-between w-auto h-[180px] p-6 m-2 border-[1px] bg-white border-gray-300">
       <div className="font-normal text-3xl">
-        {`${name ?? "#"} | ${course} | ${name ?? "#"} | ${schoolYear}`}
+        {`${name ?? "#"} | ${course} | ${title ?? "#"} | ${schoolYear}`}
+      </div>
+      <div className="text-sm text-gray-400">
+        {description ?? ""}
       </div>
       <div className="flex flex-row text-green-800 text-base">
         <Link to={"/dashboard"}>
