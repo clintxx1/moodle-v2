@@ -35,9 +35,9 @@ const items = [
     accounttype: ["admin", "superadmin"],
   },
   {
-    key: "category",
+    key: "records",
     icon: <AppstoreOutlined />,
-    label: "Category",
+    label: "Records",
     accounttype: ["admin", "superadmin"],
   },
   {
@@ -68,10 +68,10 @@ const GuestLayout = () => {
         return "dashboard";
       case "/exam":
         return "exam";
-      case "/category":
-        return "3";
+      case "/records":
+        return "records";
       case "/logout":
-        return "4";
+        return "logout";
       default:
         return "dashboard";
     }

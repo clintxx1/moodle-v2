@@ -11,7 +11,7 @@ import ErrorPage from "../pages/error";
 import { PrivateLayout, PublicLayout } from "./modules";
 import Register from "../pages/register";
 import Course from "../pages/course";
-import Category from "../pages/category";
+import Records from "../pages/records";
 import Exam from "../pages/exam";
 import CreateExam from "../pages/exam/create-exam";
 import Profile from "../pages/profile";
@@ -29,15 +29,17 @@ export const router = createBrowserRouter(
       <Route element={<PrivateLayout />} errorElement={<ErrorPage />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/course/:id" element={<Course />} />
-        <Route path="/exam" element={<Exam />}>
-          <Route path=":id" element={<CreateExam />} />
-        </Route>
+        {["superadmin", "admin"].includes(auth.getRole()) && (
+          <Route path="/exam" element={<Exam />}>
+            <Route path=":id" element={<CreateExam />} />
+          </Route>
+        )}
         <Route path="/exam/:id/attempt" element={<AttemptExam />} />
         {["superadmin", "admin"].includes(auth.getRole()) && (
           <Route path="/create-exam" element={<CreateExam />} />
         )}
         {["superadmin", "admin"].includes(auth.getRole()) && (
-          <Route path="/category" element={<Category />} />
+          <Route path="/records" element={<Records />} />
         )}
         <Route path="/profile/:id" element={<Profile />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />

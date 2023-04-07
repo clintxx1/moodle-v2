@@ -1,4 +1,4 @@
-import { Button, Descriptions, Form, Radio, Tag } from "antd";
+import { Button, Descriptions, Form, Radio, Tag, notification } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import CourseHeader from "../../components/course-page/courseHeader";
@@ -75,6 +75,10 @@ const AttemptExam = () => {
           // }
         } catch (error) {
           if (error?.response?.status === 401) {
+            notification.error({
+              message: "Exam Progress",
+              description: error?.response?.data?.message ?? "Something went wrong."
+            })
             handleSubmit();
             setShowResult(true);
           }

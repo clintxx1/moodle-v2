@@ -132,6 +132,21 @@ export const updateRecord = (data) => {
       .catch((err) => reject(err));
   });
 };
+
+export const fetchAllRecords = () => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/fetchAllStudents`, {
+        ...dataHeader(),
+      })
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
 /**END OF RECORDS API */
 
 /**
