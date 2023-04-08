@@ -147,6 +147,23 @@ export const fetchAllRecords = () => {
       });
   });
 };
+
+export const forceStartExam = (data) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(
+        `${process.env.REACT_APP_API_URL}/forceStartExam`,
+        data,
+        dataHeader()
+      )
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
 /**END OF RECORDS API */
 
 /**
@@ -256,6 +273,22 @@ export const submitExam = (data) => {
       .post(`${process.env.REACT_APP_API_URL}/exam/submit`, data, dataHeader())
       .then((res) => resolve(res))
       .catch((err) => reject(err));
+  });
+};
+
+export const checkExam = (data) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/fetchExamProgress`, {
+        params: data,
+        ...dataHeader(),
+      })
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((err) => {
+        reject(err);
+      });
   });
 };
 /**END OF EXAM API */

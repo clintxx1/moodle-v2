@@ -1,12 +1,24 @@
-import { Button, Descriptions } from "antd";
+import { Button, Descriptions, Modal, Tooltip } from "antd";
 import moment from "moment";
 import React, { useContext } from "react";
 import CourseHeader from "../../components/course-page/courseHeader";
 import { PageContext } from "../../lib/context";
+import auth from "../../lib/services";
 
 const CourseView = () => {
-  const { exam, navigate, hasAttempted, buttonText, record, isNotOpen } =
-    useContext(PageContext);
+  const {
+    exam,
+    navigate,
+    hasAttempted,
+    buttonText,
+    record,
+    isNotOpen,
+    fetchStudentsWithoutRec,
+    isModalOpen,
+    showModal,
+    handleCancel,
+    isTaken,
+  } = useContext(PageContext);
   return (
     <>
       {exam ? (
@@ -17,7 +29,7 @@ const CourseView = () => {
           <div className="flex flex-col m-2 border-gray-300 border-[1px] bg-white min-h-[300px] p-4">
             <Descriptions title="Examination details" bordered>
               <Descriptions.Item label="Exam name">
-                {exam?.category.name}
+                {exam?.category.name ?? exam?.category}
               </Descriptions.Item>
               <Descriptions.Item label="No. of items">
                 {exam?.itemNumber}
@@ -45,13 +57,32 @@ const CourseView = () => {
               {isNotOpen ? (
                 <p className="italic text-gray-400 mb-8">Exam is not open.</p>
               ) : (
-                <Button
-                  hidden={hasAttempted}
-                  type="primary"
-                  onClick={() => navigate(`/exam/${exam?._id}/attempt`)}
-                >
-                  {buttonText}
-                </Button>
+                <>
+                  {auth.getRole() === "student" && (
+                    <Button
+                      hidden={hasAttempted}
+                      type="primary"
+                      onClick={() => navigate(`/exam/${exam?._id}/attempt`)}
+                    >
+                      {buttonText}
+                    </Button>
+                  )}
+                  {auth.getRole() === "admin" && (
+                    <>
+                      {!isTaken ? (
+                        <Tooltip title="By clicking this button, it will force to start the exam timer on this current category for all students.">
+                          <Button type="primary" onClick={showModal}>
+                            Start Examination
+                          </Button>
+                        </Tooltip>
+                      ) : (
+                        <p className="italic text-gray-400 mb-8">
+                          All students have started taking the examination.
+                        </p>
+                      )}
+                    </>
+                  )}
+                </>
               )}
               {hasAttempted && (
                 <p className="italic text-gray-400 mb-8">
@@ -66,6 +97,15 @@ const CourseView = () => {
           <p className="text-3xl italic text-gray-400">No information found.</p>
         </div>
       )}
+      <Modal
+        title="Start Exam"
+        open={isModalOpen}
+        onOk={fetchStudentsWithoutRec}
+        onCancel={handleCancel}
+        width={350}
+      >
+        <p>Are you sure you want to start the examination for all students?</p>
+      </Modal>
     </>
   );
 };

@@ -29,16 +29,16 @@ export const router = createBrowserRouter(
       <Route element={<PrivateLayout />} errorElement={<ErrorPage />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/course/:id" element={<Course />} />
-        {["superadmin", "admin"].includes(auth.getRole()) && (
+        {["admin"].includes(auth.getRole()) && (
           <Route path="/exam" element={<Exam />}>
             <Route path=":id" element={<CreateExam />} />
           </Route>
         )}
         <Route path="/exam/:id/attempt" element={<AttemptExam />} />
-        {["superadmin", "admin"].includes(auth.getRole()) && (
+        {["admin"].includes(auth.getRole()) && (
           <Route path="/create-exam" element={<CreateExam />} />
         )}
-        {["superadmin", "admin"].includes(auth.getRole()) && (
+        {["admin"].includes(auth.getRole()) && (
           <Route path="/records" element={<Records />} />
         )}
         <Route path="/profile/:id" element={<Profile />} />

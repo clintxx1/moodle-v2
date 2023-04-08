@@ -12,7 +12,7 @@ import { PageContext } from "../../lib/context";
 import auth from "../../lib/services";
 import ExamView from "./view";
 import { Popconfirm, Space, Tooltip, message, notification } from "antd";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, FolderOpenOutlined } from "@ant-design/icons";
 
 const Exam = () => {
   const navigate = useNavigate();
@@ -130,6 +130,7 @@ const Exam = () => {
       if (data.length > 0) {
         const tempData = data.map((val, index) => {
           return {
+            ...val,
             no: index + 1,
             id: val?._id,
             time_start: moment(val?.dateTimeStart).format("LLL"),
@@ -181,6 +182,17 @@ const Exam = () => {
       title: "Date modified",
       dataIndex: "date_modified",
       key: "date_modified",
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space>
+          <Tooltip title="View Exam Details">
+            <FolderOpenOutlined onClick={handleGoToCourse} />
+          </Tooltip>
+        </Space>
+      ),
     },
   ];
 
@@ -255,6 +267,11 @@ const Exam = () => {
     setEditData();
     setOptionType("Create");
     setIsModalOpen(true);
+  };
+
+  const handleGoToCourse = () => {
+    localStorage.setItem("currentExam", JSON.stringify(data[0]));
+    navigate(`/course/${data[0]?.id}`);
   };
 
   useEffect(() => {
