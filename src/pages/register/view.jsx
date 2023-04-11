@@ -114,7 +114,7 @@ const RegisterView = () => {
                   placeholder="Choose Role"
                   style={{ width: "100%" }}
                   options={[
-                    { label: "Admin", value: "admin" },
+                    { label: "Teacher", value: "admin" },
                     { label: "Student", value: "student" },
                   ]}
                 />
