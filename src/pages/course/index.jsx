@@ -76,8 +76,8 @@ const Course = () => {
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("currentExam"));
     let today = new Date();
+    setExam(data);
     if (new Date(data.dateTimeStart) < today) {
-      setExam(data);
       fetchCurrentRecord(data._id);
       checkExamProgress(data._id)
       setIsNotOpen(false);
