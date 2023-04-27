@@ -18,6 +18,9 @@ const CourseView = () => {
     showModal,
     handleCancel,
     isTaken,
+    isForecastOpen,
+    setIsForecastOpen,
+    handleOpenForecast,
   } = useContext(PageContext);
   return (
     <>
@@ -42,6 +45,9 @@ const CourseView = () => {
               </Descriptions.Item>
               <Descriptions.Item label="Exam end date" span={2}>
                 {moment(exam?.dateTimeEnd).format("LLL")}
+              </Descriptions.Item>
+              <Descriptions.Item label="Forecast" span={2}>
+                <Button type="link" onClick={handleOpenForecast}>Show Forecast</Button>
               </Descriptions.Item>
               {hasAttempted && (
                 <Descriptions.Item label="Score" span={24}>
@@ -105,6 +111,24 @@ const CourseView = () => {
         width={350}
       >
         <p>Are you sure you want to start the examination for all students?</p>
+      </Modal>
+      <Modal
+        title="Student Forecast"
+        open={isForecastOpen}
+        footer={[]}
+        onCancel={() => setIsForecastOpen(false)}
+      >
+        {/**TODO */}
+        <div className="flex flex-col items-center justify-between">
+          {/**CHART */}
+          <div>
+            {/**BAR CHART HERE */}
+          </div>
+          {/**RECORD */}
+          <div>
+            <p>{`${auth.getUserInfo().firstName} ${auth.getUserInfo().middleName ? `${auth.getUserInfo().middleName[0]}.` : ''} ${auth.getUserInfo().lastName}`}</p>
+          </div>
+        </div>
       </Modal>
     </>
   );

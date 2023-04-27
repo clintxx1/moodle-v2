@@ -222,7 +222,7 @@ const GuestLayout = () => {
             alt=""
             onClick={() => (window.location.href = "/")}
           />
-          <p className="text-sm md:text-xl">NwSSU LMS - Moodle</p>
+          <p className="text-sm md:text-xl">BSAG - Mock Exam</p>
         </div>
         <div className="flex flex-row items-center justify-center">
           {auth.getRole() === "superadmin" && (

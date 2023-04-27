@@ -1,18 +1,14 @@
-import React, { useRef } from "react";
+import React from "react";
 import { PageContext } from "../../lib/context";
 import LoginView from "./view";
 import auth from "../../lib/services";
 import { message } from "antd";
 
 const Login = () => {
-  const emailRef = useRef(null);
-  const passwordRef = useRef(null);
-
   const handleSubmit = (e) => {
-    e.preventDefault();
     const payload = {
-      schoolId: emailRef.current.value,
-      password: passwordRef.current.value,
+      schoolId: e.schoolId,
+      password: e.password,
     };
     auth
       .login(payload)
@@ -34,8 +30,6 @@ const Login = () => {
 
   const values = {
     handleSubmit,
-    emailRef,
-    passwordRef,
   };
   return (
     <PageContext.Provider value={values}>

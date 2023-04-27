@@ -14,6 +14,7 @@ const Course = () => {
   const [record, setRecord] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTaken, setIsTaken] = useState(false);
+  const [isForecastOpen, setIsForecastOpen] = useState(false);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -86,6 +87,10 @@ const Course = () => {
     }
   }, []);
 
+  const handleOpenForecast = () => {
+    setIsForecastOpen(true);
+  }
+
   const values = {
     exam,
     navigate,
@@ -98,6 +103,9 @@ const Course = () => {
     showModal,
     handleCancel,
     isTaken,
+    isForecastOpen,
+    setIsForecastOpen,
+    handleOpenForecast,
   };
   return (
     <PageContext.Provider value={values}>

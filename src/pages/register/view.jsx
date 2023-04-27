@@ -1,10 +1,20 @@
 import { LockFilled } from "@ant-design/icons";
-import { Input, Select, Form } from "antd";
+import { Input, Select, Form, Upload, Modal } from "antd";
 import React, { useContext } from "react";
 import { PageContext } from "../../lib/context";
 
 const RegisterView = () => {
-  const { handleSubmit, form } = useContext(PageContext);
+  const {
+    handleSubmit,
+    form,
+    handleCancel,
+    handlePreview,
+    previewImage,
+    previewOpen,
+    uploadButton,
+    profilePhotoRequest,
+    handlePhotoRemove,
+  } = useContext(PageContext);
   return (
     <div className="flex min-h-full w-full h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
@@ -28,6 +38,23 @@ const RegisterView = () => {
             &nbsp;if you already have an account.
           </p>
         </div>
+        {/* <div className="flex items-start justify-between border border-gray-300 rounded-2xl px-20">
+          <p className="mt-2">Profile Picture:</p>
+          <div>
+            <Upload
+              name="profile-pic"
+              listType="picture-card"
+              onPreview={handlePreview}
+              showUploadList={uploadButton}
+              accept="image/png, image/jpeg"
+              maxCount={1}
+              customRequest={profilePhotoRequest}
+              onRemove={handlePhotoRemove}
+            >
+              {previewImage ? null : uploadButton}
+            </Upload>
+          </div>
+        </div> */}
         <Form
           form={form}
           onFinish={handleSubmit}
@@ -36,6 +63,20 @@ const RegisterView = () => {
         >
           <div className="rounded-md shadow-sm mt-8 space-y-6">
             <div className="my-4">
+              {/* <Form.Item name={"profilePic"} label={"Profile Picture"}>
+                <Upload
+                  name="profile-pic"
+                  listType="picture-card"
+                  onPreview={handlePreview}
+                  showUploadList={uploadButton}
+                  accept="image/png, image/jpeg"
+                  maxCount={1}
+                  customRequest={profilePhotoRequest}
+                  onRemove={handlePhotoRemove}
+                >
+                  {previewImage ? null : uploadButton}
+                </Upload>
+              </Form.Item> */}
               <Form.Item
                 name={"schoolId"}
                 label={"School ID"}
@@ -50,6 +91,10 @@ const RegisterView = () => {
                 label="First name"
                 rules={[
                   { required: true, message: "Please input your first name" },
+                  {
+                    pattern: new RegExp(/^[a-zA-Z.\s]+$/i),
+                    message: "Numbers are not valid to use in this field",
+                  },
                 ]}
               >
                 <Input id="firstName" placeholder="First name" />
@@ -59,6 +104,12 @@ const RegisterView = () => {
               <Form.Item
                 name="middleName"
                 label="Middle name"
+                rules={[
+                  {
+                    pattern: new RegExp(/^[a-zA-Z.\s]+$/i),
+                    message: "Numbers are not valid to use in this field",
+                  },
+                ]}
               >
                 <Input id="middleName" placeholder="Middle name" />
               </Form.Item>
@@ -69,6 +120,10 @@ const RegisterView = () => {
                 label="Lastname"
                 rules={[
                   { required: true, message: "Please input your lastname" },
+                  {
+                    pattern: new RegExp(/^[a-zA-Z.\s]+$/i),
+                    message: "Numbers are not valid to use in this field",
+                  },
                 ]}
               >
                 <Input id="lastName" placeholder="Lastname" />
@@ -78,7 +133,15 @@ const RegisterView = () => {
               <Form.Item
                 name="email"
                 label="Email"
-                rules={[{ required: true, message: "Please input your email" }]}
+                rules={[
+                  { required: true, message: "Please input your email" },
+                  {
+                    pattern: new RegExp(
+                      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i
+                    ),
+                    message: "Please enter a valid email",
+                  },
+                ]}
               >
                 <Input placeholder="Email" id="email" type="email" />
               </Form.Item>
@@ -139,6 +202,20 @@ const RegisterView = () => {
           </div>
         </Form>
       </div>
+      {/* <Modal
+        open={previewOpen}
+        title={"Profile Picture"}
+        footer={null}
+        onCancel={handleCancel}
+      >
+        <img
+          alt="example"
+          style={{
+            width: "100%",
+          }}
+          src={previewImage}
+        />
+      </Modal> */}
     </div>
   );
 };
