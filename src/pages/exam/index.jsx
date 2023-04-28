@@ -11,8 +11,12 @@ import {
 import { PageContext } from "../../lib/context";
 import auth from "../../lib/services";
 import ExamView from "./view";
-import { Popconfirm, Space, Tooltip, message, notification } from "antd";
-import { DeleteOutlined, EditOutlined, FolderOpenOutlined } from "@ant-design/icons";
+import { Popconfirm, Space, Tooltip, notification } from "antd";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  FolderOpenOutlined,
+} from "@ant-design/icons";
 
 const Exam = () => {
   const navigate = useNavigate();
@@ -66,13 +70,11 @@ const Exam = () => {
         }
       }
     } catch (error) {
-      message.error(
-        {
-          message: "Category Error",
-          description: error,
-        },
-        3000
-      );
+      console.log("ERR: ", error);
+      notification.error({
+        message: "Create Category Failed",
+        description: "Something wrong",
+      });
     }
   };
 
@@ -100,12 +102,11 @@ const Exam = () => {
         });
       }
     } catch (error) {
-      message.error(
-        {
-          error,
-        },
-        3000
-      );
+      console.log("ERROR: ", error);
+      notification.error({
+        message: "Delete Category Failed",
+        description: "Something wrong",
+      });
     }
   };
 
@@ -131,6 +132,7 @@ const Exam = () => {
         const tempData = data.map((val, index) => {
           return {
             ...val,
+            key: val?._id,
             no: index + 1,
             id: val?._id,
             time_start: moment(val?.dateTimeStart).format("LLL"),
@@ -189,7 +191,10 @@ const Exam = () => {
       render: (_, record) => (
         <Space>
           <Tooltip title="View Exam Details">
-            <FolderOpenOutlined onClick={handleGoToCourse} />
+            <FolderOpenOutlined onClick={() => handleGoToCourse(record.no)} />
+          </Tooltip>
+          <Tooltip title="Edit Exam">
+            <EditOutlined onClick={() => handleEditExam(record.no)} />
           </Tooltip>
         </Space>
       ),
@@ -269,9 +274,14 @@ const Exam = () => {
     setIsModalOpen(true);
   };
 
-  const handleGoToCourse = () => {
-    localStorage.setItem("currentExam", JSON.stringify(data[0]));
-    navigate(`/course/${data[0]?.id}`);
+  const handleGoToCourse = (index) => {
+    localStorage.setItem("currentExam", JSON.stringify(data[index - 1]));
+    navigate(`/course/${data[index - 1]?.id}`);
+  };
+
+  const handleEditExam = (index) => {
+    localStorage.setItem("currentExam", JSON.stringify(data[index - 1]));
+    navigate("/create-exam");
   };
 
   useEffect(() => {

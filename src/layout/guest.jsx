@@ -32,13 +32,13 @@ const items = [
     key: "exam",
     icon: <FormOutlined />,
     label: "Exam",
-    accounttype: ["admin"],
+    accounttype: ["admin", "superadmin"],
   },
   {
     key: "records",
     icon: <AppstoreOutlined />,
     label: "Records",
-    accounttype: ["admin"],
+    accounttype: ["admin", "superadmin"],
   },
   {
     key: "logout",

@@ -20,6 +20,7 @@ const Login = () => {
         const data = await res.json();
         if (data) {
           auth.storeToken(data.token);
+          console.log("data: ", data);
           window.location.href = "/dashboard";
         }
       })

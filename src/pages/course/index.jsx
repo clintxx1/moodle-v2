@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { checkExam, forceStartExam, getRecord } from "../../lib/api";
+import {
+  checkExam,
+  forceStartExam,
+  getForecast,
+  getRecord,
+} from "../../lib/api";
 import { PageContext } from "../../lib/context";
 import CourseView from "./view";
 import { notification } from "antd";
+import auth from "../../lib/services";
 
 const Course = () => {
   const navigate = useNavigate();
@@ -15,6 +21,7 @@ const Course = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTaken, setIsTaken] = useState(false);
   const [isForecastOpen, setIsForecastOpen] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState();
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -65,14 +72,34 @@ const Course = () => {
 
   const checkExamProgress = async (id) => {
     try {
-      const res = await checkExam({examId: id});
+      const res = await checkExam({ examId: id });
       if (res.status === 200) {
-        setIsTaken(res?.data?.isTakenByAll)
+        setIsTaken(res?.data?.isTakenByAll);
       }
     } catch (error) {
-      console.error("ERR: ", error)
+      console.error("ERR: ", error);
     }
-  }
+  };
+
+  const handleOpenForecast = async () => {
+    try {
+      setIsForecastOpen(true);
+      let payload = {};
+      // console.log(record, "hehe");
+      // return;
+      if (auth.getRole() === "student") {
+        payload = { studentId: record?.student };
+      } else {
+        payload = { studentId: selectedStudent };
+      }
+
+      const res = await getForecast(payload);
+
+      console.log("DATA? :", res, record);
+    } catch (error) {
+      console.log("ERR: ", error);
+    }
+  };
 
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("currentExam"));
@@ -80,16 +107,12 @@ const Course = () => {
     setExam(data);
     if (new Date(data.dateTimeStart) < today) {
       fetchCurrentRecord(data._id);
-      checkExamProgress(data._id)
+      checkExamProgress(data._id);
       setIsNotOpen(false);
     } else {
       setIsNotOpen(true);
     }
   }, []);
-
-  const handleOpenForecast = () => {
-    setIsForecastOpen(true);
-  }
 
   const values = {
     exam,

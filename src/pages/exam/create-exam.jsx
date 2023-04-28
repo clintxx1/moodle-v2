@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  MinusCircleOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import {
   Button,
   Checkbox,
@@ -17,7 +14,12 @@ import {
 } from "antd";
 import moment from "moment";
 import dayjs from "dayjs";
-import { createExam, createQuestion, getCategories } from "../../lib/api";
+import {
+  createExam,
+  createQuestion,
+  getCategories,
+  getQuestions,
+} from "../../lib/api";
 import { useNavigate } from "react-router-dom";
 
 const CreateExam = () => {
@@ -27,27 +29,8 @@ const CreateExam = () => {
   const [form] = Form.useForm();
   const [data, setData] = useState();
   const [loading, setLoading] = useState(false);
+  let dataaa = JSON.parse(localStorage.getItem("currentExam"));
   const answerType = "multiple";
-  // const [answerType, setAnswerType] = useState("multiple");
-
-  // const items = [
-  //   {
-  //     label: (
-  //       <div onClick={() => setAnswerType("multiple")}>Multiple choice</div>
-  //     ),
-  //     key: "multiple",
-  //   },
-  //   {
-  //     label: <div onClick={() => setAnswerType("trulse")}>True or false</div>,
-  //     key: "trulse",
-  //   },
-  //   {
-  //     label: (
-  //       <div onClick={() => setAnswerType("fill")}>Fill in the blanks</div>
-  //     ),
-  //     key: "fill",
-  //   },
-  // ];
 
   const fetchCategories = async () => {
     const res = await getCategories();
@@ -123,15 +106,74 @@ const CreateExam = () => {
     }
   };
 
+  const fetchQuestions = async () => {
+    try {
+      const res = await getQuestions({exam: dataaa.id});
+      if (res?.data?.data?.length > 0) {
+        const questionsData = res?.data?.data
+        const intergalaktik = questionsData.map((item, index) => {
+          return {
+            ...item[index],
+            [`${index}, choices`]: {
+              [`${index}, choice`]: "a"
+            }
+          }
+        })
+        form.setFieldsValue({questions: questionsData})
+        const sampol = form.getFieldValue("questions") ?? [];
+        // let test = sampol.map((item, index) => {
+        //   let yow = item.choices.map((choice, indexC) => {
+        //     return {
+        //       [`${index}, choice`]: {
+        //         [`${indexC}, choice`]: choice
+        //       }
+        //     }
+        //   })
+        //   return {
+        //     ...yow,
+        //     [`${index}, choice`]: "a"
+        //   }
+        //   // let test= Object.assign({[`${index}.choices`]: item.choices[index]});
+        //   // console.log("kay nano dawla: ", test.choices);
+        //   // return form.setFieldsValue({ test })
+        // })
+        
+        console.log("di gud mawawara: ",intergalaktik);
+        form.setFieldsValue({ intergalaktik })
+        // res.data.data.forEach((item, index) => {
+        //   form.setFieldsValue({
+        //     [choice]: item.choice,
+        //   })
+        // })
+      }
+    } catch (error) {
+      console.log("ERR: ", error);
+    }
+  };
+
   useEffect(() => {
     setLoading(true);
     fetchCategories();
+    fetchQuestions();
   }, []);
+
+  useEffect(() => {
+    if (dataaa) {
+      form.setFieldsValue({
+        examTitle: dataaa.title,
+        examCategory: dataaa.category,
+        examDescription: dataaa.description,
+        examDuration: dataaa.duration,
+        startEndTime: [dayjs(dataaa.time_start), dayjs(dataaa.time_end)],
+      });
+    }
+  }, [dataaa]);
 
   return (
     <div className="flex flex-col w-auto items-start min-h-[500px] bg-white border-[1px] border-gray-300 m-2">
       <p className="font-bold text-3xl m-5">Create Exam</p>
       <Form
+        form={form}
         onFinish={onFinish}
         style={{
           width: "100%",
@@ -148,9 +190,7 @@ const CreateExam = () => {
           label={"Title"}
           rules={[{ required: true, message: "Please add an exam title" }]}
         >
-          <Input 
-            style={{ width: "100%" }}
-          />
+          <Input style={{ width: "100%" }} />
         </Form.Item>
         <Form.Item
           name={"examCategory"}
@@ -159,17 +199,14 @@ const CreateExam = () => {
         >
           <Select loading={loading} options={data} />
         </Form.Item>
-        <Form.Item
-          name={"examDescription"}
-          label={"Description"}
-        >
-        <TextArea
-          showCount
-          maxLength={200}
-          style={{ height: 120 }}
-          // onChange={onChange}
-          placeholder="Enter exam description"
-        />
+        <Form.Item name={"examDescription"} label={"Description"}>
+          <TextArea
+            showCount
+            maxLength={200}
+            style={{ height: 120 }}
+            // onChange={onChange}
+            placeholder="Enter exam description"
+          />
         </Form.Item>
         <Form.Item
           name={"examDuration"}
@@ -257,7 +294,10 @@ const CreateExam = () => {
           {(fields, { add, remove }, { errors }) => (
             <>
               {fields.map((field, index) => (
-                <div key={field.key} className="border-gray-300 border-[1px] rounded-lg my-5 p-2 min-w-[250px]">
+                <div
+                  key={field.key}
+                  className="border-gray-300 border-[1px] rounded-lg my-5 p-2 min-w-[250px]"
+                >
                   <div className="flex flex-row items-center">
                     <Form.Item
                       {...field}
@@ -303,12 +343,14 @@ const CreateExam = () => {
                     {(answers, { add, remove }, { errors }) => {
                       if (answerType !== "multiple") {
                         answers.map((item) => remove(item.name));
-                        answers = [{
-                          fieldKey: 0,
-                          isListField: true,
-                          key: 0,
-                          name: 0,
-                        }]
+                        answers = [
+                          {
+                            fieldKey: 0,
+                            isListField: true,
+                            key: 0,
+                            name: 0,
+                          },
+                        ];
                       }
                       return (
                         <div className="border-gray-300 border-[1px] rounded-lg my-5 p-2 min-w-[250px]">
@@ -372,9 +414,9 @@ const CreateExam = () => {
                                     showArrow
                                   >
                                     <div className="mt-1">
-                                    <MinusCircleOutlined
-                                      onClick={() => remove(ans.name)}
-                                    />
+                                      <MinusCircleOutlined
+                                        onClick={() => remove(ans.name)}
+                                      />
                                     </div>
                                   </Tooltip>
                                 </div>

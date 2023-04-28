@@ -30,6 +30,7 @@ export const updateCategory = ({ id, name }) => {
 };
 
 export const createCategory = ({ name }) => {
+  console.log("NAME: ", name);
   return new Promise((resolve, reject) => {
     axios
       .post(`${process.env.REACT_APP_API_URL}/category`, { name }, dataHeader())
@@ -173,7 +174,10 @@ export const forceStartExam = (data) => {
 export const getQuestions = (data) => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/question`, data, dataHeader())
+      .get(`${process.env.REACT_APP_API_URL}/question`, {
+        params: data,
+        ...dataHeader(),
+      })
       .then((res) => resolve(res))
       .catch((err) => reject(err));
   });
@@ -347,3 +351,21 @@ export const rejectAllUser = () => {
 };
 
 /**END OF NOTIFICATIONS API */
+
+/**START OF FORECAST API */
+export const getForecast = (id) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/forecast`, {
+        params: id,
+        ...dataHeader(),
+      })
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+/**END OF FORECAST API */
