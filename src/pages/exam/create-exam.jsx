@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import {
@@ -31,7 +32,7 @@ const CreateExam = () => {
   const [form] = Form.useForm();
   const [data, setData] = useState();
   const [loading, setLoading] = useState(false);
-  let dataaa = JSON.parse(localStorage.getItem("currentExam"));
+  let selectedExam = JSON.parse(localStorage.getItem("currentExam"));
   const answerType = "multiple";
   const location = useLocation();
 
@@ -110,9 +111,8 @@ const CreateExam = () => {
           });
         }
       } else {
-        console.log("trigger");
-        const res = await updateExam({...newVal, exam: dataaa.id});
-        if(res.status === 200){
+        const res = await updateExam({ ...newVal, exam: selectedExam.id });
+        if (res.status === 200) {
           const questionPayload = values?.questions.map((q) => {
             let answer = q?.choices.filter((a) => a.answer)[0]?.choice;
             let type = q?.choices.filter((a) => a.answer)[0]?.type;
@@ -125,11 +125,34 @@ const CreateExam = () => {
               type,
             };
           });
-          console.log("PAYLOAD: ", questionPayload);
-          const updateQ = await updateQuestion({exam: dataaa.id, questions: questionPayload});
-          console.log("Q: ", updateQ);
+          let updateQuestions = [];
+          let createQuestions = [];
+          questionPayload.forEach((item) => {
+            if (item.id) {
+              updateQuestions.push(item);
+            } else {
+              createQuestions.push(item);
+            }
+          });
+
+          const updateQ = await updateQuestion({
+            exam: selectedExam.id,
+            updateQuestions,
+            createQuestions,
+          });
+          if (updateQ.status === 200) {
+            notification.success({
+              message: "Exam Update",
+              description: "Exam updated successfully.",
+            });
+            navigate("/exam");
+          } else {
+            notification.error({
+              message: "Exam Update",
+              description: "Exam error",
+            });
+          }
         }
-        navigate("/exam")
       }
     } catch (error) {
       console.log("ERR: ", error);
@@ -138,7 +161,7 @@ const CreateExam = () => {
 
   const fetchQuestions = async () => {
     try {
-      const res = await getQuestions({ exam: dataaa.id });
+      const res = await getQuestions({ exam: selectedExam.id });
       if (res?.data?.data?.length > 0) {
         const questionsData = res?.data?.data;
         const formattedQuestions = questionsData.map((item, index) => {
@@ -169,13 +192,24 @@ const CreateExam = () => {
 
   useEffect(() => {
     if (location.pathname.includes("update-exam")) {
-      form.setFieldsValue({
-        examTitle: dataaa.title,
-        examCategory: dataaa.category,
-        examDescription: dataaa.description,
-        examDuration: dataaa.duration,
-        startEndTime: [dayjs(dataaa.time_start), dayjs(dataaa.time_end)],
-      });
+      setTimeout(() => {
+        const category =
+          data &&
+          selectedExam &&
+          data?.filter((e) => e.label === selectedExam.category)[0]?.value;
+        console.log("ASDFSDAFSDAF: ", category);
+        form.setFieldsValue({
+          examTitle: selectedExam.title,
+          // examCategory: selectedExam.category,
+          examCategory: category,
+          examDescription: selectedExam.description,
+          examDuration: selectedExam.duration,
+          startEndTime: [
+            dayjs(selectedExam.time_start),
+            dayjs(selectedExam.time_end),
+          ],
+        });
+      }, 2000);
       fetchQuestions();
     }
   }, [location]);

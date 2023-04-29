@@ -54,6 +54,7 @@ const Records = () => {
           .filter((e) => e.isComplete)
           .map((item) => {
             return {
+              key: item?._id,
               studentId: item?.student?.schoolId,
               studentName: `${item?.student?.firstName} ${
                 item?.student?.middleName ?? ""

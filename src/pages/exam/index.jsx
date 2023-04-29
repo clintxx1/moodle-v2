@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import {
   createCategory,
   deleteCategory,
+  deleteExam,
   getCategories,
   getExam,
   updateCategory,
@@ -25,6 +26,7 @@ const Exam = () => {
   const [categoryData, setCategoryData] = useState();
   const [categoryLoading, setCategoryLoading] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const [confirmExamLoading, setConfirmExamLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editData, setEditData] = useState();
   const [name, setName] = useState();
@@ -161,6 +163,11 @@ const Exam = () => {
       key: "no",
     },
     {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+    },
+    {
       title: "Category",
       dataIndex: "category",
       key: "category",
@@ -195,6 +202,20 @@ const Exam = () => {
           </Tooltip>
           <Tooltip title="Edit Exam">
             <EditOutlined onClick={() => handleEditExam(record.no)} />
+          </Tooltip>
+          <Tooltip title="Delete Exam" key={record.id}>
+            <Popconfirm
+              title="Delete Exam"
+              description="Are you sure you want to delete this exam?"
+              onConfirm={() => handleDeleteExam(record)}
+              okText="Yes"
+              cancelText="No"
+              okButtonProps={{
+                loading: confirmExamLoading,
+              }}
+            >
+              <DeleteOutlined />
+            </Popconfirm>
           </Tooltip>
         </Space>
       ),
@@ -281,7 +302,31 @@ const Exam = () => {
 
   const handleEditExam = (index) => {
     localStorage.setItem("currentExam", JSON.stringify(data[index - 1]));
-    navigate(`/update-exam/${data[index-1]?.id}`);
+    navigate(`/update-exam/${data[index - 1]?.id}`);
+  };
+
+  const handleDeleteExam = async (data) => {
+    try {
+      setConfirmExamLoading(true);
+      console.log("DATAAAAAAA: ", data._id);
+      const res = await deleteExam({ exam: data._id });
+      console.log("LOG: ", res);
+      if (res.status === 200) {
+        notification.success({
+          message: "Exam Deletion",
+          description: "Exam deleted successfully",
+        });
+        fetchExam();
+        setConfirmExamLoading(false);
+      }
+    } catch (error) {
+      console.log("ERROR: ", error);
+      notification.error({
+        message: "Exam Deletion Failed",
+        description: "Something wrong",
+      });
+      setConfirmExamLoading(false);
+    }
   };
 
   useEffect(() => {
