@@ -3,10 +3,10 @@ const auth = {
     return this.getUserInfo();
   },
   storeToken(token) {
-    localStorage.setItem("token", token);
+    localStorage.setItem('token', token);
   },
   getToken() {
-    return localStorage.getItem("token");
+    return localStorage.getItem('token');
   },
   getExpiration() {
     const token = this.getToken();
@@ -34,17 +34,15 @@ const auth = {
     return null;
   },
   decode(token) {
-    setTimeout(() => {
-      let base64Url = token.split(".")[1];
-      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-      return JSON.parse(window.atob(base64));
-    }, 1000);
+    let base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(window.atob(base64));
   },
   login(credential) {
     return fetch(`${process.env.REACT_APP_API_URL}/login`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(credential),
     });
@@ -52,9 +50,9 @@ const auth = {
   register(data) {
     //TODO - fix API to combine both admin and student
     return fetch(`${process.env.REACT_APP_API_URL}/register`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
     });

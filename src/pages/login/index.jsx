@@ -19,9 +19,10 @@ const Login = () => {
         }
         const data = await res.json();
         if (data) {
-          auth.storeToken(data.token);
-          console.log("data: ", data);
-          window.location.href = "/dashboard";
+          setTimeout(() => {
+            auth.storeToken(data.token);
+            window.location.href = "/dashboard";
+          }, 1000);
         }
       })
       .catch((err) => {
