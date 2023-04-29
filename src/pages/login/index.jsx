@@ -3,10 +3,8 @@ import { PageContext } from "../../lib/context";
 import LoginView from "./view";
 import auth from "../../lib/services";
 import { message } from "antd";
-import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const navigate = useNavigate();
   const handleSubmit = (e) => {
     const payload = {
       schoolId: e.schoolId,
@@ -23,7 +21,7 @@ const Login = () => {
         if (data) {
           auth.storeToken(data.token);
           if (auth.getToken()) {
-            navigate("/dashboard");
+            window.location.href = "/dashboard";
           }
         }
       })
