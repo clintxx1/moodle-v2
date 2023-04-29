@@ -13,7 +13,7 @@ const Login = () => {
     auth
       .login(payload)
       .then(async (res) => {
-        if (res.status === 401) {
+        if (res.status === 400) {
           message.error("Invalid username or password!");
           return;
         }
