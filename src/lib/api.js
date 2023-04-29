@@ -244,7 +244,7 @@ export const createExam = (data) => {
 export const updateExam = (data) => {
   return new Promise((resolve, reject) => {
     axios
-      .put(`${process.env.REACT_APP_API_URL}/exam`, data, dataHeader())
+      .put(`${process.env.REACT_APP_API_URL}/exam`, { ...data }, dataHeader())
       .then((res) => resolve(res))
       .catch((err) => reject(err));
   });

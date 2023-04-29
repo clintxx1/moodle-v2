@@ -30,9 +30,10 @@ export const router = createBrowserRouter(
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/course/:id" element={<Course />} />
         {["superadmin", "admin"].includes(auth.getRole()) && (
-          <Route path="/exam" element={<Exam />}>
-            <Route path=":id" element={<CreateExam />} />
-          </Route>
+          <Route path="/exam" element={<Exam />} />
+        )}
+        {["superadmin", "admin"].includes(auth.getRole()) && (
+          <Route path="update-exam/:id" element={<CreateExam />} />
         )}
         <Route path="/exam/:id/attempt" element={<AttemptExam />} />
         {["superadmin", "admin"].includes(auth.getRole()) && (

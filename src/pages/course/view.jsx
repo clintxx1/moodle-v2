@@ -67,7 +67,7 @@ const CourseView = () => {
                       {buttonText}
                     </Button>
                   )}
-                  {auth.getRole() === "admin" && (
+                  {["admin", "superadmin"].includes(auth.getRole()) && (
                     <>
                       {!isTaken ? (
                         <Tooltip title="By clicking this button, it will force to start the exam timer on this current category for all students.">

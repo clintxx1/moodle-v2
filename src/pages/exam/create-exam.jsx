@@ -19,8 +19,10 @@ import {
   createQuestion,
   getCategories,
   getQuestions,
+  updateQuestion,
 } from "../../lib/api";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { updateExam } from "../../lib/api";
 
 const CreateExam = () => {
   const navigate = useNavigate();
@@ -31,6 +33,7 @@ const CreateExam = () => {
   const [loading, setLoading] = useState(false);
   let dataaa = JSON.parse(localStorage.getItem("currentExam"));
   const answerType = "multiple";
+  const location = useLocation();
 
   const fetchCategories = async () => {
     const res = await getCategories();
@@ -50,7 +53,7 @@ const CreateExam = () => {
   const onFinish = async (values) => {
     // console.log("DATA: ", values);
     // return;
-    if (values.questions && values.questions.length) {
+    try {
       const newVal = {
         title: values.examTitle,
         description: values.examDescription ?? null,
@@ -64,87 +67,95 @@ const CreateExam = () => {
         ),
         itemNumber: values.questions.length,
       };
-      const examRes = await createExam(newVal);
-      let examResult = examRes.data.data;
-      if (examResult) {
-        if (values?.questions && values?.questions.length) {
+      if (!location.pathname.includes("update-exam")) {
+        if (values.questions && values.questions.length) {
+          const examRes = await createExam(newVal);
+          let examResult = examRes.data.data;
+          if (examResult) {
+            if (values?.questions && values?.questions.length) {
+              const questionPayload = values?.questions.map((q) => {
+                let answer = q?.choices.filter((a) => a.answer)[0]?.choice;
+                let type = q?.choices.filter((a) => a.answer)[0]?.type;
+                let choices = q?.choices.map((a) => a.choice);
+                return {
+                  question: q.question,
+                  answer,
+                  choices,
+                  type,
+                };
+              });
+              const questionRes = await createQuestion({
+                exam: examResult._id,
+                questions: questionPayload,
+              });
+              if (questionRes.status === 200) {
+                notification.success({
+                  message: "Exam Creation",
+                  description: "Exam created successfully.",
+                });
+                navigate("/exam");
+              } else {
+                notification.error({
+                  message: "Exam Creation",
+                  description: "Exam error",
+                });
+              }
+            }
+          }
+        } else {
+          notification.error({
+            message: "Creation Failed",
+            description: "Please input at least 1 question",
+            duration: 2,
+          });
+        }
+      } else {
+        console.log("trigger");
+        const res = await updateExam({...newVal, exam: dataaa.id});
+        if(res.status === 200){
           const questionPayload = values?.questions.map((q) => {
             let answer = q?.choices.filter((a) => a.answer)[0]?.choice;
             let type = q?.choices.filter((a) => a.answer)[0]?.type;
             let choices = q?.choices.map((a) => a.choice);
             return {
+              id: q.questionID,
               question: q.question,
               answer,
               choices,
               type,
             };
           });
-          const questionRes = await createQuestion({
-            exam: examResult._id,
-            questions: questionPayload,
-          });
-          if (questionRes.status === 200) {
-            notification.success({
-              message: "Exam Creation",
-              description: "Exam created successfully.",
-            });
-            navigate("/exam");
-          } else {
-            notification.error({
-              message: "Exam Creation",
-              description: "Exam error",
-            });
-          }
+          console.log("PAYLOAD: ", questionPayload);
+          const updateQ = await updateQuestion({exam: dataaa.id, questions: questionPayload});
+          console.log("Q: ", updateQ);
         }
+        navigate("/exam")
       }
-    } else {
-      notification.error({
-        message: "Creation Failed",
-        description: "Please input at least 1 question",
-        duration: 2,
-      });
+    } catch (error) {
+      console.log("ERR: ", error);
     }
   };
 
   const fetchQuestions = async () => {
     try {
-      const res = await getQuestions({exam: dataaa.id});
+      const res = await getQuestions({ exam: dataaa.id });
       if (res?.data?.data?.length > 0) {
-        const questionsData = res?.data?.data
-        const intergalaktik = questionsData.map((item, index) => {
+        const questionsData = res?.data?.data;
+        const formattedQuestions = questionsData.map((item, index) => {
+          const formattedChoices = item.choices.map((c) => {
+            return {
+              choice: c,
+              type: "multiple",
+              answer: item.answer === c ? true : false,
+            };
+          });
           return {
-            ...item[index],
-            [`${index}, choices`]: {
-              [`${index}, choice`]: "a"
-            }
-          }
-        })
-        form.setFieldsValue({questions: questionsData})
-        const sampol = form.getFieldValue("questions") ?? [];
-        // let test = sampol.map((item, index) => {
-        //   let yow = item.choices.map((choice, indexC) => {
-        //     return {
-        //       [`${index}, choice`]: {
-        //         [`${indexC}, choice`]: choice
-        //       }
-        //     }
-        //   })
-        //   return {
-        //     ...yow,
-        //     [`${index}, choice`]: "a"
-        //   }
-        //   // let test= Object.assign({[`${index}.choices`]: item.choices[index]});
-        //   // console.log("kay nano dawla: ", test.choices);
-        //   // return form.setFieldsValue({ test })
-        // })
-        
-        console.log("di gud mawawara: ",intergalaktik);
-        form.setFieldsValue({ intergalaktik })
-        // res.data.data.forEach((item, index) => {
-        //   form.setFieldsValue({
-        //     [choice]: item.choice,
-        //   })
-        // })
+            question: item.question,
+            questionID: item._id,
+            choices: formattedChoices,
+          };
+        });
+        form.setFieldsValue({ questions: formattedQuestions });
       }
     } catch (error) {
       console.log("ERR: ", error);
@@ -154,11 +165,10 @@ const CreateExam = () => {
   useEffect(() => {
     setLoading(true);
     fetchCategories();
-    fetchQuestions();
   }, []);
 
   useEffect(() => {
-    if (dataaa) {
+    if (location.pathname.includes("update-exam")) {
       form.setFieldsValue({
         examTitle: dataaa.title,
         examCategory: dataaa.category,
@@ -166,8 +176,9 @@ const CreateExam = () => {
         examDuration: dataaa.duration,
         startEndTime: [dayjs(dataaa.time_start), dayjs(dataaa.time_end)],
       });
+      fetchQuestions();
     }
-  }, [dataaa]);
+  }, [location]);
 
   return (
     <div className="flex flex-col w-auto items-start min-h-[500px] bg-white border-[1px] border-gray-300 m-2">
@@ -301,6 +312,14 @@ const CreateExam = () => {
                   <div className="flex flex-row items-center">
                     <Form.Item
                       {...field}
+                      hidden
+                      name={[field.name, "questionID"]}
+                      key={[field.key, "t1"]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      {...field}
                       label={`Question ${index + 1}`}
                       name={[field.name, "question"]}
                       key={[field.key, "q"]}
@@ -327,18 +346,18 @@ const CreateExam = () => {
                   </div>
                   <Form.List
                     name={[field.name, "choices"]}
-                    // rules={[
-                    //   {
-                    //     validator: async (_, names) => {
-                    //       if (!names || names.length < 2) {
-                    //         return Promise.reject(
-                    //           new Error("Please add at least 2 choices")
-                    //         );
-                    //       }
-                    //     },
-                    //   },
-                    // ]}
-                    // style={{alignSelf: "center"}}
+                    rules={[
+                      {
+                        validator: async (_, names) => {
+                          if (!names || names.length < 2) {
+                            return Promise.reject(
+                              new Error("Please add at least 2 choices")
+                            );
+                          }
+                        },
+                      },
+                    ]}
+                    style={{ alignSelf: "center" }}
                   >
                     {(answers, { add, remove }, { errors }) => {
                       if (answerType !== "multiple") {

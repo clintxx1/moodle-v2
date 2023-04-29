@@ -281,7 +281,7 @@ const Exam = () => {
 
   const handleEditExam = (index) => {
     localStorage.setItem("currentExam", JSON.stringify(data[index - 1]));
-    navigate("/create-exam");
+    navigate(`/update-exam/${data[index-1]?.id}`);
   };
 
   useEffect(() => {
