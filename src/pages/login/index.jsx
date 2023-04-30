@@ -1,30 +1,28 @@
-import React, { useRef } from "react";
+import React from "react";
 import { PageContext } from "../../lib/context";
 import LoginView from "./view";
 import auth from "../../lib/services";
 import { message } from "antd";
 
 const Login = () => {
-  const emailRef = useRef(null);
-  const passwordRef = useRef(null);
-
   const handleSubmit = (e) => {
-    e.preventDefault();
     const payload = {
-      schoolId: emailRef.current.value,
-      password: passwordRef.current.value,
+      schoolId: e.schoolId,
+      password: e.password,
     };
     auth
       .login(payload)
       .then(async (res) => {
-        if (res.status === 401) {
+        if (res.status === 400) {
           message.error("Invalid username or password!");
           return;
         }
         const data = await res.json();
-        if (data) {
+        if (data?.token) {
           auth.storeToken(data.token);
-          window.location.href = "/dashboard";
+          if (auth.getToken()) {
+            window.location.href = "/dashboard";
+          }
         }
       })
       .catch((err) => {
@@ -34,8 +32,6 @@ const Login = () => {
 
   const values = {
     handleSubmit,
-    emailRef,
-    passwordRef,
   };
   return (
     <PageContext.Provider value={values}>

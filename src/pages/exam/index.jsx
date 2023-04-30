@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import {
   createCategory,
   deleteCategory,
+  deleteExam,
   getCategories,
   getExam,
   updateCategory,
@@ -11,8 +12,12 @@ import {
 import { PageContext } from "../../lib/context";
 import auth from "../../lib/services";
 import ExamView from "./view";
-import { Popconfirm, Space, Tooltip, message, notification } from "antd";
-import { DeleteOutlined, EditOutlined, FolderOpenOutlined } from "@ant-design/icons";
+import { Popconfirm, Space, Tooltip, notification } from "antd";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  FolderOpenOutlined,
+} from "@ant-design/icons";
 
 const Exam = () => {
   const navigate = useNavigate();
@@ -21,6 +26,7 @@ const Exam = () => {
   const [categoryData, setCategoryData] = useState();
   const [categoryLoading, setCategoryLoading] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const [confirmExamLoading, setConfirmExamLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editData, setEditData] = useState();
   const [name, setName] = useState();
@@ -66,13 +72,11 @@ const Exam = () => {
         }
       }
     } catch (error) {
-      message.error(
-        {
-          message: "Category Error",
-          description: error,
-        },
-        3000
-      );
+      console.log("ERR: ", error);
+      notification.error({
+        message: "Create Category Failed",
+        description: "Something wrong",
+      });
     }
   };
 
@@ -96,16 +100,17 @@ const Exam = () => {
       } else {
         notification.error({
           message: "Delete Category",
-          description: "Deletion failed.",
+          description: res?.response?.data?.message ?? "Something went wrong",
         });
+        setConfirmLoading(false);
       }
     } catch (error) {
-      message.error(
-        {
-          error,
-        },
-        3000
-      );
+      console.log("ERROR: ", error);
+      notification.error({
+        message: "Delete Category Failed",
+        description: error?.response?.data?.message ?? "Something wrong",
+      });
+      setConfirmLoading(false);
     }
   };
 
@@ -131,6 +136,7 @@ const Exam = () => {
         const tempData = data.map((val, index) => {
           return {
             ...val,
+            key: val?._id,
             no: index + 1,
             id: val?._id,
             time_start: moment(val?.dateTimeStart).format("LLL"),
@@ -157,6 +163,11 @@ const Exam = () => {
       title: "No.",
       dataIndex: "no",
       key: "no",
+    },
+    {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
     },
     {
       title: "Category",
@@ -189,7 +200,24 @@ const Exam = () => {
       render: (_, record) => (
         <Space>
           <Tooltip title="View Exam Details">
-            <FolderOpenOutlined onClick={handleGoToCourse} />
+            <FolderOpenOutlined onClick={() => handleGoToCourse(record.no)} />
+          </Tooltip>
+          <Tooltip title="Edit Exam">
+            <EditOutlined onClick={() => handleEditExam(record.no)} />
+          </Tooltip>
+          <Tooltip title="Delete Exam" key={record.id}>
+            <Popconfirm
+              title="Delete Exam"
+              description="Are you sure you want to delete this exam?"
+              onConfirm={() => handleDeleteExam(record)}
+              okText="Yes"
+              cancelText="No"
+              okButtonProps={{
+                loading: confirmExamLoading,
+              }}
+            >
+              <DeleteOutlined />
+            </Popconfirm>
           </Tooltip>
         </Space>
       ),
@@ -269,9 +297,38 @@ const Exam = () => {
     setIsModalOpen(true);
   };
 
-  const handleGoToCourse = () => {
-    localStorage.setItem("currentExam", JSON.stringify(data[0]));
-    navigate(`/course/${data[0]?.id}`);
+  const handleGoToCourse = (index) => {
+    localStorage.setItem("currentExam", JSON.stringify(data[index - 1]));
+    navigate(`/course/${data[index - 1]?.id}`);
+  };
+
+  const handleEditExam = (index) => {
+    localStorage.setItem("currentExam", JSON.stringify(data[index - 1]));
+    navigate(`/update-exam/${data[index - 1]?.id}`);
+  };
+
+  const handleDeleteExam = async (data) => {
+    try {
+      setConfirmExamLoading(true);
+      console.log("DATAAAAAAA: ", data._id);
+      const res = await deleteExam({ exam: data._id });
+      console.log("LOG: ", res);
+      if (res.status === 200) {
+        notification.success({
+          message: "Exam Deletion",
+          description: "Exam deleted successfully",
+        });
+        fetchExam();
+        setConfirmExamLoading(false);
+      }
+    } catch (error) {
+      console.log("ERROR: ", error);
+      notification.error({
+        message: "Exam Deletion Failed",
+        description: "Something wrong",
+      });
+      setConfirmExamLoading(false);
+    }
   };
 
   useEffect(() => {

@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { PageContext } from "../../lib/context";
-import { LockFilled } from "@ant-design/icons";
+import { Button, Checkbox, Form, Input } from "antd";
 
 const LoginView = () => {
-  const { handleSubmit, emailRef, passwordRef } = useContext(PageContext);
+  const { handleSubmit } = useContext(PageContext);
   return (
     <div className="flex min-h-full w-full h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
@@ -26,83 +26,46 @@ const LoginView = () => {
             </a>
           </p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <input type="hidden" name="remember" defaultValue="true" />
-          <div className="-space-y-px rounded-md shadow-sm">
-            <div>
-              <label htmlFor="email-address" className="sr-only">
-                School ID
-              </label>
-              <input
-                ref={emailRef}
-                id="schoolId"
-                name="schoolId"
-                type="text"
-                required
-                className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder="School ID"
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                ref={passwordRef}
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder="Password"
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-              />
-              <label
-                htmlFor="remember-me"
-                className="ml-2 block text-sm text-gray-900"
-              >
-                Remember me
-              </label>
-            </div>
-
-            <div className="text-sm">
-              <a
-                href="/"
-                className="font-medium text-indigo-600 hover:text-indigo-500"
-              >
-                Forgot your password?
-              </a>
-            </div>
-          </div>
-
-          <div>
-            <button
-              type="submit"
-              className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            >
-              <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                <div
-                  className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
-                  aria-hidden="true"
-                >
-                  <LockFilled style={{ color: "white" }} />
-                </div>
-              </span>
-              Sign in
-            </button>
-          </div>
-        </form>
+        <Form
+          labelCol={{ span: 6 }}
+          wrapperCol={{ span: 18 }}
+          labelAlign="right"
+          initialValues={{ remember: true }}
+          onFinish={handleSubmit}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Form.Item
+            label="School ID"
+            name="schoolId"
+            rules={[{ required: true, message: "Please input your School ID" }]}
+            style={{ width: "100%" }}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[{ required: true, message: "Please input your password" }]}
+            style={{ width: "100%" }}
+          >
+            <Input.Password />
+          </Form.Item>
+          <Form.Item
+            name="remember"
+            valuePropName="checked"
+            style={{ width: "50%" }}
+          >
+            <Checkbox>Remember me</Checkbox>
+          </Form.Item>
+          <Button type="primary" htmlType="submit" style={{ width: "50%" }}>
+            Sign in
+          </Button>
+        </Form>
       </div>
     </div>
   );

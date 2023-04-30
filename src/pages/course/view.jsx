@@ -18,6 +18,7 @@ const CourseView = () => {
     showModal,
     handleCancel,
     isTaken,
+    isClose,
   } = useContext(PageContext);
   return (
     <>
@@ -46,7 +47,7 @@ const CourseView = () => {
               {hasAttempted && (
                 <Descriptions.Item label="Score" span={24}>
                   {`${
-                    record?.score
+                    record?.score >= 0
                       ? `${record?.score} out of ${exam?.itemNumber}`
                       : "Not available"
                   }`}
@@ -56,6 +57,8 @@ const CourseView = () => {
             <div className="flex flex-row w-full justify-center mt-12">
               {isNotOpen ? (
                 <p className="italic text-gray-400 mb-8">Exam is not open.</p>
+              ) : isClose ? (
+                <p className="italic text-gray-400 mb-8">Exam is close.</p>
               ) : (
                 <>
                   {auth.getRole() === "student" && (
@@ -67,7 +70,7 @@ const CourseView = () => {
                       {buttonText}
                     </Button>
                   )}
-                  {auth.getRole() === "admin" && (
+                  {["admin", "superadmin"].includes(auth.getRole()) && (
                     <>
                       {!isTaken ? (
                         <Tooltip title="By clicking this button, it will force to start the exam timer on this current category for all students.">

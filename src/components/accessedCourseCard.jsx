@@ -11,10 +11,15 @@ const CourseCard = (props) => {
   const navigate = useNavigate();
   const defBackgroundImage = require("../assets/nwssu.png");
 
+  const handleGoToCourse = () => {
+    localStorage.setItem("currentExam", JSON.stringify(props));
+    navigate(`/course/${_id}`);
+  };
+
   return (
     <div className="flex flex-row w-[250px] items-center justify-center border-gray-300 border-[1px] mr-4 overflow-hidden">
       <img
-        onClick={() => navigate(`/course/${_id}`, { state: { ...props } })}
+        onClick={handleGoToCourse}
         alt="img"
         src={image ?? defBackgroundImage}
         width={200}
@@ -23,7 +28,7 @@ const CourseCard = (props) => {
       <div className="absolute mt-[136px] flex flex-col items-start bg-gray-300 bg-opacity-60 w-[250px] min-h-[66px] max-h-[66px] p-3">
         <div className="opacity-75">{category}</div>
         <div
-          onClick={() => navigate(`/course/${_id}`, { state: { ...props } })}
+          onClick={handleGoToCourse}
           className="hover:underline inline-block cursor-pointer min-w-[250px]"
         >
           {category.length > 32 ? (

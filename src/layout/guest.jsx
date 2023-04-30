@@ -8,6 +8,7 @@ import {
   MenuFoldOutlined,
   FormOutlined,
   BellOutlined,
+  LineChartOutlined,
 } from "@ant-design/icons";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import CustomDropdown from "../components/dropdown";
@@ -32,13 +33,19 @@ const items = [
     key: "exam",
     icon: <FormOutlined />,
     label: "Exam",
-    accounttype: ["admin"],
+    accounttype: ["admin", "superadmin"],
   },
   {
     key: "records",
     icon: <AppstoreOutlined />,
     label: "Records",
-    accounttype: ["admin"],
+    accounttype: ["admin", "superadmin"],
+  },
+  {
+    key: "forecast",
+    icon: <LineChartOutlined />,
+    label: "Forecast",
+    accounttype: ["admin", "superadmin"],
   },
   {
     key: "logout",
@@ -70,6 +77,8 @@ const GuestLayout = () => {
         return "exam";
       case "/records":
         return "records";
+      case "/forecast":
+        return "forecast";
       case "/logout":
         return "logout";
       default:
@@ -222,7 +231,7 @@ const GuestLayout = () => {
             alt=""
             onClick={() => (window.location.href = "/")}
           />
-          <p className="text-sm md:text-xl">NwSSU LMS - Moodle</p>
+          <p className="text-sm md:text-xl">BSAG - Mock Exam</p>
         </div>
         <div className="flex flex-row items-center justify-center">
           {auth.getRole() === "superadmin" && (

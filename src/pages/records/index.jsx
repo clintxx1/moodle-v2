@@ -1,19 +1,19 @@
 import moment from "moment/moment";
 import React, { useEffect, useState } from "react";
 import { PageContext } from "../../lib/context";
-import { fetchAllRecords } from "../../lib/api";
+import { fetchAllRecords, getCategories } from "../../lib/api";
 import RecordsView from "./view";
 
 const Records = () => {
   const [data, setData] = useState();
+  const [categoryData, setCategoryData] = useState();
   const [loading, setLoading] = useState(false);
+  const [categoryLoading, setCategoryLoading] = useState(false);
+  const [searchData, setSearchData] = useState();
+  const [filteredData, setFilteredData] = useState();
+  const [selectedCategory, setSelectedCategory] = useState();
 
   const columns = [
-    {
-      title: "Student ID",
-      dataIndex: "studentId",
-      key: "studentId",
-    },
     {
       title: "Student Name",
       dataIndex: "studentName",
@@ -33,6 +33,14 @@ const Records = () => {
       title: "Score",
       dataIndex: "score",
       key: "score",
+      sorter: (a, b) => a.score - b.score,
+    },
+    {
+      title: "Percentage",
+      dataIndex: "percentage",
+      key: "percentage",
+      render: (text) => <p>{`${text}%`}</p>,
+      sorter: (a, b) => a.percentage - b.percentage,
     },
     {
       title: "Exam Started",
@@ -54,6 +62,7 @@ const Records = () => {
           .filter((e) => e.isComplete)
           .map((item) => {
             return {
+              key: item?._id,
               studentId: item?.student?.schoolId,
               studentName: `${item?.student?.firstName} ${
                 item?.student?.middleName ?? ""
@@ -61,11 +70,16 @@ const Records = () => {
               subject: item?.exam?.title,
               numOfItems: item?.exam?.itemNumber,
               score: item?.score,
+              percentage:
+                (Number(item?.score) / Number(item?.exam?.itemNumber)) * 100,
               startDate: moment(item?.timeStart).format("LLL"),
               endDate: moment(item?.timeEnd).format("LLL"),
+              category: item?.exam?.category,
             };
-          });
+          })
+          .sort((a, b) => (a.percentage > b.percentage ? -1 : 1));
         setData(temp);
+        setFilteredData(temp);
         setLoading(false);
       }
     } catch (error) {
@@ -74,15 +88,67 @@ const Records = () => {
     }
   };
 
+  const fetchCategories = async () => {
+    const res = await getCategories();
+    let data = res.data.data;
+    if (data.length) {
+      const tempData = data.map((val) => {
+        return {
+          label: val.name,
+          value: val._id,
+        };
+      });
+      setCategoryData([{ label: "All Category", value: null }, ...tempData]);
+      setCategoryLoading(false);
+    }
+  };
+
+  const handleSearch = () => {
+    setLoading(true);
+    if (searchData) {
+      let temp = [];
+      if (selectedCategory) {
+        temp = data.filter(
+          (e) =>
+            e.category === selectedCategory &&
+            e.studentName.toLowerCase().includes(searchData.toLowerCase())
+        );
+      } else {
+        temp = data.filter((e) =>
+          e.studentName.toLowerCase().includes(searchData.toLowerCase())
+        );
+      }
+      setLoading(false);
+      setFilteredData(temp);
+    } else {
+      let temp = [];
+      if (selectedCategory) {
+        temp = data.filter((e) => e.category === selectedCategory);
+      } else {
+        temp = data;
+      }
+      setLoading(false);
+      setFilteredData(temp);
+    }
+  };
+
   useEffect(() => {
     setLoading(true);
+    setCategoryLoading(true);
     getAllRecords();
+    fetchCategories();
   }, []);
 
   const values = {
     data,
     columns,
     loading,
+    categoryData,
+    categoryLoading,
+    handleSearch,
+    setSearchData,
+    filteredData,
+    setSelectedCategory,
   };
 
   return (

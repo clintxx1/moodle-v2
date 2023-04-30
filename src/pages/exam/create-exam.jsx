@@ -1,8 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import {
-  MinusCircleOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import {
   Button,
   Checkbox,
@@ -17,8 +15,15 @@ import {
 } from "antd";
 import moment from "moment";
 import dayjs from "dayjs";
-import { createExam, createQuestion, getCategories } from "../../lib/api";
-import { useNavigate } from "react-router-dom";
+import {
+  createExam,
+  createQuestion,
+  getCategories,
+  getQuestions,
+  updateQuestion,
+} from "../../lib/api";
+import { useLocation, useNavigate } from "react-router-dom";
+import { updateExam } from "../../lib/api";
 
 const CreateExam = () => {
   const navigate = useNavigate();
@@ -27,27 +32,9 @@ const CreateExam = () => {
   const [form] = Form.useForm();
   const [data, setData] = useState();
   const [loading, setLoading] = useState(false);
+  let selectedExam = JSON.parse(localStorage.getItem("currentExam"));
   const answerType = "multiple";
-  // const [answerType, setAnswerType] = useState("multiple");
-
-  // const items = [
-  //   {
-  //     label: (
-  //       <div onClick={() => setAnswerType("multiple")}>Multiple choice</div>
-  //     ),
-  //     key: "multiple",
-  //   },
-  //   {
-  //     label: <div onClick={() => setAnswerType("trulse")}>True or false</div>,
-  //     key: "trulse",
-  //   },
-  //   {
-  //     label: (
-  //       <div onClick={() => setAnswerType("fill")}>Fill in the blanks</div>
-  //     ),
-  //     key: "fill",
-  //   },
-  // ];
+  const location = useLocation();
 
   const fetchCategories = async () => {
     const res = await getCategories();
@@ -59,6 +46,11 @@ const CreateExam = () => {
           value: val._id,
         };
       });
+      const category =
+        tempData &&
+        selectedExam &&
+        tempData?.filter((e) => e.label === selectedExam.category)[0]?.value;
+      form.setFieldsValue({ examCategory: category });
       setData(tempData);
       setLoading(false);
     }
@@ -67,7 +59,7 @@ const CreateExam = () => {
   const onFinish = async (values) => {
     // console.log("DATA: ", values);
     // return;
-    if (values.questions && values.questions.length) {
+    try {
       const newVal = {
         title: values.examTitle,
         description: values.examDescription ?? null,
@@ -81,57 +73,151 @@ const CreateExam = () => {
         ),
         itemNumber: values.questions.length,
       };
-      const examRes = await createExam(newVal);
-      let examResult = examRes.data.data;
-      if (examResult) {
-        if (values?.questions && values?.questions.length) {
+      if (!location.pathname.includes("update-exam")) {
+        if (values.questions && values.questions.length) {
+          const examRes = await createExam(newVal);
+          let examResult = examRes.data.data;
+          if (examResult) {
+            if (values?.questions && values?.questions.length) {
+              const questionPayload = values?.questions.map((q) => {
+                let answer = q?.choices.filter((a) => a.answer)[0]?.choice;
+                let type = q?.choices.filter((a) => a.answer)[0]?.type;
+                let choices = q?.choices.map((a) => a.choice);
+                return {
+                  question: q.question,
+                  answer,
+                  choices,
+                  type,
+                };
+              });
+              const questionRes = await createQuestion({
+                exam: examResult._id,
+                questions: questionPayload,
+              });
+              if (questionRes.status === 200) {
+                notification.success({
+                  message: "Exam Creation",
+                  description: "Exam created successfully.",
+                });
+                navigate("/exam");
+              } else {
+                notification.error({
+                  message: "Exam Creation",
+                  description: "Exam error",
+                });
+              }
+            }
+          }
+        } else {
+          notification.error({
+            message: "Creation Failed",
+            description: "Please input at least 1 question",
+            duration: 2,
+          });
+        }
+      } else {
+        const res = await updateExam({ ...newVal, exam: selectedExam.id });
+        if (res.status === 200) {
           const questionPayload = values?.questions.map((q) => {
             let answer = q?.choices.filter((a) => a.answer)[0]?.choice;
             let type = q?.choices.filter((a) => a.answer)[0]?.type;
             let choices = q?.choices.map((a) => a.choice);
             return {
+              id: q.questionID,
               question: q.question,
               answer,
               choices,
               type,
             };
           });
-          const questionRes = await createQuestion({
-            exam: examResult._id,
-            questions: questionPayload,
+          let updateQuestions = [];
+          let createQuestions = [];
+          questionPayload.forEach((item) => {
+            if (item.id) {
+              updateQuestions.push(item);
+            } else {
+              createQuestions.push(item);
+            }
           });
-          if (questionRes.status === 200) {
+
+          const updateQ = await updateQuestion({
+            exam: selectedExam.id,
+            updateQuestions,
+            createQuestions,
+          });
+          if (updateQ.status === 200) {
             notification.success({
-              message: "Exam Creation",
-              description: "Exam created successfully.",
+              message: "Exam Update",
+              description: "Exam updated successfully.",
             });
             navigate("/exam");
           } else {
             notification.error({
-              message: "Exam Creation",
+              message: "Exam Update",
               description: "Exam error",
             });
           }
         }
       }
-    } else {
-      notification.error({
-        message: "Creation Failed",
-        description: "Please input at least 1 question",
-        duration: 2,
-      });
+    } catch (error) {
+      console.log("ERR: ", error);
+    }
+  };
+
+  const fetchQuestions = async () => {
+    try {
+      const res = await getQuestions({ exam: selectedExam.id });
+      if (res?.data?.data?.length > 0) {
+        const questionsData = res?.data?.data;
+        const formattedQuestions = questionsData.map((item, index) => {
+          const formattedChoices = item.choices.map((c) => {
+            return {
+              choice: c,
+              type: "multiple",
+              answer: item.answer === c ? true : false,
+            };
+          });
+          return {
+            question: item.question,
+            questionID: item._id,
+            choices: formattedChoices,
+          };
+        });
+        form.setFieldsValue({ questions: formattedQuestions });
+      }
+    } catch (error) {
+      console.log("ERR: ", error);
     }
   };
 
   useEffect(() => {
     setLoading(true);
     fetchCategories();
+    window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    if (location.pathname.includes("update-exam")) {
+      form.setFieldsValue({
+        examTitle: selectedExam.title,
+        examDescription: selectedExam.description,
+        examDuration: selectedExam.duration,
+        startEndTime: [
+          dayjs(selectedExam.time_start),
+          dayjs(selectedExam.time_end),
+        ],
+      });
+      fetchQuestions();
+    }
+  }, [location]);
 
   return (
     <div className="flex flex-col w-auto items-start min-h-[500px] bg-white border-[1px] border-gray-300 m-2">
-      <p className="font-bold text-3xl m-5">Create Exam</p>
+      <p className="font-bold text-3xl m-5">
+        {!location.pathname.includes("update-exam") ? "Create" : "Update"} Exam
+      </p>
       <Form
+        form={form}
         onFinish={onFinish}
         style={{
           width: "100%",
@@ -148,9 +234,7 @@ const CreateExam = () => {
           label={"Title"}
           rules={[{ required: true, message: "Please add an exam title" }]}
         >
-          <Input 
-            style={{ width: "100%" }}
-          />
+          <Input style={{ width: "100%" }} />
         </Form.Item>
         <Form.Item
           name={"examCategory"}
@@ -159,17 +243,14 @@ const CreateExam = () => {
         >
           <Select loading={loading} options={data} />
         </Form.Item>
-        <Form.Item
-          name={"examDescription"}
-          label={"Description"}
-        >
-        <TextArea
-          showCount
-          maxLength={200}
-          style={{ height: 120 }}
-          // onChange={onChange}
-          placeholder="Enter exam description"
-        />
+        <Form.Item name={"examDescription"} label={"Description"}>
+          <TextArea
+            showCount
+            maxLength={200}
+            style={{ height: 120 }}
+            // onChange={onChange}
+            placeholder="Enter exam description"
+          />
         </Form.Item>
         <Form.Item
           name={"examDuration"}
@@ -257,8 +338,19 @@ const CreateExam = () => {
           {(fields, { add, remove }, { errors }) => (
             <>
               {fields.map((field, index) => (
-                <div key={field.key} className="border-gray-300 border-[1px] rounded-lg my-5 p-2 min-w-[250px]">
+                <div
+                  key={field.key}
+                  className="border-gray-300 border-[1px] rounded-lg my-5 p-2 min-w-[250px]"
+                >
                   <div className="flex flex-row items-center">
+                    <Form.Item
+                      {...field}
+                      hidden
+                      name={[field.name, "questionID"]}
+                      key={[field.key, "t1"]}
+                    >
+                      <Input />
+                    </Form.Item>
                     <Form.Item
                       {...field}
                       label={`Question ${index + 1}`}
@@ -287,28 +379,30 @@ const CreateExam = () => {
                   </div>
                   <Form.List
                     name={[field.name, "choices"]}
-                    // rules={[
-                    //   {
-                    //     validator: async (_, names) => {
-                    //       if (!names || names.length < 2) {
-                    //         return Promise.reject(
-                    //           new Error("Please add at least 2 choices")
-                    //         );
-                    //       }
-                    //     },
-                    //   },
-                    // ]}
-                    // style={{alignSelf: "center"}}
+                    rules={[
+                      {
+                        validator: async (_, names) => {
+                          if (!names || names.length < 2) {
+                            return Promise.reject(
+                              new Error("Please add at least 2 choices")
+                            );
+                          }
+                        },
+                      },
+                    ]}
+                    style={{ alignSelf: "center" }}
                   >
                     {(answers, { add, remove }, { errors }) => {
                       if (answerType !== "multiple") {
                         answers.map((item) => remove(item.name));
-                        answers = [{
-                          fieldKey: 0,
-                          isListField: true,
-                          key: 0,
-                          name: 0,
-                        }]
+                        answers = [
+                          {
+                            fieldKey: 0,
+                            isListField: true,
+                            key: 0,
+                            name: 0,
+                          },
+                        ];
                       }
                       return (
                         <div className="border-gray-300 border-[1px] rounded-lg my-5 p-2 min-w-[250px]">
@@ -372,9 +466,9 @@ const CreateExam = () => {
                                     showArrow
                                   >
                                     <div className="mt-1">
-                                    <MinusCircleOutlined
-                                      onClick={() => remove(ans.name)}
-                                    />
+                                      <MinusCircleOutlined
+                                        onClick={() => remove(ans.name)}
+                                      />
                                     </div>
                                   </Tooltip>
                                 </div>

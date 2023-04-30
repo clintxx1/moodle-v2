@@ -11,9 +11,11 @@ const Course = () => {
   const [buttonText, setButtonText] = useState("Attempt Exam");
   const [hasAttempted, setHasAttempted] = useState(false);
   const [isNotOpen, setIsNotOpen] = useState(false);
+  const [isClose, setIsClose] = useState(false);
   const [record, setRecord] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTaken, setIsTaken] = useState(false);
+  const [isForecastOpen, setIsForecastOpen] = useState(false);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -64,14 +66,14 @@ const Course = () => {
 
   const checkExamProgress = async (id) => {
     try {
-      const res = await checkExam({examId: id});
+      const res = await checkExam({ examId: id });
       if (res.status === 200) {
-        setIsTaken(res?.data?.isTakenByAll)
+        setIsTaken(res?.data?.isTakenByAll);
       }
     } catch (error) {
-      console.error("ERR: ", error)
+      console.error("ERR: ", error);
     }
-  }
+  };
 
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("currentExam"));
@@ -79,10 +81,16 @@ const Course = () => {
     setExam(data);
     if (new Date(data.dateTimeStart) < today) {
       fetchCurrentRecord(data._id);
-      checkExamProgress(data._id)
+      checkExamProgress(data._id);
       setIsNotOpen(false);
     } else {
       setIsNotOpen(true);
+    }
+
+    if (today > new Date(data.dateTimeEnd)) {
+      setIsClose(true);
+    } else {
+      setIsClose(false);
     }
   }, []);
 
@@ -98,6 +106,9 @@ const Course = () => {
     showModal,
     handleCancel,
     isTaken,
+    isForecastOpen,
+    setIsForecastOpen,
+    isClose,
   };
   return (
     <PageContext.Provider value={values}>

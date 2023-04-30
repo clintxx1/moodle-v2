@@ -17,6 +17,7 @@ import CreateExam from "../pages/exam/create-exam";
 import Profile from "../pages/profile";
 import AttemptExam from "../pages/exam/attempt-exam";
 import auth from "../lib/services";
+import Forecast from "../pages/forecast";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -29,17 +30,21 @@ export const router = createBrowserRouter(
       <Route element={<PrivateLayout />} errorElement={<ErrorPage />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/course/:id" element={<Course />} />
-        {["admin"].includes(auth.getRole()) && (
-          <Route path="/exam" element={<Exam />}>
-            <Route path=":id" element={<CreateExam />} />
-          </Route>
+        {["superadmin", "admin"].includes(auth.getRole()) && (
+          <Route path="/exam" element={<Exam />} />
+        )}
+        {["superadmin", "admin"].includes(auth.getRole()) && (
+          <Route path="update-exam/:id" element={<CreateExam />} />
         )}
         <Route path="/exam/:id/attempt" element={<AttemptExam />} />
-        {["admin"].includes(auth.getRole()) && (
+        {["superadmin", "admin"].includes(auth.getRole()) && (
           <Route path="/create-exam" element={<CreateExam />} />
         )}
-        {["admin"].includes(auth.getRole()) && (
+        {["superadmin", "admin"].includes(auth.getRole()) && (
           <Route path="/records" element={<Records />} />
+        )}
+        {["superadmin"].includes(auth.getRole()) && (
+          <Route path="/forecast" element={<Forecast />} />
         )}
         <Route path="/profile/:id" element={<Profile />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Avatar, Dropdown } from "antd";
 import { getRandomColor } from "../lib/helper";
 import auth from "../lib/services";
@@ -8,11 +8,10 @@ import { useNavigate } from "react-router-dom";
 const CustomDropdown = () => {
   const navigate = useNavigate();
   const initialChar = <UserOutlined />;
-  const role = auth.getRole();
   const handleLogout = () => {
     auth.clear();
   };
-  const [items, setItems] = useState([
+  const items = [
     {
       key: "1",
       label: (
@@ -25,35 +24,7 @@ const CustomDropdown = () => {
       key: "2",
       label: <div onClick={handleLogout}>Logout</div>,
     },
-  ]);
-
-  useEffect(() => {
-    if (role) {
-      if (["admin", "superadmin"].includes(role)) {
-        setItems([
-          {
-            key: "1",
-            label: (
-              <div onClick={() => navigate(`profile/${auth.getUserInfo().id}`)}>
-                Profile
-              </div>
-            ),
-          },
-          {
-            key: "2",
-            label: (
-              <div onClick={() => navigate("create-exam")}>Create Exam</div>
-            ),
-          },
-          {
-            key: "3",
-            label: <div onClick={handleLogout}>Logout</div>,
-          },
-        ]);
-      }
-    }
-    // eslint-disable-next-line
-  }, [role]);
+  ];
 
   return (
     <Dropdown menu={{ items }} placement="bottomRight">
