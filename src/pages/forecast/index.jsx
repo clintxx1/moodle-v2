@@ -33,7 +33,7 @@ const Forecast = () => {
       const res = await getPassingRate();
       if (res?.status === 200) {
         const forecastData = res?.data?.data;
-        setBatchPassingRate(res?.data?.rate)
+        setBatchPassingRate(res?.data?.rate);
         if (forecastData?.passedStudent.length > 0) {
           const temp = forecastData.passedStudent.map((item) => {
             return {
@@ -43,7 +43,9 @@ const Forecast = () => {
                 item?.lastName
               }`,
               passingRate: item?.passingRate,
-              prediction: item?.forecast?.score,
+              prediction: item?.forecast?.score
+                ? `${item?.forecast?.score}%`
+                : "",
             };
           });
           setPassData(temp);
