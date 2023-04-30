@@ -17,7 +17,7 @@ const CourseCard = (props) => {
   };
 
   return (
-    <div className="flex flex-row w-[250px] items-center justify-center border-gray-300 border-[1px] mr-4 overflow-hidden">
+    <div className="flex flex-row min-w-[250px] w-[250px] items-center justify-center border-gray-300 border-[1px] mr-4 overflow-hidden relative">
       <img
         onClick={handleGoToCourse}
         alt="img"
@@ -26,14 +26,16 @@ const CourseCard = (props) => {
         className="hover:scale-150 transform transition duration-500 cursor-pointer"
       />
       <div className="absolute mt-[136px] flex flex-col items-start bg-gray-300 bg-opacity-60 w-[250px] min-h-[66px] max-h-[66px] p-3">
-        <div className="opacity-75">{category}</div>
+        <p className="opacity-75">
+          <p>{category.substring(0, 30 - 3) + "..."}</p>
+        </p>
         <div
           onClick={handleGoToCourse}
           className="hover:underline inline-block cursor-pointer min-w-[250px]"
         >
-          {category.length > 32 ? (
+          {category.length > 30 ? (
             <Tooltip placement="bottomRight" title={category}>
-              <p>{category.substring(0, 32 - 3) + "..."}</p>
+              <p>{category.substring(0, 30 - 3) + "..."}</p>
             </Tooltip>
           ) : (
             <p>{category}</p>

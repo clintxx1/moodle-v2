@@ -2,9 +2,9 @@ import React from "react";
 
 const RecentlyAccessedCourse = ({ children }) => {
   return (
-    <div className="flex flex-col bg-white p-4 m-2 w-full border-gray-300 border-[1px] overflow-auto">
+    <div className="flex flex-col bg-white p-4 m-2 border-gray-300 border-[1px] w-full">
       <div className="text-lg font-extralight">Recently accessed courses</div>
-      <div className="flex flex-row my-4">{children}</div>
+      <div className="flex flex-row my-4 overflow-x-scroll max-w-[1000px]">{children}</div>
     </div>
   );
 };
