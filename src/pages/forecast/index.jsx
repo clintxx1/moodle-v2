@@ -59,7 +59,9 @@ const Forecast = () => {
                 item?.lastName
               }`,
               passingRate: item?.passingRate,
-              prediction: item?.forecast?.score,
+              prediction: item?.forecast?.score
+                ? `${item?.forecast?.score}%`
+                : "",
             };
           });
           setFailedData(temp1);
