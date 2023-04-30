@@ -100,15 +100,17 @@ const Exam = () => {
       } else {
         notification.error({
           message: "Delete Category",
-          description: "Deletion failed.",
+          description: res?.response?.data?.message ?? "Something went wrong",
         });
+        setConfirmLoading(false);
       }
     } catch (error) {
       console.log("ERROR: ", error);
       notification.error({
         message: "Delete Category Failed",
-        description: "Something wrong",
+        description: error?.response?.data?.message ?? "Something wrong",
       });
+      setConfirmLoading(false);
     }
   };
 

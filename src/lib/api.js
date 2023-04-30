@@ -368,4 +368,20 @@ export const getForecast = (id) => {
       });
   });
 };
+
+export const getPassingRate = () => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/getPassingRate`, {
+        params: {},
+        ...dataHeader(),
+      })
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
 /**END OF FORECAST API */

@@ -46,6 +46,11 @@ const CreateExam = () => {
           value: val._id,
         };
       });
+      const category =
+        tempData &&
+        selectedExam &&
+        tempData?.filter((e) => e.label === selectedExam.category)[0]?.value;
+      form.setFieldsValue({ examCategory: category });
       setData(tempData);
       setLoading(false);
     }
@@ -188,35 +193,29 @@ const CreateExam = () => {
   useEffect(() => {
     setLoading(true);
     fetchCategories();
+    window.scrollTo(0, 0);
   }, []);
 
   useEffect(() => {
     if (location.pathname.includes("update-exam")) {
-      setTimeout(() => {
-        const category =
-          data &&
-          selectedExam &&
-          data?.filter((e) => e.label === selectedExam.category)[0]?.value;
-        console.log("ASDFSDAFSDAF: ", category);
-        form.setFieldsValue({
-          examTitle: selectedExam.title,
-          // examCategory: selectedExam.category,
-          examCategory: category,
-          examDescription: selectedExam.description,
-          examDuration: selectedExam.duration,
-          startEndTime: [
-            dayjs(selectedExam.time_start),
-            dayjs(selectedExam.time_end),
-          ],
-        });
-      }, 2000);
+      form.setFieldsValue({
+        examTitle: selectedExam.title,
+        examDescription: selectedExam.description,
+        examDuration: selectedExam.duration,
+        startEndTime: [
+          dayjs(selectedExam.time_start),
+          dayjs(selectedExam.time_end),
+        ],
+      });
       fetchQuestions();
     }
   }, [location]);
 
   return (
     <div className="flex flex-col w-auto items-start min-h-[500px] bg-white border-[1px] border-gray-300 m-2">
-      <p className="font-bold text-3xl m-5">Create Exam</p>
+      <p className="font-bold text-3xl m-5">
+        {!location.pathname.includes("update-exam") ? "Create" : "Update"} Exam
+      </p>
       <Form
         form={form}
         onFinish={onFinish}

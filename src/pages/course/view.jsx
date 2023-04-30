@@ -18,6 +18,7 @@ const CourseView = () => {
     showModal,
     handleCancel,
     isTaken,
+    isClose,
   } = useContext(PageContext);
   return (
     <>
@@ -56,6 +57,8 @@ const CourseView = () => {
             <div className="flex flex-row w-full justify-center mt-12">
               {isNotOpen ? (
                 <p className="italic text-gray-400 mb-8">Exam is not open.</p>
+              ) : isClose ? (
+                <p className="italic text-gray-400 mb-8">Exam is close.</p>
               ) : (
                 <>
                   {auth.getRole() === "student" && (
