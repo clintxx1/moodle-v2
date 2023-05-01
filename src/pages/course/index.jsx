@@ -34,16 +34,27 @@ const Course = () => {
       if (res.status === 200) {
         let data = res.data.data;
         setRecord(data);
+        
         if (data) {
-          if (data.isComplete) {
+          if(res.data.message === "No more Attempt"){
+            setButtonText(res.data.message);
             setHasAttempted(true);
-          } else {
+          }
+          // else if (data.isComplete) {
+          //   setHasAttempted(true);
+          // } 
+          else {
             setButtonText(res.data.message);
             setHasAttempted(false);
           }
         } else {
-          setButtonText(res.data.message);
-          setHasAttempted(false);
+          if(res.data.message === "No more Attempt"){
+            setButtonText(res.data.message);
+            setHasAttempted(true);
+          }else{
+            setButtonText(res.data.message);
+            setHasAttempted(false);
+          }
         }
       }
     } catch (error) {

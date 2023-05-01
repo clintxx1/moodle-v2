@@ -2,7 +2,7 @@ import { Button, Descriptions, Form, Radio, Tag, notification } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import CourseHeader from "../../components/course-page/courseHeader";
-import { attemptExam, updateRecord, submitExam } from "../../lib/api";
+import { attemptExam, updateRecord, submitExam, getRecord } from "../../lib/api";
 
 const AttemptExam = () => {
   const navigate = useNavigate();
@@ -25,6 +25,7 @@ const AttemptExam = () => {
   // };
 
   const updateCurrentRecord = async (question, answer) => {
+    
     const payload = {
       exam: params?.id,
       question: question?._id,
@@ -41,7 +42,7 @@ const AttemptExam = () => {
   };
 
   const handleSubmit = async () => {
-    const res = await submitExam({ record: recordId });
+    const res = await submitExam({_id:exam.record._id});
     if (res.status === 200) {
       navigate(`/course/${exam?.exam?._id}`);
     }
@@ -50,9 +51,13 @@ const AttemptExam = () => {
   useEffect(() => {
     if (params && params.id) {
       async function attemptExamination() {
+        // const testid = recordId
         try {
-          const res = await attemptExam({ exam: params.id });
+          const res = await attemptExam({ exam: params.id, record: recordId });
+          // console.log(res.data.exam)
           setExam(res?.data);
+          // setRecordId(res?.data.record._id)
+          
 
           //TIME
           if (res?.data?.record) {

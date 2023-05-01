@@ -22,7 +22,7 @@ const Forecast = () => {
       key: "passingRate",
     },
     {
-      title: "PREDICTION",
+      title: "PREDICTED SCORE PERCENTAGE",
       dataIndex: "prediction",
       key: "prediction",
     },
