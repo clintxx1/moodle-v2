@@ -38,11 +38,11 @@ const Course = () => {
           if (data.isComplete) {
             setHasAttempted(true);
           } else {
-            setButtonText("Continue last attempt");
+            setButtonText(res.data.message);
             setHasAttempted(false);
           }
         } else {
-          setButtonText("Attempt Exam");
+          setButtonText(res.data.message);
           setHasAttempted(false);
         }
       }
