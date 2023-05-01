@@ -248,8 +248,20 @@ const CreateExam = () => {
             showCount
             maxLength={200}
             style={{ height: 120 }}
-            // onChange={onChange}
             placeholder="Enter exam description"
+          />
+        </Form.Item>
+        <Form.Item
+          name="startEndTime"
+          label={"Timing"}
+          rules={[{ required: true, message: "Please add a deadline" }]}
+        >
+          <RangePicker
+            showTime={{
+              hideDisabledOptions: true,
+            }}
+            format="YYYY-MM-DD hh:mm a"
+            style={{ width: "100%" }}
           />
         </Form.Item>
         <Form.Item
@@ -262,23 +274,6 @@ const CreateExam = () => {
           <InputNumber
             placeholder="Enter exam duration (ex. 1)"
             min={1}
-            style={{ width: "100%" }}
-          />
-        </Form.Item>
-        <Form.Item
-          name="startEndTime"
-          label={"Timing"}
-          rules={[{ required: true, message: "Please add a deadline" }]}
-        >
-          <RangePicker
-            showTime={{
-              hideDisabledOptions: true,
-              // defaultValue: [
-              //   moment("00:00", "hh:mm a"),
-              //   moment("11:59", "hh:mm a"),
-              // ],
-            }}
-            format="YYYY-MM-DD hh:mm a"
             style={{ width: "100%" }}
           />
         </Form.Item>

@@ -9,6 +9,7 @@ import {
   FormOutlined,
   BellOutlined,
   LineChartOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import CustomDropdown from "../components/dropdown";
@@ -48,6 +49,12 @@ const items = [
     accounttype: ["admin", "superadmin"],
   },
   {
+    key: "accounts",
+    icon: <UserOutlined />,
+    label: "Accounts",
+    accounttype: ["superadmin"],
+  },
+  {
     key: "logout",
     icon: <LogoutOutlined />,
     label: "Logout",
@@ -79,6 +86,8 @@ const GuestLayout = () => {
         return "records";
       case "/forecast":
         return "forecast";
+      case "/accounts":
+        return "accounts";
       case "/logout":
         return "logout";
       default:

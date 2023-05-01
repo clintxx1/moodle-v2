@@ -1,5 +1,5 @@
 import { LockFilled } from "@ant-design/icons";
-import { Input, Select, Form, Upload, Modal } from "antd";
+import { Input, Select, Form } from "antd";
 import React, { useContext } from "react";
 import { PageContext } from "../../lib/context";
 
@@ -7,54 +7,50 @@ const RegisterView = () => {
   const {
     handleSubmit,
     form,
-    handleCancel,
-    handlePreview,
-    previewImage,
-    previewOpen,
-    uploadButton,
-    profilePhotoRequest,
-    handlePhotoRemove,
+    isTeacher,
+    // handleCancel,
+    // handlePreview,
+    // previewImage,
+    // previewOpen,
+    // uploadButton,
+    // profilePhotoRequest,
+    // handlePhotoRemove,
   } = useContext(PageContext);
   return (
-    <div className="flex min-h-full w-full h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="flex w-full items-center justify-center h-full bg-white m-2 p-5">
       <div className="w-full max-w-md space-y-8">
-        <div>
-          <img
-            className="mx-auto h-24 w-auto"
-            src={require("../../assets/nwssu.png")}
-            alt=""
-          />
-          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-            Register
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Or go to&nbsp;
-            <a
-              href="/login"
-              className="font-medium text-indigo-600 hover:text-indigo-500"
-            >
-              login page
-            </a>
-            &nbsp;if you already have an account.
-          </p>
-        </div>
-        {/* <div className="flex items-start justify-between border border-gray-300 rounded-2xl px-20">
-          <p className="mt-2">Profile Picture:</p>
+        <img
+          className="mx-auto h-24 w-auto"
+          src={require("../../assets/nwssu.png")}
+          alt=""
+        />
+        {isTeacher ? (
           <div>
-            <Upload
-              name="profile-pic"
-              listType="picture-card"
-              onPreview={handlePreview}
-              showUploadList={uploadButton}
-              accept="image/png, image/jpeg"
-              maxCount={1}
-              customRequest={profilePhotoRequest}
-              onRemove={handlePhotoRemove}
-            >
-              {previewImage ? null : uploadButton}
-            </Upload>
+            <p className="mt-6 text-center text-2xl font-bold tracking-tight text-gray-900">
+              Create a Teacher account
+            </p>
+            <p className="italic text-center text-sm text-gray-600">
+              NOTE: After creating an account you will receive a request for
+              approval in the notification settings.
+            </p>
           </div>
-        </div> */}
+        ) : (
+          <div>
+            <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+              Register
+            </h2>
+            <p className="mt-2 text-center text-sm text-gray-600">
+              Or go to&nbsp;
+              <a
+                href="/login"
+                className="font-medium text-indigo-600 hover:text-indigo-500"
+              >
+                login page
+              </a>
+              &nbsp;if you already have an account.
+            </p>
+          </div>
+        )}
         <Form
           form={form}
           onFinish={handleSubmit}
@@ -82,9 +78,13 @@ const RegisterView = () => {
                 label={"School ID"}
                 rules={[
                   { required: true, message: "Please input your school ID" },
+                  {
+                    pattern: new RegExp(/^\d{2}-\d{4}[0-9]$/i),
+                    message: "Accepted format is (xx-xxxxx) ex. 12-12345",
+                  },
                 ]}
               >
-                <Input placeholder="School ID" />
+                <Input placeholder="School ID (00-00000)" />
               </Form.Item>
               <Form.Item
                 name="firstName"
@@ -171,9 +171,10 @@ const RegisterView = () => {
               </Form.Item>
             </div>
             <div className="my-4">
-              <Form.Item name="role" label="Role" initialValue={"student"}>
+              <Form.Item name="role" label="Role" initialValue={"student"} hidden>
                 <Select
                   id="role"
+                  disabled
                   placeholder="Choose Role"
                   style={{ width: "100%" }}
                   options={[

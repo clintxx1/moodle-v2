@@ -27,7 +27,11 @@ const CourseCard = (props) => {
       />
       <div className="absolute mt-[136px] flex flex-col items-start bg-gray-300 bg-opacity-60 w-[250px] min-h-[66px] max-h-[66px] p-3">
         <p className="opacity-75">
-          <p>{category.substring(0, 30 - 3) + "..."}</p>
+          {category.length > 30 ? (
+            <p>{category.substring(0, 30 - 3) + "..."}</p>
+          ) : (
+            <p>{category}</p>
+          )}
         </p>
         <div
           onClick={handleGoToCourse}

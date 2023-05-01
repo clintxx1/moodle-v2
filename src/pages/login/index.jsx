@@ -2,7 +2,7 @@ import React from "react";
 import { PageContext } from "../../lib/context";
 import LoginView from "./view";
 import auth from "../../lib/services";
-import { message } from "antd";
+import { notification } from "antd";
 
 const Login = () => {
   const handleSubmit = (e) => {
@@ -14,7 +14,14 @@ const Login = () => {
       .login(payload)
       .then(async (res) => {
         if (res.status === 400) {
-          message.error("Invalid username or password!");
+          const message = await res.json();
+          notification.error({
+            message: "Login Failed",
+            description: message?.message
+              ? message?.message
+              : "Invalid username or password!",
+            duration: 5,
+          });
           return;
         }
         const data = await res.json();

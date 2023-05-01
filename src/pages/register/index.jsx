@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Form, notification } from "antd";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { register } from "../../lib/api";
 import { PageContext } from "../../lib/context";
 import RegisterView from "./view";
@@ -20,9 +21,11 @@ import { PlusOutlined } from "@ant-design/icons";
 
 const Register = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [form] = Form.useForm();
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
+  const [isTeacher, setIsTeacher] = useState(false);
 
   const getBase64 = (img, callback) => {
     const reader = new FileReader();
@@ -93,7 +96,8 @@ const Register = () => {
       } else if (res.status === 401) {
         notification.error({
           message: "Account Registration",
-          description: "Email is already taken",
+          description:
+            "An account with the same School ID exist and is not yet approved. Please contact admin for account approval.",
         });
       } else {
         notification.success({
@@ -106,13 +110,19 @@ const Register = () => {
       notification.error({
         message: "Account Registration",
         description: error.response.data.message,
+        duration: 7,
       });
     }
   };
 
-  // useEffect(() => {
-  //   console.log(previewImage);
-  // }, [previewImage])
+  useEffect(() => {
+    if (location && location?.pathname?.includes("register-teacher")) {
+      form.setFieldsValue({ role: "admin" });
+      setIsTeacher(true);
+    } else {
+      setIsTeacher(false);
+    }
+  }, [location]);
 
   const values = {
     handleSubmit,
@@ -125,6 +135,7 @@ const Register = () => {
     uploadButton,
     profilePhotoRequest,
     handlePhotoRemove,
+    isTeacher,
   };
   return (
     <PageContext.Provider value={values}>

@@ -18,6 +18,7 @@ import Profile from "../pages/profile";
 import AttemptExam from "../pages/exam/attempt-exam";
 import auth from "../lib/services";
 import Forecast from "../pages/forecast";
+import Accounts from "../pages/accounts";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -45,6 +46,12 @@ export const router = createBrowserRouter(
         )}
         {["superadmin"].includes(auth.getRole()) && (
           <Route path="/forecast" element={<Forecast />} />
+        )}
+        {["superadmin"].includes(auth.getRole()) && (
+          <Route path="/register-teacher" element={<Register />} />
+        )}
+        {["superadmin"].includes(auth.getRole()) && (
+          <Route path="/accounts" element={<Accounts />} />
         )}
         <Route path="/profile/:id" element={<Profile />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
