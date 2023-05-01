@@ -19,6 +19,7 @@ import AttemptExam from "../pages/exam/attempt-exam";
 import auth from "../lib/services";
 import Forecast from "../pages/forecast";
 import Accounts from "../pages/accounts";
+import ForgotPassword from "../pages/forgot-password";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -26,6 +27,7 @@ export const router = createBrowserRouter(
       <Route element={<PublicLayout />} errorElement={<ErrorPage />}>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Route>
       <Route element={<PrivateLayout />} errorElement={<ErrorPage />}>
