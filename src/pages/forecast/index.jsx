@@ -33,7 +33,7 @@ const Forecast = () => {
       const res = await getPassingRate();
       if (res?.status === 200) {
         const forecastData = res?.data?.data;
-        setBatchPassingRate(res?.data?.rate);
+        setBatchPassingRate(res?.data?.rate.toFixed(2));
         if (forecastData?.passedStudent.length > 0) {
           const temp = forecastData.passedStudent.map((item) => {
             return {
