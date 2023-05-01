@@ -40,9 +40,9 @@ const LoginView = () => {
           }}
         >
           <Form.Item
-            label="School ID"
+            label="Student ID"
             name="schoolId"
-            rules={[{ required: true, message: "Please input your School ID" }]}
+            rules={[{ required: true, message: "Please input your Student ID" }]}
             style={{ width: "100%" }}
           >
             <Input />

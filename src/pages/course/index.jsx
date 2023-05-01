@@ -16,6 +16,9 @@ const Course = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTaken, setIsTaken] = useState(false);
   const [isForecastOpen, setIsForecastOpen] = useState(false);
+  const [checkExamKey, setCheckExamKey] = useState(false);
+  const [examKeyChange, setExamKeyChange] = useState();
+  const [errorMsg, setErrorMsg] = useState("");
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -48,6 +51,16 @@ const Course = () => {
     }
   };
 
+  const handleAttemptExam = () => {
+    try {
+      if (exam?.password) {
+        setCheckExamKey(true);
+      }
+    } catch (error) {
+      console.log("ERR: ", error.message);
+    }
+  };
+
   const fetchStudentsWithoutRec = async () => {
     try {
       const res = await forceStartExam({ examId: exam?._id });
@@ -74,6 +87,17 @@ const Course = () => {
       console.error("ERR: ", error);
     }
   };
+
+  const handleGoToExam = () => {
+    if (examKeyChange && examKeyChange === exam?.password) {
+      setErrorMsg("")
+      navigate(`/exam/${exam?._id}/attempt`);
+    } else {
+      setErrorMsg("Invalid exam key")
+    }
+  };
+
+  const handleExamKeyChange = (e) => setExamKeyChange(e.target.value);
 
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("currentExam"));
@@ -109,6 +133,13 @@ const Course = () => {
     isForecastOpen,
     setIsForecastOpen,
     isClose,
+    handleAttemptExam,
+    checkExamKey,
+    setCheckExamKey,
+    handleGoToExam,
+    handleExamKeyChange,
+    examKeyChange,
+    errorMsg,
   };
   return (
     <PageContext.Provider value={values}>

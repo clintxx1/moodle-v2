@@ -75,7 +75,7 @@ const RegisterView = () => {
               </Form.Item> */}
               <Form.Item
                 name={"schoolId"}
-                label={"School ID"}
+                label={"Student No."}
                 rules={[
                   { required: true, message: "Please input your school ID" },
                   {
@@ -84,7 +84,7 @@ const RegisterView = () => {
                   },
                 ]}
               >
-                <Input placeholder="School ID (00-00000)" />
+                <Input placeholder="Student ID (00-00000)" />
               </Form.Item>
               <Form.Item
                 name="firstName"

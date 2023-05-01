@@ -26,7 +26,7 @@ const ForecastView = () => {
       <Table
         key={crypto.randomUUID()}
         loading={loadingPassedData}
-        dataSource={passData}
+        dataSource={passData ?? []}
         columns={columns}
         bordered
         style={{ width: "100%", padding: 16 }}
@@ -35,7 +35,7 @@ const ForecastView = () => {
       <Table
         key={crypto.randomUUID()}
         loading={loadingFailedData}
-        dataSource={failData}
+        dataSource={failData ?? []}
         columns={columns}
         bordered
         style={{ width: "100%", padding: 16 }}

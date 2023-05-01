@@ -1,4 +1,4 @@
-import { Button, Descriptions, Modal, Tooltip } from "antd";
+import { Button, Descriptions, Input, Modal, Tooltip } from "antd";
 import moment from "moment";
 import React, { useContext } from "react";
 import CourseHeader from "../../components/course-page/courseHeader";
@@ -8,7 +8,7 @@ import auth from "../../lib/services";
 const CourseView = () => {
   const {
     exam,
-    navigate,
+    handleAttemptExam,
     hasAttempted,
     buttonText,
     record,
@@ -19,6 +19,12 @@ const CourseView = () => {
     handleCancel,
     isTaken,
     isClose,
+    checkExamKey,
+    setCheckExamKey,
+    handleGoToExam,
+    handleExamKeyChange,
+    examKeyChange,
+    errorMsg,
   } = useContext(PageContext);
   return (
     <>
@@ -65,7 +71,7 @@ const CourseView = () => {
                     <Button
                       hidden={hasAttempted}
                       type="primary"
-                      onClick={() => navigate(`/exam/${exam?._id}/attempt`)}
+                      onClick={handleAttemptExam}
                     >
                       {buttonText}
                     </Button>
@@ -108,6 +114,17 @@ const CourseView = () => {
         width={350}
       >
         <p>Are you sure you want to start the examination for all students?</p>
+      </Modal>
+      <Modal
+        title="Attempt Exam"
+        open={checkExamKey}
+        onOk={handleGoToExam}
+        onCancel={() => setCheckExamKey(false)}
+        width={350}
+      >
+        <p>Please enter exam key</p>
+        <Input.Password value={examKeyChange} onChange={handleExamKeyChange} autoFocus={true} />
+        {errorMsg && <div className="italic text-xs ml-1 text-red-600">{errorMsg}</div>}
       </Modal>
     </>
   );

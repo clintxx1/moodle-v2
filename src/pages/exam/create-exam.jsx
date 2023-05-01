@@ -71,6 +71,7 @@ const CreateExam = () => {
         dateTimeEnd: moment(dayjs(values.startEndTime[1]).format()).format(
           "LLL"
         ),
+        password: values.examPassword,
         itemNumber: values.questions.length,
       };
       if (!location.pathname.includes("update-exam")) {
@@ -276,6 +277,13 @@ const CreateExam = () => {
             min={1}
             style={{ width: "100%" }}
           />
+        </Form.Item>
+        <Form.Item
+          name={"examPassword"}
+          label={"Exam Key"}
+          rules={[{ required: true, message: "Please add an exam key" }]}
+        >
+          <Input.Password />
         </Form.Item>
         {/* <Form.List name="sections">
             {(sections, {add, remove}, {errors}) => (
