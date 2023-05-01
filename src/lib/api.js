@@ -121,6 +121,39 @@ export const fetchAllUsers = () => {
       });
   });
 };
+
+export const checkIfAccountExist = (data) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/checkEmail`, {
+        params: data,
+        ...dataHeader(),
+      })
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+export const changePassword = (data) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(
+        `${process.env.REACT_APP_API_URL}/changePassword`,
+        data,
+        dataHeader()
+      )
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
 /**END OF USERS API */
 
 /**

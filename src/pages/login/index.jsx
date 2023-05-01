@@ -3,8 +3,10 @@ import { PageContext } from "../../lib/context";
 import LoginView from "./view";
 import auth from "../../lib/services";
 import { notification } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
   const handleSubmit = (e) => {
     const payload = {
       schoolId: e.schoolId,
@@ -39,6 +41,7 @@ const Login = () => {
 
   const values = {
     handleSubmit,
+    navigate,
   };
   return (
     <PageContext.Provider value={values}>

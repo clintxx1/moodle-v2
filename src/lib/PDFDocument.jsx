@@ -174,7 +174,7 @@ const PDFDocument = ({
 
       {/* FAILING STUDENT TABLE*/}
       <View style={styles.divider}>
-        <Text style={styles.title}>Passing Students Summary</Text>
+        <Text style={styles.title}>Failing Students Summary</Text>
         <View style={styles.table}>
           <View style={styles.tableHeader}>
             <Text>Student Name</Text>

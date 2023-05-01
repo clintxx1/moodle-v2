@@ -3,7 +3,7 @@ import { PageContext } from "../../lib/context";
 import { Button, Checkbox, Form, Input } from "antd";
 
 const LoginView = () => {
-  const { handleSubmit } = useContext(PageContext);
+  const { handleSubmit, navigate } = useContext(PageContext);
   return (
     <div className="flex min-h-full w-full h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
@@ -42,7 +42,9 @@ const LoginView = () => {
           <Form.Item
             label="Student ID"
             name="schoolId"
-            rules={[{ required: true, message: "Please input your Student ID" }]}
+            rules={[
+              { required: true, message: "Please input your Student ID" },
+            ]}
             style={{ width: "100%" }}
           >
             <Input />
@@ -55,13 +57,18 @@ const LoginView = () => {
           >
             <Input.Password />
           </Form.Item>
-          <Form.Item
-            name="remember"
-            valuePropName="checked"
-            style={{ width: "50%" }}
-          >
-            <Checkbox>Remember me</Checkbox>
-          </Form.Item>
+          <div className="flex w-full items-center justify-end mb-4">
+            <Form.Item
+              name="remember"
+              valuePropName="checked"
+              style={{ width: "60%", padding: 0, margin: 0 }}
+            >
+              <Checkbox>Remember me</Checkbox>
+            </Form.Item>
+            <Button style={{ padding: 0 }} type="link" onClick={() => navigate("/forgot-password")}>
+              Forgot password
+            </Button>
+          </div>
           <Button type="primary" htmlType="submit" style={{ width: "50%" }}>
             Sign in
           </Button>
