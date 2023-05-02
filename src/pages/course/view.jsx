@@ -50,14 +50,23 @@ const CourseView = () => {
               <Descriptions.Item label="Exam end date" span={2}>
                 {moment(exam?.dateTimeEnd).format("LLL")}
               </Descriptions.Item>
-              {hasAttempted && (
-                <Descriptions.Item label="Score" span={24}>
-                  {`${
-                    record?.score >= 0
-                      ? `${record?.score} out of ${exam?.itemNumber}`
-                      : "Not available"
-                  }`}
-                </Descriptions.Item>
+              {hasAttempted && record?.length > 0 && (
+                <>
+                  <Descriptions.Item label="Pretest Score">
+                    {`${
+                      record[0]?.score >= 0
+                        ? `${record[0]?.score} out of ${exam?.itemNumber}`
+                        : "Not available"
+                    }`}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Posttest Score">
+                    {`${
+                      record[1]?.score >= 0
+                        ? `${record[1]?.score} out of ${exam?.itemNumber}`
+                        : "Not available"
+                    }`}
+                  </Descriptions.Item>
+                </>
               )}
             </Descriptions>
             <div className="flex flex-row w-full justify-center mt-12">
@@ -123,8 +132,14 @@ const CourseView = () => {
         width={350}
       >
         <p>Please enter exam key</p>
-        <Input.Password value={examKeyChange} onChange={handleExamKeyChange} autoFocus={true} />
-        {errorMsg && <div className="italic text-xs ml-1 text-red-600">{errorMsg}</div>}
+        <Input.Password
+          value={examKeyChange}
+          onChange={handleExamKeyChange}
+          autoFocus={true}
+        />
+        {errorMsg && (
+          <div className="italic text-xs ml-1 text-red-600">{errorMsg}</div>
+        )}
       </Modal>
     </>
   );

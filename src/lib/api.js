@@ -214,6 +214,22 @@ export const forceStartExam = (data) => {
       });
   });
 };
+
+export const fetchExamPercentage = (data) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/fetchExamPercentage`, {
+        params: data,
+        ...dataHeader(),
+      })
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
 /**END OF RECORDS API */
 
 /**

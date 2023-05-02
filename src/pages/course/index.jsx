@@ -32,7 +32,7 @@ const Course = () => {
     try {
       const res = await getRecord({ exam: data });
       if (res.status === 200) {
-        let data = res.data.data;
+        let data = res.data.records;
         setRecord(data);
         
         if (data) {

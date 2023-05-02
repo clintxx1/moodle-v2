@@ -2,7 +2,7 @@ import { Button, Descriptions, Form, Radio, Tag, notification } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import CourseHeader from "../../components/course-page/courseHeader";
-import { attemptExam, updateRecord, submitExam, getRecord } from "../../lib/api";
+import { attemptExam, updateRecord, submitExam } from "../../lib/api";
 
 const AttemptExam = () => {
   const navigate = useNavigate();
@@ -17,7 +17,8 @@ const AttemptExam = () => {
   // const [buttonText, setButtonText] = useState("Next");
   // const [buttonType, setButtonType] = useState("button");
   const [timer, setTimer] = useState("00:00:00");
-  const [fetchTime, setFetchTime] = useState(0)
+  const [fetchTime, setFetchTime] = useState(0);
+  const [submitLoader, setSubmitLoader] = useState(false);
 
   // const handleNextQuestion = () => {
   //   if (currentPage === page) return;
@@ -25,13 +26,12 @@ const AttemptExam = () => {
   // };
 
   const updateCurrentRecord = async (question, answer) => {
-    
     const payload = {
       exam: params?.id,
       question: question?._id,
       answer,
     };
-    if (fetchTime.getTime() >= new Date().getTime()){
+    if (fetchTime.getTime() >= new Date().getTime()) {
       const res = await updateRecord(payload);
       if (res.status === 201) {
         setRecordId(res.data.record?._id);
@@ -42,10 +42,13 @@ const AttemptExam = () => {
   };
 
   const handleSubmit = async () => {
-    const res = await submitExam({_id:exam.record._id});
+    setSubmitLoader(true);
+    const res = await submitExam({ _id: exam.record._id });
     if (res.status === 200) {
       navigate(`/course/${exam?.exam?._id}`);
+      setSubmitLoader(false);
     }
+    setSubmitLoader(false);
   };
 
   useEffect(() => {
@@ -57,13 +60,12 @@ const AttemptExam = () => {
           // console.log(res.data.exam)
           setExam(res?.data);
           // setRecordId(res?.data.record._id)
-          
 
           //TIME
           if (res?.data?.record) {
             let deadline = new Date(res?.data?.record?.timeStart);
             deadline.setHours(deadline.getHours() + res?.data?.exam?.duration);
-            if(deadline.getTime() >= new Date().getTime()){
+            if (deadline.getTime() >= new Date().getTime()) {
               setFetchTime(deadline);
               clearTimer(deadline);
             } else {
@@ -82,8 +84,9 @@ const AttemptExam = () => {
           if (error?.response?.status === 401) {
             notification.error({
               message: "Exam Progress",
-              description: error?.response?.data?.message ?? "Something went wrong."
-            })
+              description:
+                error?.response?.data?.message ?? "Something went wrong.",
+            });
             handleSubmit();
             setShowResult(true);
           }
@@ -218,6 +221,7 @@ const AttemptExam = () => {
                     <Button
                       type="primary"
                       htmlType="submit"
+                      loading={submitLoader}
                       // htmlType={`${buttonType}`}
                       // onClick={handleNextQuestion}
                     >
