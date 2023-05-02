@@ -34,15 +34,11 @@ const Course = () => {
       if (res.status === 200) {
         let data = res.data.records;
         setRecord(data);
-        
         if (data) {
           if(res.data.message === "No more Attempt"){
             setButtonText(res.data.message);
             setHasAttempted(true);
           }
-          // else if (data.isComplete) {
-          //   setHasAttempted(true);
-          // } 
           else {
             setButtonText(res.data.message);
             setHasAttempted(false);

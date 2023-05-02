@@ -56,7 +56,7 @@ const AttemptExam = () => {
       async function attemptExamination() {
         // const testid = recordId
         try {
-          const res = await attemptExam({ exam: params.id, record: recordId });
+          const res = await attemptExam({ exam: params.id});
           // console.log(res.data.exam)
           setExam(res?.data);
           // setRecordId(res?.data.record._id)
