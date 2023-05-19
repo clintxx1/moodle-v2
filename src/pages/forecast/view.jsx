@@ -19,7 +19,7 @@ const ForecastView = () => {
   return (
     <div className="flex flex-col w-auto items-start min-h-[500px] bg-white border-[1px] border-gray-300 m-2">
       <div className="flex flex-row w-full items-center justify-between">
-        <p className="font-bold text-3xl m-5">Forecast Records</p>
+        <p className="font-bold text-3xl m-5">Reports</p>
       </div>
       <div className="flex flex-row items-center justify-between my-3 w-full px-5 py-2 mr-5">
         <PDFDownloadLink

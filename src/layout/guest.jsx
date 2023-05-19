@@ -45,7 +45,7 @@ const items = [
   {
     key: "forecast",
     icon: <LineChartOutlined />,
-    label: "Forecast",
+    label: "Reports",
     accounttype: ["admin", "superadmin"],
   },
   {

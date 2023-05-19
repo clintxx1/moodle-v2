@@ -153,9 +153,9 @@ const PDFDocument = ({
           <View style={styles.tableHeader}>
             <Text>Passing Rate</Text>
           </View>
-          <View style={styles.tableHeader}>
+          {/* <View style={styles.tableHeader}>
             <Text>Prediction</Text>
-          </View>
+          </View> */}
         </View>
         {passingStudents.map((item, index) => (
           <View key={index} style={styles.table}>
@@ -165,9 +165,9 @@ const PDFDocument = ({
             <View style={styles.tableCell}>
               <Text>{item.passingRate}</Text>
             </View>
-            <View style={styles.tableCell}>
+            {/* <View style={styles.tableCell}>
               <Text>{item.prediction}</Text>
-            </View>
+            </View> */}
           </View>
         ))}
       </View>
@@ -182,9 +182,9 @@ const PDFDocument = ({
           <View style={styles.tableHeader}>
             <Text>Passing Rate</Text>
           </View>
-          <View style={styles.tableHeader}>
+          {/* <View style={styles.tableHeader}>
             <Text>Prediction</Text>
-          </View>
+          </View> */}
         </View>
         {failingStudents.map((item, index) => (
           <View key={index} style={styles.table}>
@@ -194,9 +194,9 @@ const PDFDocument = ({
             <View style={styles.tableCell}>
               <Text>{item.passingRate}</Text>
             </View>
-            <View style={styles.tableCell}>
+            {/* <View style={styles.tableCell}>
               <Text>{item.prediction}</Text>
-            </View>
+            </View> */}
           </View>
         ))}
       </View>

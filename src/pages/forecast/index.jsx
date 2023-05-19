@@ -21,11 +21,11 @@ const Forecast = () => {
       dataIndex: "passingRate",
       key: "passingRate",
     },
-    {
-      title: "PREDICTED SCORE PERCENTAGE",
-      dataIndex: "prediction",
-      key: "prediction",
-    },
+    // {
+    //   title: "PREDICTED SCORE PERCENTAGE",
+    //   dataIndex: "prediction",
+    //   key: "prediction",
+    // },
   ];
 
   const getAllRecords = async () => {
