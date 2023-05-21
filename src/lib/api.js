@@ -218,7 +218,7 @@ export const forceStartExam = (data) => {
 export const fetchExamPercentage = (data) => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/fetchExamPercentage`, {
+      .get(`${process.env.REACT_APP_API_URL}/fetchExamProgress`, {
         params: data,
         ...dataHeader(),
       })
@@ -442,6 +442,7 @@ export const getPassingRate = () => {
         ...dataHeader(),
       })
       .then((res) => {
+        console.log(res)
         resolve(res);
       })
       .catch((err) => {

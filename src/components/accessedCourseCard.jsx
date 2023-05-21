@@ -4,12 +4,37 @@ import { useNavigate } from "react-router-dom";
 
 const CourseCard = (props) => {
   const {
-    image,
     _id,
     category: { name: category },
   } = props;
   const navigate = useNavigate();
   const defBackgroundImage = require("../assets/nwssu.png");
+  
+  let image = null
+  
+  switch (props.category.name) {
+    case "SOIL SCIENCE":
+      image = require("../assets/soilScience.png")
+      break;
+    case "ANIMAL SCIENCE":
+      image = require("../assets/animalScience.jpg")
+      break;
+    case "CROP PROTECTION":
+      image = require("../assets/cropProtection.jpg")
+    break;
+    case "CROP SCIENCE":
+      image = require("../assets/cropScience.jpg")
+      break;
+    case "ECONOMICS, AGRICULTURAL AND MARKETING":
+      image = require("../assets/agriMarket.jpg")
+        break;
+    case "AGRICULTURAL EXTENSION AND COMMUNICATION":
+      image = require("../assets/com.jpg")
+      break;
+    default:
+      image = defBackgroundImage
+      break;
+  }
 
   const handleGoToCourse = () => {
     localStorage.setItem("currentExam", JSON.stringify(props));
