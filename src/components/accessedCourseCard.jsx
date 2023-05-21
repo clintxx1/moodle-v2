@@ -9,30 +9,30 @@ const CourseCard = (props) => {
   } = props;
   const navigate = useNavigate();
   const defBackgroundImage = require("../assets/nwssu.png");
-  
-  let image = null
-  
+
+  let image = null;
+
   switch (props.category.name) {
     case "SOIL SCIENCE":
-      image = require("../assets/soilScience.png")
+      image = require("../assets/soilScience.png");
       break;
     case "ANIMAL SCIENCE":
-      image = require("../assets/animalScience.jpg")
+      image = require("../assets/animalScience.jpg");
       break;
     case "CROP PROTECTION":
-      image = require("../assets/cropProtection.jpg")
-    break;
+      image = require("../assets/cropProtection.jpg");
+      break;
     case "CROP SCIENCE":
-      image = require("../assets/cropScience.jpg")
+      image = require("../assets/cropScience.jpg");
       break;
     case "ECONOMICS, AGRICULTURAL AND MARKETING":
-      image = require("../assets/agriMarket.jpg")
-        break;
+      image = require("../assets/agriMarket.jpg");
+      break;
     case "AGRICULTURAL EXTENSION AND COMMUNICATION":
-      image = require("../assets/com.jpg")
+      image = require("../assets/com.jpg");
       break;
     default:
-      image = defBackgroundImage
+      image = defBackgroundImage;
       break;
   }
 
@@ -42,33 +42,28 @@ const CourseCard = (props) => {
   };
 
   return (
-    <div className="flex flex-row min-w-[250px] w-[250px] items-center justify-center border-gray-300 border-[1px] mr-4 overflow-hidden relative">
-      <img
-        onClick={handleGoToCourse}
-        alt="img"
-        src={image ?? defBackgroundImage}
-        width={200}
-        className="hover:scale-150 transform transition duration-500 cursor-pointer"
-      />
-      <div className="absolute mt-[136px] flex flex-col items-start bg-gray-300 bg-opacity-60 w-[250px] min-h-[66px] max-h-[66px] p-3">
-        <p className="opacity-75">
-          {category.length > 30 ? (
-            <p>{category.substring(0, 30 - 3) + "..."}</p>
-          ) : (
-            <p>{category}</p>
-          )}
+    <div className="flex flex-row min-w-[250px] w-[250px] max-w-[250px] items-center justify-center border-gray-300 border-[1px] mr-4 overflow-hidden relative">
+      <div className="boxImage h-full w-full">
+        <img
+          onClick={handleGoToCourse}
+          alt="img"
+          src={image ?? defBackgroundImage}
+          className="hover:scale-150 duration-500 cursor-pointer"
+        />
+      </div>
+      <div className="absolute mt-[183px] flex flex-col items-start bg-gray-300 bg-opacity-70 w-[250px] min-h-[66px] max-h-[66px] p-3">
+        <p className="opacity-75 text-ellipsis w-[250px] whitespace-nowrap overflow-hidden max-w-[225px]">
+          {category}
         </p>
         <div
           onClick={handleGoToCourse}
           className="hover:underline inline-block cursor-pointer min-w-[250px]"
         >
-          {category.length > 30 ? (
-            <Tooltip placement="bottomRight" title={category}>
-              <p>{category.substring(0, 30 - 3) + "..."}</p>
-            </Tooltip>
-          ) : (
-            <p>{category}</p>
-          )}
+          <Tooltip placement="bottomLeft" title={category}>
+            <p className="font-semibold text-ellipsis w-[250px] whitespace-nowrap overflow-hidden max-w-[225px]">
+              {category}
+            </p>
+          </Tooltip>
         </div>
       </div>
     </div>
