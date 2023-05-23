@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { MinusCircleOutlined, PlusOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import {
   Button,
   Checkbox,
@@ -32,6 +32,7 @@ const CreateExam = () => {
   const [form] = Form.useForm();
   const [data, setData] = useState();
   const [loading, setLoading] = useState(false);
+  const [reviewDuration, setReviewDuration] = useState([])
   let selectedExam = JSON.parse(localStorage.getItem("currentExam"));
   const answerType = "multiple";
   const location = useLocation();
@@ -65,6 +66,7 @@ const CreateExam = () => {
         description: values.examDescription ?? null,
         category: values.examCategory,
         duration: values.examDuration,
+        reviewDuration: values.reviewDuration,
         dateTimeStart: moment(dayjs(values.startEndTime[0]).format()).format(
           "LLL"
         ),
@@ -191,6 +193,22 @@ const CreateExam = () => {
     }
   };
 
+  const handleCalendarChange = (a, b) => {
+    if (b[1] !== ''){
+      const days = moment(b[1]).diff(moment(b[0]), 'days')
+      if (days > 0) {
+        const data = []
+        for (let i = 1; i <= days; i++) {
+          data.push({
+            value: i,
+            label: i
+          });
+        }
+        setReviewDuration(data)
+      }
+    }
+  };
+
   useEffect(() => {
     setLoading(true);
     fetchCategories();
@@ -203,6 +221,7 @@ const CreateExam = () => {
         examTitle: selectedExam.title,
         examDescription: selectedExam.description,
         examDuration: selectedExam.duration,
+        reviewDuraton: selectedExam.reviewDuration,
         startEndTime: [
           dayjs(selectedExam.time_start),
           dayjs(selectedExam.time_end),
@@ -263,6 +282,7 @@ const CreateExam = () => {
             }}
             format="YYYY-MM-DD hh:mm a"
             style={{ width: "100%" }}
+            onCalendarChange={handleCalendarChange}
           />
         </Form.Item>
         <Form.Item
@@ -277,6 +297,25 @@ const CreateExam = () => {
             min={1}
             style={{ width: "100%" }}
           />
+        </Form.Item>
+        <Form.Item
+          name={"reviewDuration"}
+          label={"Review Duration (days)"}
+          rules={[
+            { required: true, message: "Please choose a review duration" },
+          ]}
+        >
+          <div className="flex items-center gap-4">
+            <Select
+              placeholder="Choose a review duration"
+              disabled={!reviewDuration?.length}
+              options={reviewDuration}
+              // style={{ width: "100%" }}
+            />
+            <Tooltip title="Review duration is the number of days an instructor will take to review the examination. Students can retake the exam after the review duration expires">
+              <QuestionCircleOutlined />
+            </Tooltip>
+          </div>
         </Form.Item>
         <Form.Item
           name={"examPassword"}

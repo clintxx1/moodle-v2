@@ -183,10 +183,11 @@ export const updateRecord = (data) => {
   });
 };
 
-export const fetchAllRecords = () => {
+export const fetchAllRecords = (year) => {
   return new Promise((resolve, reject) => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/fetchAllStudents`, {
+        params: year,
         ...dataHeader(),
       })
       .then((res) => {

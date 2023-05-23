@@ -6,6 +6,7 @@ const CourseCard = (props) => {
   const {
     _id,
     category: { name: category },
+    title,
   } = props;
   const navigate = useNavigate();
   const defBackgroundImage = require("../assets/nwssu.png");
@@ -61,7 +62,7 @@ const CourseCard = (props) => {
         >
           <Tooltip placement="bottomLeft" title={category}>
             <p className="font-semibold text-ellipsis w-[250px] whitespace-nowrap overflow-hidden max-w-[225px]">
-              {category}
+              {title ?? category}
             </p>
           </Tooltip>
         </div>

@@ -13,6 +13,8 @@ const RecordsView = () => {
     setSearchData,
     filteredData,
     setSelectedCategory,
+    batchData,
+    setSelectedBatch
   } = useContext(PageContext);
   return (
     <div className="flex flex-col w-auto items-start min-h-[500px] bg-white border-[1px] border-gray-300 m-2">
@@ -32,6 +34,13 @@ const RecordsView = () => {
           defaultValue={null}
           style={{ width: "10%" }}
           onChange={(e) => setSelectedCategory(e)}
+        />
+        <Select
+          // loading={selectedBatch}
+          options={batchData}
+          defaultValue={null}
+          style={{ width: "10%" }}
+          onChange={(e) => setSelectedBatch(e)}
         />
         <Button onClick={handleSearch}>Search</Button>
       </div>

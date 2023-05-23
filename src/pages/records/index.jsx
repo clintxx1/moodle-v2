@@ -12,7 +12,25 @@ const Records = () => {
   const [searchData, setSearchData] = useState();
   const [filteredData, setFilteredData] = useState();
   const [selectedCategory, setSelectedCategory] = useState();
-
+  const [selectedBatch, setSelectedBatch] = useState();
+  const [batchData, setBatchData] = useState([
+    {
+      label: "All Batch",
+      value: null,
+    },
+    {
+      label: "2023",
+      value: 2023,
+    },
+    {
+      label: "2024",
+      value: 2024,
+    },
+    {
+      label: "2025",
+      value: 2025,
+    },
+  ])
   const columns = [
     {
       title: "Student Name",
@@ -56,7 +74,7 @@ const Records = () => {
 
   const getAllRecords = async () => {
     try {
-      const res = await fetchAllRecords();
+      const res = await fetchAllRecords({year: selectedBatch ?? 2023});
       if (res?.status === 200) {
         const temp = res?.data?.data
           .filter((e) => e.isComplete)
@@ -139,6 +157,13 @@ const Records = () => {
     fetchCategories();
   }, []);
 
+  useEffect(() => {
+    if(selectedBatch){
+      getAllRecords();
+    }
+  }, [selectedBatch])
+  
+
   const values = {
     data,
     columns,
@@ -149,6 +174,8 @@ const Records = () => {
     setSearchData,
     filteredData,
     setSelectedCategory,
+    batchData,
+    setSelectedBatch
   };
 
   return (
