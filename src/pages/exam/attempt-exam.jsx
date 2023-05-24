@@ -65,7 +65,7 @@ const AttemptExam = () => {
           //TIME
           if (res?.data?.record) {
             if (res?.data?.isPreTest === null) return;
-            if (res?.data?.isPreTest) {
+            if (res?.data?.isPreTest) { 
               let deadline = new Date(res?.data?.record?.preTest?.timeStart);
               deadline.setHours(deadline.getHours() + res?.data?.exam?.duration);
               if (deadline.getTime() >= new Date().getTime()) {
