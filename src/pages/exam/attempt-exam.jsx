@@ -64,13 +64,26 @@ const AttemptExam = () => {
 
           //TIME
           if (res?.data?.record) {
-            let deadline = new Date(res?.data?.record?.timeStart);
-            deadline.setHours(deadline.getHours() + res?.data?.exam?.duration);
-            if (deadline.getTime() >= new Date().getTime()) {
-              setFetchTime(deadline);
-              clearTimer(deadline);
+            if (res?.data?.isPreTest === null) return;
+            if (res?.data?.isPreTest) {
+              let deadline = new Date(res?.data?.record?.preTest?.timeStart);
+              deadline.setHours(deadline.getHours() + res?.data?.exam?.duration);
+              if (deadline.getTime() >= new Date().getTime()) {
+                setFetchTime(deadline);
+                clearTimer(deadline);
+              } else {
+                handleSubmit();
+              }
             } else {
-              handleSubmit();
+              let deadline = new Date(res?.data?.record?.postTest?.timeStart);
+              deadline.setHours(deadline.getHours() + res?.data?.exam?.duration);
+              if (deadline.getTime() >= new Date().getTime()) {
+                setFetchTime(deadline);
+                clearTimer(deadline);
+              } else {
+                console.log("na trigger ka didi?");
+                handleSubmit();
+              }
             }
           }
 
@@ -141,12 +154,21 @@ const AttemptExam = () => {
   // };
 
   const getCurrentChoice = (questionId) => {
-    let filteredQuestion = exam.record.answers.filter(
-      (f) => f.question === questionId
-    );
-
-    if (!filteredQuestion) return null;
-    return filteredQuestion[0]?.answer;
+    if (exam.isPreTest){
+      let filteredQuestion = exam.record.preTest.answers.filter(
+        (f) => f.question === questionId
+      );
+  
+      if (!filteredQuestion) return null;
+      return filteredQuestion[0]?.answer;
+    } else {
+      let filteredQuestion = exam.record.postTest.answers.filter(
+        (f) => f.question === questionId
+      );
+  
+      if (!filteredQuestion) return null;
+      return filteredQuestion[0]?.answer;
+    }
   };
 
   // useEffect(() => {
