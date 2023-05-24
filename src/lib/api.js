@@ -203,7 +203,7 @@ export const forceStartExam = (data) => {
   return new Promise((resolve, reject) => {
     axios
       .post(
-        `${process.env.REACT_APP_API_URL}/forceStartExam`,
+        `${process.env.REACT_APP_API_URL}/triggerReviewDuration`,
         data,
         dataHeader()
       )

@@ -58,6 +58,7 @@ const AttemptExam = () => {
         try {
           const res = await attemptExam({ exam: params.id});
           // console.log(res.data.exam)
+          console.log(res.data)
           setExam(res?.data);
           // setRecordId(res?.data.record._id)
 

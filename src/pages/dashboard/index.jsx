@@ -16,7 +16,7 @@ const Dashboard = () => {
       setData(data);
       setLoader(false);
       if (auth.getRole() === "student") {
-        fetchStudentRecords();
+        // fetchStudentRecords();
       }
     } catch (error) {
       console.error("ERR: ", error);
@@ -59,7 +59,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (data) {
-      fetchStudentRecords();
+      // fetchStudentRecords();
     }
   }, [data]);
 

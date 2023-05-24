@@ -142,6 +142,8 @@ const Exam = () => {
             time_start: moment(val?.dateTimeStart).format("LLL"),
             time_end: moment(val?.dateTimeEnd).format("LLL"),
             duration: val?.duration,
+            reviewDuration: val?.reviewDuration,
+            examKey:val?.password,
             item_number: val?.itemNumber,
             category: val?.category?.name,
             questions: val?.questions,

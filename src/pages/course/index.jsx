@@ -77,7 +77,7 @@ const Course = () => {
           description: "Examination has force started",
         });
         setIsModalOpen(false);
-        checkExamProgress(exam?._id);
+        // checkExamProgress(exam?._id);
       }
     } catch (error) {
       console.err("FETCH ERR: ", error);
@@ -112,7 +112,7 @@ const Course = () => {
     setExam(data);
     if (new Date(data.dateTimeStart) < today) {
       fetchCurrentRecord(data._id);
-      checkExamProgress(data._id);
+      // checkExamProgress(data._id);
       setIsNotOpen(false);
     } else {
       setIsNotOpen(true);

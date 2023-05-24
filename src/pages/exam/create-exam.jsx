@@ -32,7 +32,6 @@ const CreateExam = () => {
   const [form] = Form.useForm();
   const [data, setData] = useState();
   const [loading, setLoading] = useState(false);
-  const [reviewDuration, setReviewDuration] = useState([])
   let selectedExam = JSON.parse(localStorage.getItem("currentExam"));
   const answerType = "multiple";
   const location = useLocation();
@@ -204,7 +203,7 @@ const CreateExam = () => {
             label: i
           });
         }
-        setReviewDuration(data)
+        // setReviewDuration(data)
       }
     }
   };
@@ -216,12 +215,14 @@ const CreateExam = () => {
   }, []);
 
   useEffect(() => {
+    console.log(selectedExam)
     if (location.pathname.includes("update-exam")) {
       form.setFieldsValue({
         examTitle: selectedExam.title,
         examDescription: selectedExam.description,
         examDuration: selectedExam.duration,
-        reviewDuraton: selectedExam.reviewDuration,
+        examPassword: selectedExam.examKey,
+        reviewDuration: selectedExam.reviewDuration,
         startEndTime: [
           dayjs(selectedExam.time_start),
           dayjs(selectedExam.time_end),
@@ -302,20 +303,17 @@ const CreateExam = () => {
           name={"reviewDuration"}
           label={"Review Duration (days)"}
           rules={[
-            { required: true, message: "Please choose a review duration" },
+            { required: true, message: "Please enter a review duration" },
           ]}
         >
-          <div className="flex items-center gap-4">
-            <Select
-              placeholder="Choose a review duration"
-              disabled={!reviewDuration?.length}
-              options={reviewDuration}
-              // style={{ width: "100%" }}
-            />
-            <Tooltip title="Review duration is the number of days an instructor will take to review the examination. Students can retake the exam after the review duration expires">
-              <QuestionCircleOutlined />
-            </Tooltip>
-          </div>
+            <InputNumber
+                placeholder="Choose a review duration"
+                // disabled={!reviewDuration?.length}
+                // options={reviewDuration}
+                min={1}
+                style={{ width: "100%" }}
+                
+              />
         </Form.Item>
         <Form.Item
           name={"examPassword"}

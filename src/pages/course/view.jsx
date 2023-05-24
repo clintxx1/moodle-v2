@@ -88,14 +88,14 @@ const CourseView = () => {
                   {["admin", "superadmin"].includes(auth.getRole()) && (
                     <>
                       {!isTaken ? (
-                        <Tooltip title="By clicking this button, it will force to start the exam timer on this current category for all students.">
+                        <Tooltip title="By clicking this button, it will start review duration for the current batch">
                           <Button type="primary" onClick={showModal}>
-                            Start Examination
+                            Start Review Duration
                           </Button>
                         </Tooltip>
                       ) : (
                         <p className="italic text-gray-400 mb-8">
-                          All students have started taking the examination.
+                          All students started Review Duration.
                         </p>
                       )}
                     </>
@@ -122,7 +122,7 @@ const CourseView = () => {
         onCancel={handleCancel}
         width={350}
       >
-        <p>Are you sure you want to start the examination for all students?</p>
+        <p>Are you sure you want to start the review duration for the current batch?</p>
       </Modal>
       <Modal
         title="Attempt Exam"
