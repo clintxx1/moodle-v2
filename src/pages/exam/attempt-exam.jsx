@@ -66,14 +66,27 @@ const AttemptExam = () => {
           if (res?.data?.record) {
             if (res?.data?.isPreTest === null) return;
             if (res?.data?.isPreTest) { 
-              let deadline = new Date(res?.data?.record?.preTest?.timeStart);
+              if (res?.data?.isPreTest === null) return;
+            if (res?.data?.isPreTest) {
+              let deadline = new Date(res?.data?.record?.preTest?.preTest?.timeStart);
+                deadline.setHours(deadline.getHours() + res?.data?.exam?.duration);
+                if (deadline.getTime() >= new Date().getTime()) {
+                  setFetchTime(deadline);
+                  clearTimer(deadline);
+                } else {
+                  handleSubmit();
+                }
+            } else {
+              let deadline = new Date(res?.data?.record?.postTest?.timeStart);
               deadline.setHours(deadline.getHours() + res?.data?.exam?.duration);
               if (deadline.getTime() >= new Date().getTime()) {
                 setFetchTime(deadline);
                 clearTimer(deadline);
               } else {
+                console.log("na trigger ka didi?");
                 handleSubmit();
               }
+            }
             } else {
               let deadline = new Date(res?.data?.record?.postTest?.timeStart);
               deadline.setHours(deadline.getHours() + res?.data?.exam?.duration);
