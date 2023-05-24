@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const Course = (props) => {
   const {
-    progress = 0,
+    progress = 50,
     _id,
     category: { name: category },
     title,

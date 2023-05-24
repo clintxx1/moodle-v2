@@ -32,25 +32,15 @@ const Course = () => {
     try {
       const res = await getRecord({ exam: data });
       if (res.status === 200) {
-        let data = res.data.records;
+        let data = res.data.record;
         setRecord(data);
-        if (data) {
-          if(res.data.message === "No more Attempt"){
-            setButtonText(res.data.message);
-            setHasAttempted(true);
-          }
-          else {
-            setButtonText(res.data.message);
-            setHasAttempted(false);
-          }
+        console.log(res.data)
+        if (res.data.isPretest == null) {
+          setButtonText("Exam is Close");
+          setHasAttempted(true);
         } else {
-          if(res.data.message === "No more Attempt"){
-            setButtonText(res.data.message);
-            setHasAttempted(true);
-          }else{
             setButtonText(res.data.message);
             setHasAttempted(false);
-          }
         }
       }
     } catch (error) {
