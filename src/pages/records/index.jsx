@@ -47,19 +47,19 @@ const Records = () => {
       dataIndex: "numOfItems",
       key: "numOfItems",
     },
-    {
-      title: "Score",
-      dataIndex: "score",
-      key: "score",
-      sorter: (a, b) => a.score - b.score,
-    },
-    {
-      title: "Percentage",
-      dataIndex: "percentage",
-      key: "percentage",
-      render: (text) => <p>{`${text}%`}</p>,
-      sorter: (a, b) => a.percentage - b.percentage,
-    },
+    // {
+    //   title: "Score",
+    //   dataIndex: "score",
+    //   key: "score",
+    //   sorter: (a, b) => a.score - b.score,
+    // },
+    // {
+    //   title: "Percentage",
+    //   dataIndex: "percentage",
+    //   key: "percentage",
+    //   render: (text) => <p>{`${text}%`}</p>,
+    //   sorter: (a, b) => a.percentage - b.percentage,
+    // },
     {
       title: "Exam Started",
       dataIndex: "startDate",
@@ -93,6 +93,8 @@ const Records = () => {
               startDate: moment(item?.timeStart).format("LLL"),
               endDate: moment(item?.timeEnd).format("LLL"),
               category: item?.exam?.category,
+              preTest: item?.preTest,
+              postTest: item?.postTest,
             };
           })
           .sort((a, b) => (a.percentage > b.percentage ? -1 : 1));
